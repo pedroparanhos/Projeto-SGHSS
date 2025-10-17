@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - SGHSS VidaPlus</title>
+    <!-- Tailwind CSS para um design rápido e responsivo -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Fonte Inter do Google Fonts para uma melhor legibilidade -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <script>
+        // Configuração de cores personalizadas do Tailwind para corresponder à nossa paleta
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'fundo-principal': '#1E293B',
+                        'fundo-secundario': '#334155',
+                        'campo': '#475569',
+                        'texto-principal': '#F1F5F9',
+                        'texto-secundario': '#94A3B8',
+                        'ciano-vibrante': '#06B6D4',
+                        'azul-suave': '#22D3EE',
+                    },
+                    fontFamily: {
+                        'sans': ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Estilo para garantir que o corpo ocupe toda a altura da tela */
+        html, body {
+            height: 100%;
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-fundo-principal text-texto-principal flex items-center justify-center p-4">
+    <!-- English Gemini -->
+    <!-- Container principal do formulário de login -->
+    <div class="w-full max-w-sm bg-fundo-secundario rounded-xl shadow-lg p-8 space-y-8">
+        
+        <!-- Secção do Logo -->
+        <div class="flex flex-col items-center space-y-4">
+            <!-- Círculo do Logo -->
+            <div class="w-24 h-24 bg-ciano-vibrante rounded-full flex items-center justify-center">
+                <span class="text-white text-xl font-bold">LOGO</span>
+            </div>
+            <!-- Título da Tela -->
+            <h1 class="text-3xl font-bold text-texto-principal tracking-tight">VidaPlus SGHSS</h1>
+            <p class="text-texto-secundario">Acesse a sua conta para continuar</p>
+        </div>
+
+        <!-- Formulário de Login -->
+        <form class="space-y-6" action="#" method="POST">
+            <!-- Campo de CPF ou E-mail -->
+            <div>
+                <label for="login" class="block text-sm font-medium text-texto-secundario">Login</label>
+                <div class="mt-2">
+                    <input id="login" name="login" type="text" required placeholder="Digite seu CPF ou E-mail"
+                           class="block w-full rounded-md border-0 bg-campo p-3 text-texto-principal placeholder:text-texto-secundario focus:ring-2 focus:ring-inset focus:ring-ciano-vibrante sm:text-sm">
+                </div>
+            </div>
+
+            <!-- Campo de Senha -->
+            <div>
+                <div class="flex items-center justify-between">
+                    <label for="password" class="block text-sm font-medium text-texto-secundario">Senha</label>
+                    <div class="text-sm">
+                        <a href="#" class="font-semibold text-ciano-vibrante hover:text-azul-suave">Esqueceu a senha?</a>
+                    </div>
+                </div>
+                <div class="mt-2">
+                    <input id="password" name="password" type="password" autocomplete="current-password" required placeholder="••••••••"
+                           class="block w-full rounded-md border-0 bg-campo p-3 text-texto-principal placeholder:text-texto-secundario focus:ring-2 focus:ring-inset focus:ring-ciano-vibrante sm:text-sm">
+                </div>
+            </div>
+
+            <!-- Botão de Entrar -->
+            <div>
+                <button type="submit"
+                        class="flex w-full justify-center rounded-md bg-ciano-vibrante px-3 py-3 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-azul-suave focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ciano-vibrante transition-colors duration-200">
+                    Entrar
+                </button>
+            </div>
+        </form>
+
+        <!-- Link para Criar Conta -->
+        <p class="mt-10 text-center text-sm text-texto-secundario">
+            Não tem uma conta?
+            <a href="#" class="font-semibold leading-6 text-ciano-vibrante hover:text-azul-suave">Crie uma agora</a>
+        </p>
+    </div>
+
+</body>
+</html>
