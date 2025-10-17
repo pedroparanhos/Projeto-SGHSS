@@ -3,15 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - SGHSS VidaPlus</title>
-    <!-- Tailwind CSS para um design rápido e responsivo -->
+    <title>SGHSS VidaPlus</title>
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Fonte Inter do Google Fonts para uma melhor legibilidade -->
+    <!-- Google Fonts: Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
     <script>
-        // Configuração de cores personalizadas do Tailwind para corresponder à nossa paleta
+        // Configuração de cores personalizadas do Tailwind
         tailwind.config = {
             theme: {
                 extend: {
@@ -32,69 +32,203 @@
         }
     </script>
     <style>
-        /* Estilo para garantir que o corpo ocupe toda a altura da tela */
         html, body {
             height: 100%;
             font-family: 'Inter', sans-serif;
         }
+        /* Para garantir que apenas um ecrã é visível de cada vez */
+        .screen {
+            width: 100%;
+        }
     </style>
 </head>
 <body class="bg-fundo-principal text-texto-principal flex items-center justify-center p-4">
-    <!-- English Gemini -->
-    <!-- Container principal do formulário de login -->
-    <div class="w-full max-w-sm bg-fundo-secundario rounded-xl shadow-lg p-8 space-y-8">
-        
-        <!-- Secção do Logo -->
-        <div class="flex flex-col items-center space-y-4">
-            <!-- Círculo do Logo -->
-            <div class="w-24 h-24 bg-ciano-vibrante rounded-full flex items-center justify-center">
-                <span class="text-white text-xl font-bold">LOGO</span>
-            </div>
-            <!-- Título da Tela -->
-            <h1 class="text-3xl font-bold text-texto-principal tracking-tight">VidaPlus SGHSS</h1>
-            <p class="text-texto-secundario">Acesse a sua conta para continuar</p>
-        </div>
-
-        <!-- Formulário de Login -->
-        <form class="space-y-6" action="#" method="POST">
-            <!-- Campo de CPF ou E-mail -->
-            <div>
-                <label for="login" class="block text-sm font-medium text-texto-secundario">Login</label>
-                <div class="mt-2">
-                    <input id="login" name="login" type="text" required placeholder="Digite seu CPF ou E-mail"
-                           class="block w-full rounded-md border-0 bg-campo p-3 text-texto-principal placeholder:text-texto-secundario focus:ring-2 focus:ring-inset focus:ring-ciano-vibrante sm:text-sm">
+    <!-- ECRÃ DE LOGIN -->
+    <div id="login-screen" class="screen">
+        <div class="w-full max-w-sm mx-auto bg-fundo-secundario rounded-xl shadow-lg p-8 space-y-8">
+            <div class="flex flex-col items-center space-y-4">
+                <div class="w-24 h-24 bg-ciano-vibrante rounded-full flex items-center justify-center">
+                    <span class="text-white text-xl font-bold">LOGO</span>
                 </div>
+                <h1 class="text-3xl font-bold text-texto-principal tracking-tight">VidaPlus SGHSS</h1>
+                <p class="text-texto-secundario">Acesse sua conta para continuar</p>
             </div>
-
-            <!-- Campo de Senha -->
-            <div>
-                <div class="flex items-center justify-between">
-                    <label for="password" class="block text-sm font-medium text-texto-secundario">Senha</label>
-                    <div class="text-sm">
-                        <a href="#" class="font-semibold text-ciano-vibrante hover:text-azul-suave">Esqueceu a senha?</a>
+            <form class="space-y-6">
+                <div>
+                    <label for="login-email" class="block text-sm font-medium text-texto-secundario">Login</label>
+                    <div class="mt-2">
+                        <input id="login-email" name="login" type="text" required placeholder="Digite o seu CPF ou E-mail"
+                               class="block w-full rounded-md border-0 bg-campo p-3 text-texto-principal placeholder:text-texto-secundario focus:ring-2 focus:ring-inset focus:ring-ciano-vibrante sm:text-sm">
                     </div>
                 </div>
-                <div class="mt-2">
-                    <input id="password" name="password" type="password" autocomplete="current-password" required placeholder="••••••••"
-                           class="block w-full rounded-md border-0 bg-campo p-3 text-texto-principal placeholder:text-texto-secundario focus:ring-2 focus:ring-inset focus:ring-ciano-vibrante sm:text-sm">
+                <div>
+                    <div class="flex items-center justify-between">
+                        <label for="login-password" class="block text-sm font-medium text-texto-secundario">Senha</label>
+                        <div class="text-sm">
+                            <a href="#" class="font-semibold text-ciano-vibrante hover:text-azul-suave">Esqueceu a senha?</a>
+                        </div>
+                    </div>
+                    <div class="mt-2">
+                        <input id="login-password" name="password" type="password" required placeholder="••••••••"
+                               class="block w-full rounded-md border-0 bg-campo p-3 text-texto-principal placeholder:text-texto-secundario focus:ring-2 focus:ring-inset focus:ring-ciano-vibrante sm:text-sm">
+                    </div>
                 </div>
-            </div>
-
-            <!-- Botão de Entrar -->
-            <div>
-                <button type="submit"
-                        class="flex w-full justify-center rounded-md bg-ciano-vibrante px-3 py-3 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-azul-suave focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ciano-vibrante transition-colors duration-200">
-                    Entrar
-                </button>
-            </div>
-        </form>
-
-        <!-- Link para Criar Conta -->
-        <p class="mt-10 text-center text-sm text-texto-secundario">
-            Não tem uma conta?
-            <a href="#" class="font-semibold leading-6 text-ciano-vibrante hover:text-azul-suave">Crie uma agora</a>
-        </p>
+                <div>
+                    <button type="submit"
+                            class="flex w-full justify-center rounded-md bg-ciano-vibrante px-3 py-3 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-azul-suave transition-colors duration-200">
+                        Entrar
+                    </button>
+                </div>
+            </form>
+            <p class="mt-10 text-center text-sm text-texto-secundario">
+                Não tem uma conta?
+                <a href="#" id="go-to-register" class="font-semibold leading-6 text-ciano-vibrante hover:text-azul-suave">Crie uma agora</a>
+            </p>
+        </div>
     </div>
 
+    <!-- ECRÃ DE CADASTRO -->
+    <div id="register-screen" class="screen hidden">
+         <div class="w-full max-w-lg mx-auto bg-fundo-secundario rounded-xl shadow-lg p-8 space-y-6">
+            <div id="header-section" class="text-center space-y-2">
+                <p id="progress-indicator" class="font-semibold text-ciano-vibrante">Passo 1 de 3</p>
+                <h1 id="step-title" class="text-3xl font-bold text-texto-principal tracking-tight">Vamos começar. Quem é você?</h1>
+            </div>
+            <form id="registration-form">
+                <!-- Passo 1: Dados Pessoais -->
+                <div id="step-1" class="space-y-4">
+                    <div>
+                        <label for="fullName" class="block text-sm font-medium text-texto-secundario">Nome Completo</label>
+                        <input type="text" id="fullName" required class="mt-1 block w-full rounded-md border-0 bg-campo p-3 text-texto-principal placeholder:text-texto-secundario focus:ring-2 focus:ring-inset focus:ring-ciano-vibrante">
+                    </div>
+                    <div>
+                        <label for="cpf" class="block text-sm font-medium text-texto-secundario">CPF</label>
+                        <input type="text" id="cpf" required placeholder="000.000.000-00" class="mt-1 block w-full rounded-md border-0 bg-campo p-3 text-texto-principal placeholder:text-texto-secundario focus:ring-2 focus:ring-inset focus:ring-ciano-vibrante">
+                    </div>
+                    <div>
+                        <label for="birthDate" class="block text-sm font-medium text-texto-secundario">Data de Nascimento</label>
+                        <input type="date" id="birthDate" required class="mt-1 block w-full rounded-md border-0 bg-campo p-3 text-texto-principal placeholder:text-texto-secundario focus:ring-2 focus:ring-inset focus:ring-ciano-vibrante">
+                    </div>
+                     <div>
+                        <label for="gender" class="block text-sm font-medium text-texto-secundario">Género</label>
+                        <select id="gender" class="mt-1 block w-full rounded-md border-0 bg-campo p-3 text-texto-principal focus:ring-2 focus:ring-inset focus:ring-ciano-vibrante">
+                            <option>Feminino</option>
+                            <option>Masculino</option>
+                            <option>Outro</option>
+                            <option>Prefiro não informar</option>
+                        </select>
+                    </div>
+                </div>
+                <!-- Passo 2: Contacto e Endereço -->
+                <div id="step-2" class="space-y-4 hidden">
+                    <div>
+                        <label for="phone" class="block text-sm font-medium text-texto-secundario">Telemóvel</label>
+                        <input type="tel" id="phone" required placeholder="(00) 00000-0000" class="mt-1 block w-full rounded-md border-0 bg-campo p-3 text-texto-principal placeholder:text-texto-secundario focus:ring-2 focus:ring-inset focus:ring-ciano-vibrante">
+                    </div>
+                    <div>
+                        <label for="email" class="block text-sm font-medium text-texto-secundario">E-mail</label>
+                        <input type="email" id="email" required placeholder="seuemail@exemplo.com" class="mt-1 block w-full rounded-md border-0 bg-campo p-3 text-texto-principal placeholder:text-texto-secundario focus:ring-2 focus:ring-inset focus:ring-ciano-vibrante">
+                    </div>
+                     <div>
+                        <label for="cep" class="block text-sm font-medium text-texto-secundario">CEP</label>
+                        <input type="text" id="cep" placeholder="00000-000" class="mt-1 block w-full rounded-md border-0 bg-campo p-3 text-texto-principal placeholder:text-texto-secundario focus:ring-2 focus:ring-inset focus:ring-ciano-vibrante">
+                    </div>
+                </div>
+                <!-- Passo 3: Segurança -->
+                <div id="step-3" class="space-y-4 hidden">
+                    <div>
+                        <label for="password" class="block text-sm font-medium text-texto-secundario">Crie uma Senha</label>
+                        <input type="password" id="password" required placeholder="Mínimo de 8 caracteres" class="mt-1 block w-full rounded-md border-0 bg-campo p-3 text-texto-principal placeholder:text-texto-secundario focus:ring-2 focus:ring-inset focus:ring-ciano-vibrante">
+                    </div>
+                    <div>
+                        <label for="confirmPassword" class="block text-sm font-medium text-texto-secundario">Confirme a sua Senha</label>
+                        <input type="password" id="confirmPassword" required placeholder="Repita a senha" class="mt-1 block w-full rounded-md border-0 bg-campo p-3 text-texto-principal placeholder:text-texto-secundario focus:ring-2 focus:ring-inset focus:ring-ciano-vibrante">
+                    </div>
+                </div>
+                <!-- Botões de Navegação -->
+                <div class="mt-6 flex justify-between">
+                    <button type="button" id="prev-btn" class="px-6 py-2 text-sm font-semibold text-texto-principal bg-fundo-secundario rounded-md shadow-sm border border-campo hover:bg-campo hidden">Voltar</button>
+                    <button type="button" id="next-btn" class="w-full flex justify-center rounded-md bg-ciano-vibrante px-3 py-3 text-sm font-semibold text-white shadow-sm hover:bg-azul-suave">Avançar</button>
+                </div>
+            </form>
+             <p class="mt-6 text-center text-sm text-texto-secundario">
+                Já tem uma conta?
+                <a href="#" id="go-to-login" class="font-semibold leading-6 text-ciano-vibrante hover:text-azul-suave">Faça login</a>
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // --- LÓGICA DE NAVEGAÇÃO ENTRE ECRÃS ---
+        const loginScreen = document.getElementById('login-screen');
+        const registerScreen = document.getElementById('register-screen');
+        const goToRegisterLink = document.getElementById('go-to-register');
+        const goToLoginLink = document.getElementById('go-to-login');
+
+        goToRegisterLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            loginScreen.classList.add('hidden');
+            registerScreen.classList.remove('hidden');
+        });
+
+        goToLoginLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            registerScreen.classList.add('hidden');
+            loginScreen.classList.remove('hidden');
+        });
+
+        // --- LÓGICA DO FORMULÁRIO DE CADASTRO MULTI-PASSO ---
+        const steps = [document.getElementById('step-1'), document.getElementById('step-2'), document.getElementById('step-3')];
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const progressIndicator = document.getElementById('progress-indicator');
+        const stepTitle = document.getElementById('step-title');
+        
+        const titles = [
+            "Vamos começar. Quem é você?",
+            "Onde podemos te encontrar?",
+            "Para sua segurança, crie uma senha"
+        ];
+
+        let currentStep = 0;
+
+        function updateStep() {
+            steps.forEach((step, index) => {
+                step.classList.toggle('hidden', index !== currentStep);
+            });
+            
+            progressIndicator.textContent = `Passo ${currentStep + 1} de ${steps.length}`;
+            stepTitle.textContent = titles[currentStep];
+
+            prevBtn.classList.toggle('hidden', currentStep === 0);
+            nextBtn.textContent = currentStep === steps.length - 1 ? 'Finalizar Cadastro' : 'Avançar';
+            
+            if (currentStep > 0) {
+                 nextBtn.classList.remove('w-full');
+            } else {
+                 nextBtn.classList.add('w-full');
+            }
+        }
+
+        nextBtn.addEventListener('click', () => {
+            if (currentStep < steps.length - 1) {
+                currentStep++;
+                updateStep();
+            } else {
+                // Lógica para submeter o formulário
+                document.getElementById('registration-form').submit();
+            }
+        });
+
+        prevBtn.addEventListener('click', () => {
+            if (currentStep > 0) {
+                currentStep--;
+                updateStep();
+            }
+        });
+
+        updateStep();
+    </script>
 </body>
 </html>
+
