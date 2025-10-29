@@ -25,6 +25,7 @@
                         'texto-secundario': '#94A3B8',
                         'ciano-vibrante': '#06B6D4',
                         'azul-suave': '#22D3EE',
+                        'vermelho-erro': '#F43F5E', // Cor para o botão de desligar
                     },
                     fontFamily: {
                         'sans': ['Inter', 'sans-serif'],
@@ -72,6 +73,46 @@
             -ms-overflow-style: none;  /* IE and Edge */
             scrollbar-width: none;  /* Firefox */
         }
+         /* Estilo para horários selecionados */
+        .time-slot.selected {
+            background-color: #06B6D4; /* ciano-vibrante */
+            color: white;
+            border-color: #06B6D4;
+        }
+        /* Estilos para abas ativas/inativas */
+        .tab-button.active {
+            border-bottom-color: #06B6D4; /* ciano-vibrante */
+            color: #06B6D4;
+            font-weight: 600;
+        }
+        .tab-button {
+            border-bottom-width: 2px;
+            border-bottom-color: transparent;
+            color: #94A3B8; /* texto-secundario */
+        }
+        /* Placeholder de vídeo */
+        .video-placeholder {
+            background-color: #0F172A; /* Um tom mais escuro que fundo-principal */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 0.5rem; /* rounded-lg */
+        }
+        /* Indicador de notificação/mensagem não lida */
+        .notification-unread::before, .message-unread > div > p:first-child::before {
+            content: '';
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: #06B6D4; /* ciano-vibrante */
+            margin-right: 8px;
+            vertical-align: middle;
+        }
+        .message-unread > div > p:first-child {
+            font-weight: 600; /* Negrito para remetente não lido */
+        }
+
     </style>
 </head>
 <body class="bg-fundo-principal text-texto-principal p-0 sm:p-4">
@@ -207,7 +248,7 @@
                     </div>
                 </div>
                 <div class="flex items-center space-x-3">
-                    <button class="relative p-2">
+                    <button id="go-to-notifications" class="relative p-2">
                         <i data-lucide="bell" class="text-texto-secundario w-5 h-5"></i>
                         <span class="absolute top-1 right-1 flex h-2 w-2">
                             <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-ciano-vibrante opacity-75"></span>
@@ -221,7 +262,7 @@
             <div class="bg-fundo-secundario p-4 rounded-xl space-y-3 shadow-lg">
                 <div class="flex justify-between items-center">
                     <h2 class="font-semibold text-texto-principal text-base">Próxima Consulta</h2>
-                    <a href="#" class="text-xs text-ciano-vibrante font-semibold hover:underline">Ver todas</a>
+                    <a href="#" id="view-all-appointments" class="text-xs text-ciano-vibrante font-semibold hover:underline">Ver todas</a>
                 </div>
                 <div class="bg-campo p-3 rounded-lg flex items-center space-x-3">
                     <div class="bg-ciano-vibrante/20 p-2 rounded-lg">
@@ -244,7 +285,7 @@
                 </div>
                 <div class="flex gap-3">
                      <button class="flex-1 text-center rounded-md bg-campo px-3 py-2 text-xs font-semibold text-texto-principal shadow-sm hover:bg-gray-600">Remarcar</button>
-                     <button class="flex-1 text-center rounded-md bg-ciano-vibrante px-3 py-2 text-xs font-semibold text-white shadow-sm hover:bg-azul-suave">Cancelar</button>
+                     <button class="flex-1 text-center rounded-md bg-red-500/80 px-3 py-2 text-xs font-semibold text-white shadow-sm hover:bg-red-600">Cancelar</button>
                 </div>
             </div>
 
@@ -258,7 +299,7 @@
                          </div>
                          <p class="font-semibold text-texto-principal text-sm">Agendar Consulta</p>
                      </button>
-                     <button class="bg-fundo-secundario p-4 rounded-xl flex flex-col items-center justify-center text-center space-y-2 hover:bg-campo transition-colors">
+                     <button id="go-to-telemedicine" class="bg-fundo-secundario p-4 rounded-xl flex flex-col items-center justify-center text-center space-y-2 hover:bg-campo transition-colors">
                          <div class="bg-ciano-vibrante/20 p-3 rounded-full">
                             <i data-lucide="video" class="text-ciano-vibrante w-5 h-5"></i>
                          </div>
@@ -274,7 +315,7 @@
         <div class="p-4 space-y-4">
             <!-- Cabeçalho com Botão Voltar -->
             <header class="flex items-center space-x-4 mb-4">
-                 <button id="back-to-dashboard" class="p-2">
+                 <button id="back-specialty-to-dashboard" class="p-2">
                      <i data-lucide="arrow-left" class="text-texto-principal w-6 h-6"></i>
                  </button>
                  <h1 class="text-xl font-bold text-texto-principal">Agendar Consulta</h1>
@@ -291,83 +332,551 @@
 
             <!-- Grelha de Especialidades -->
             <div id="specialty-grid" class="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                 <!-- Card de Especialidade (Exemplo) -->
+                 <!-- Cards de Especialidade -->
                  <button class="specialty-card bg-fundo-secundario p-4 rounded-xl flex flex-col items-center justify-center text-center space-y-2 hover:bg-campo transition-colors" data-specialty="Cardiologia">
-                     <div class="bg-ciano-vibrante/20 p-3 rounded-full">
-                         <i data-lucide="heart-pulse" class="text-ciano-vibrante w-6 h-6"></i>
-                     </div>
+                     <div class="bg-ciano-vibrante/20 p-3 rounded-full"> <i data-lucide="heart-pulse" class="text-ciano-vibrante w-6 h-6"></i> </div>
                      <p class="font-semibold text-texto-principal text-sm">Cardiologia</p>
                  </button>
                  <button class="specialty-card bg-fundo-secundario p-4 rounded-xl flex flex-col items-center justify-center text-center space-y-2 hover:bg-campo transition-colors" data-specialty="Dermatologia">
-                    <div class="bg-ciano-vibrante/20 p-3 rounded-full">
-                        <i data-lucide="user" class="text-ciano-vibrante w-6 h-6"></i>
-                    </div>
+                    <div class="bg-ciano-vibrante/20 p-3 rounded-full"> <i data-lucide="user" class="text-ciano-vibrante w-6 h-6"></i> </div>
                     <p class="font-semibold text-texto-principal text-sm">Dermatologia</p>
                  </button>
                  <button class="specialty-card bg-fundo-secundario p-4 rounded-xl flex flex-col items-center justify-center text-center space-y-2 hover:bg-campo transition-colors" data-specialty="Ortopedia">
-                    <div class="bg-ciano-vibrante/20 p-3 rounded-full">
-                        <i data-lucide="bone" class="text-ciano-vibrante w-6 h-6"></i>
-                    </div>
+                    <div class="bg-ciano-vibrante/20 p-3 rounded-full"> <i data-lucide="bone" class="text-ciano-vibrante w-6 h-6"></i> </div>
                     <p class="font-semibold text-texto-principal text-sm">Ortopedia</p>
                  </button>
                  <button class="specialty-card bg-fundo-secundario p-4 rounded-xl flex flex-col items-center justify-center text-center space-y-2 hover:bg-campo transition-colors" data-specialty="Pediatria">
-                    <div class="bg-ciano-vibrante/20 p-3 rounded-full">
-                        <i data-lucide="baby" class="text-ciano-vibrante w-6 h-6"></i>
-                    </div>
+                    <div class="bg-ciano-vibrante/20 p-3 rounded-full"> <i data-lucide="baby" class="text-ciano-vibrante w-6 h-6"></i> </div>
                     <p class="font-semibold text-texto-principal text-sm">Pediatria</p>
                  </button>
                  <button class="specialty-card bg-fundo-secundario p-4 rounded-xl flex flex-col items-center justify-center text-center space-y-2 hover:bg-campo transition-colors" data-specialty="Fisioterapia">
-                    <div class="bg-ciano-vibrante/20 p-3 rounded-full">
-                        <i data-lucide="activity" class="text-ciano-vibrante w-6 h-6"></i>
-                    </div>
+                    <div class="bg-ciano-vibrante/20 p-3 rounded-full"> <i data-lucide="activity" class="text-ciano-vibrante w-6 h-6"></i> </div>
                     <p class="font-semibold text-texto-principal text-sm">Fisioterapia</p>
                  </button>
                  <button class="specialty-card bg-fundo-secundario p-4 rounded-xl flex flex-col items-center justify-center text-center space-y-2 hover:bg-campo transition-colors" data-specialty="Oftalmologia">
-                    <div class="bg-ciano-vibrante/20 p-3 rounded-full">
-                        <i data-lucide="eye" class="text-ciano-vibrante w-6 h-6"></i>
-                    </div>
+                    <div class="bg-ciano-vibrante/20 p-3 rounded-full"> <i data-lucide="eye" class="text-ciano-vibrante w-6 h-6"></i> </div>
                     <p class="font-semibold text-texto-principal text-sm">Oftalmologia</p>
                  </button>
                  <button class="specialty-card bg-fundo-secundario p-4 rounded-xl flex flex-col items-center justify-center text-center space-y-2 hover:bg-campo transition-colors" data-specialty="Clínica Geral">
-                    <div class="bg-ciano-vibrante/20 p-3 rounded-full">
-                        <i data-lucide="stethoscope" class="text-ciano-vibrante w-6 h-6"></i>
-                    </div>
+                    <div class="bg-ciano-vibrante/20 p-3 rounded-full"> <i data-lucide="stethoscope" class="text-ciano-vibrante w-6 h-6"></i> </div>
                     <p class="font-semibold text-texto-principal text-sm">Clínica Geral</p>
                  </button>
-                 <button class="specialty-card bg-fundo-secundario p-4 rounded-xl flex flex-col items-center justify-center text-center space-y-2 hover:bg-campo transition-colors" data-specialty="Nutrição"> <!-- Alterado -->
-                    <div class="bg-ciano-vibrante/20 p-3 rounded-full">
-                        <i data-lucide="utensils-crossed" class="text-ciano-vibrante w-6 h-6"></i> <!-- Ícone alterado -->
-                    </div>
-                    <p class="font-semibold text-texto-principal text-sm">Nutrição</p> <!-- Texto alterado -->
+                 <button class="specialty-card bg-fundo-secundario p-4 rounded-xl flex flex-col items-center justify-center text-center space-y-2 hover:bg-campo transition-colors" data-specialty="Nutrição">
+                    <div class="bg-ciano-vibrante/20 p-3 rounded-full"> <i data-lucide="utensils-crossed" class="text-ciano-vibrante w-6 h-6"></i> </div>
+                    <p class="font-semibold text-texto-principal text-sm">Nutrição</p>
                  </button>
-                 <button class="specialty-card bg-fundo-secundario p-4 rounded-xl flex flex-col items-center justify-center text-center space-y-2 hover:bg-campo transition-colors" data-specialty="Psicologia"> <!-- Alterado -->
-                    <div class="bg-ciano-vibrante/20 p-3 rounded-full">
-                        <i data-lucide="brain" class="text-ciano-vibrante w-6 h-6"></i> <!-- Ícone alterado -->
-                    </div>
-                    <p class="font-semibold text-texto-principal text-sm">Psicologia</p> <!-- Texto alterado -->
+                 <button class="specialty-card bg-fundo-secundario p-4 rounded-xl flex flex-col items-center justify-center text-center space-y-2 hover:bg-campo transition-colors" data-specialty="Psicologia">
+                    <div class="bg-ciano-vibrante/20 p-3 rounded-full"> <i data-lucide="brain" class="text-ciano-vibrante w-6 h-6"></i> </div>
+                    <p class="font-semibold text-texto-principal text-sm">Psicologia</p>
                  </button>
-                  <!-- Adicionar mais especialidades aqui -->
             </div>
         </div>
     </div>
 
+    <!-- ECRÃ 4.2: ESCOLHA DO PROFISSIONAL -->
+    <div id="professional-screen" class="screen screen-scrollable hidden bg-fundo-principal h-full w-full">
+        <div class="p-4 space-y-4">
+             <header class="flex items-center space-x-4 mb-4">
+                 <button id="back-professional-to-specialty" class="p-2">
+                     <i data-lucide="arrow-left" class="text-texto-principal w-6 h-6"></i>
+                 </button>
+                 <h1 class="text-xl font-bold text-texto-principal">Escolha o Profissional</h1>
+            </header>
+             <h2 class="text-lg font-semibold text-texto-principal" id="professional-specialty-title">Cardiologia</h2>
 
-    <!-- Menu de Navegação Inferior (Partilhado por Dashboard e Fluxo de Agendamento) -->
+            <!-- Lista de Profissionais -->
+            <div class="space-y-3" id="professional-list">
+                 <!-- Card Profissional (Exemplo) -->
+                 <button class="professional-card w-full bg-fundo-secundario p-4 rounded-xl flex items-center space-x-4 hover:bg-campo transition-colors">
+                     <img src="https://placehold.co/48x48/7DD3FC/FFFFFF?text=CA" alt="Foto Dr. Carlos" class="w-12 h-12 rounded-full">
+                     <div class="flex-1 text-left">
+                         <p class="font-bold text-texto-principal">Dr. Carlos Andrade</p>
+                         <p class="text-sm text-texto-secundario">Próximo horário: Hoje, 16:00</p>
+                     </div>
+                     <i data-lucide="chevron-right" class="text-texto-secundario"></i>
+                 </button>
+                 <button class="professional-card w-full bg-fundo-secundario p-4 rounded-xl flex items-center space-x-4 hover:bg-campo transition-colors">
+                     <img src="https://placehold.co/48x48/FBCFE8/FFFFFF?text=AS" alt="Foto Dra. Ana" class="w-12 h-12 rounded-full">
+                     <div class="flex-1 text-left">
+                         <p class="font-bold text-texto-principal">Dra. Ana Sousa</p>
+                         <p class="text-sm text-texto-secundario">Próximo horário: Amanhã, 09:30</p>
+                     </div>
+                     <i data-lucide="chevron-right" class="text-texto-secundario"></i>
+                 </button>
+                 <!-- Adicionar mais profissionais dinamicamente -->
+            </div>
+        </div>
+    </div>
+
+    <!-- ECRÃ 4.3: SELEÇÃO DE DATA E HORA -->
+    <div id="datetime-screen" class="screen screen-scrollable hidden bg-fundo-principal h-full w-full">
+        <div class="p-4 space-y-4">
+            <header class="flex items-center space-x-4 mb-4">
+                 <button id="back-datetime-to-professional" class="p-2">
+                     <i data-lucide="arrow-left" class="text-texto-principal w-6 h-6"></i>
+                 </button>
+                 <h1 class="text-xl font-bold text-texto-principal">Escolha Data e Hora</h1>
+            </header>
+            <div class="flex items-center space-x-3 bg-fundo-secundario p-3 rounded-lg">
+                <img src="https://placehold.co/40x40/7DD3FC/FFFFFF?text=CA" alt="Foto Dr. Carlos" class="w-10 h-10 rounded-full" id="datetime-professional-img">
+                <div>
+                     <p class="font-semibold text-texto-principal text-sm" id="datetime-professional-name">Dr. Carlos Andrade</p>
+                     <p class="text-xs text-texto-secundario" id="datetime-professional-specialty">Cardiologia</p>
+                 </div>
+            </div>
+
+            <!-- Placeholder para Calendário -->
+            <div class="bg-fundo-secundario p-4 rounded-xl">
+                <p class="text-center text-texto-secundario">[Aqui entrará um componente de calendário interativo]</p>
+                <div class="h-40 flex items-center justify-center"> <!-- Espaço reservado -->
+                     <i data-lucide="calendar-days" class="w-16 h-16 text-campo"></i>
+                </div>
+            </div>
+
+            <!-- Grelha de Horários -->
+            <div>
+                 <h2 class="font-semibold text-texto-principal mb-3 text-base">Horários Disponíveis</h2>
+                 <div class="grid grid-cols-3 gap-3" id="time-slots-grid">
+                     <!-- Horários (Exemplo) -->
+                     <button class="time-slot bg-campo p-3 rounded-lg text-center text-sm font-semibold text-texto-principal border-2 border-transparent hover:border-ciano-vibrante">09:00</button>
+                     <button class="time-slot bg-campo p-3 rounded-lg text-center text-sm font-semibold text-texto-principal border-2 border-transparent hover:border-ciano-vibrante">09:30</button>
+                     <button class="time-slot bg-fundo-secundario p-3 rounded-lg text-center text-sm font-semibold text-texto-secundario cursor-not-allowed" disabled>10:00</button> <!-- Indisponível -->
+                     <button class="time-slot bg-campo p-3 rounded-lg text-center text-sm font-semibold text-texto-principal border-2 border-transparent hover:border-ciano-vibrante">10:30</button>
+                     <button class="time-slot bg-campo p-3 rounded-lg text-center text-sm font-semibold text-texto-principal border-2 border-transparent hover:border-ciano-vibrante">11:00</button>
+                     <button class="time-slot bg-campo p-3 rounded-lg text-center text-sm font-semibold text-texto-principal border-2 border-transparent hover:border-ciano-vibrante">11:30</button>
+                 </div>
+            </div>
+
+            <button id="go-to-confirmation" class="w-full flex justify-center rounded-md bg-ciano-vibrante px-3 py-3 text-sm font-semibold text-white shadow-sm hover:bg-azul-suave mt-6 hidden">Avançar para Confirmação</button>
+        </div>
+    </div>
+
+    <!-- ECRÃ 4.4: CONFIRMAÇÃO DO AGENDAMENTO -->
+    <div id="confirmation-screen" class="screen screen-scrollable hidden bg-fundo-principal h-full w-full">
+        <div class="p-4 space-y-4">
+             <header class="flex items-center space-x-4 mb-4">
+                 <button id="back-confirmation-to-datetime" class="p-2">
+                     <i data-lucide="arrow-left" class="text-texto-principal w-6 h-6"></i>
+                 </button>
+                 <h1 class="text-xl font-bold text-texto-principal">Confirmar Agendamento</h1>
+            </header>
+
+            <div class="bg-fundo-secundario p-4 rounded-xl space-y-3">
+                 <h2 class="text-lg font-semibold text-texto-principal mb-2">Revise os detalhes da sua consulta:</h2>
+                 <div class="bg-campo p-3 rounded-lg flex items-center space-x-3">
+                    <img src="https://placehold.co/40x40/7DD3FC/FFFFFF?text=CA" alt="Foto Dr. Carlos" class="w-10 h-10 rounded-full" id="confirm-professional-img">
+                    <div>
+                         <p class="font-semibold text-texto-principal text-sm" id="confirm-professional-name">Dr. Carlos Andrade</p>
+                         <p class="text-xs text-texto-secundario" id="confirm-specialty">Cardiologia</p>
+                    </div>
+                 </div>
+                 <div class="grid grid-cols-2 gap-3 text-sm">
+                    <div class="bg-campo p-3 rounded-lg">
+                        <p class="text-xs text-texto-secundario mb-1">Data</p>
+                        <p class="font-semibold text-texto-principal" id="confirm-date">22 de Outubro, 2025</p>
+                    </div>
+                    <div class="bg-campo p-3 rounded-lg">
+                        <p class="text-xs text-texto-secundario mb-1">Hora</p>
+                        <p class="font-semibold text-texto-principal" id="confirm-time">14:30</p>
+                    </div>
+                 </div>
+                  <div class="bg-campo p-3 rounded-lg">
+                        <p class="text-xs text-texto-secundario mb-1">Localização</p>
+                        <p class="font-semibold text-texto-principal" id="confirm-location">Clínica Vida Mais - Unidade Centro</p>
+                        <p class="text-xs text-texto-secundario">Rua das Flores, 123 - Sala 4</p>
+                    </div>
+            </div>
+
+             <button id="confirm-appointment-btn" class="w-full flex justify-center rounded-md bg-ciano-vibrante px-3 py-3 text-sm font-semibold text-white shadow-sm hover:bg-azul-suave mt-6">Confirmar Agendamento</button>
+        </div>
+    </div>
+
+    <!-- ECRÃ 4.5: SUCESSO DO AGENDAMENTO -->
+    <div id="success-screen" class="screen hidden bg-fundo-principal h-full w-full">
+         <div class="p-4 flex flex-col items-center justify-center text-center space-y-6 flex-grow">
+             <div class="bg-ciano-vibrante/20 p-6 rounded-full">
+                 <i data-lucide="check-circle" class="text-ciano-vibrante w-16 h-16"></i>
+             </div>
+             <h1 class="text-2xl font-bold text-texto-principal">Agendamento Confirmado!</h1>
+             <p class="text-texto-secundario">A sua consulta com <strong id="success-professional-name" class="text-texto-principal">Dr. Carlos Andrade</strong> para <strong id="success-date-time" class="text-texto-principal">22 de out, 2025 às 14:30</strong> foi agendada com sucesso.</p>
+             <div class="w-full space-y-3 pt-4">
+                <button class="w-full flex items-center justify-center gap-2 rounded-md bg-campo px-3 py-3 text-sm font-semibold text-texto-principal shadow-sm hover:bg-gray-600">
+                    <i data-lucide="calendar-plus" class="w-4 h-4"></i>
+                    Adicionar ao Calendário
+                </button>
+                 <button id="back-to-home-btn" class="w-full flex justify-center rounded-md bg-ciano-vibrante px-3 py-3 text-sm font-semibold text-white shadow-sm hover:bg-azul-suave">Voltar ao Início</button>
+             </div>
+        </div>
+    </div>
+
+    <!-- ECRÃ 5: MINHAS CONSULTAS -->
+    <div id="my-appointments-screen" class="screen screen-scrollable hidden bg-fundo-principal h-full w-full">
+         <div class="p-4 space-y-4">
+             <header class="flex items-center space-x-4 mb-4">
+                 <button id="back-myappointments-to-dashboard" class="p-2"> <!-- Botão Voltar -->
+                     <i data-lucide="arrow-left" class="text-texto-principal w-6 h-6"></i>
+                 </button>
+                 <h1 class="text-xl font-bold text-texto-principal">Minhas Consultas</h1>
+            </header>
+
+            <!-- Abas (Tabs) -->
+            <div class="flex border-b border-campo mb-4">
+                <button id="tab-upcoming" class="tab-button flex-1 py-3 text-sm active">Próximas</button>
+                <button id="tab-past" class="tab-button flex-1 py-3 text-sm">Passadas</button>
+            </div>
+
+            <!-- Lista de Consultas Próximas -->
+            <div id="upcoming-list" class="space-y-3">
+                 <!-- Card Consulta Próxima (Exemplo 1) -->
+                 <div class="bg-fundo-secundario p-4 rounded-xl space-y-3 shadow-lg">
+                    <div class="flex items-start space-x-3">
+                        <img src="https://placehold.co/40x40/7DD3FC/FFFFFF?text=CA" alt="Foto Dr. Carlos" class="w-10 h-10 rounded-full">
+                        <div class="flex-1">
+                            <p class="font-semibold text-texto-principal text-sm">Dr. Carlos Andrade</p>
+                            <p class="text-xs text-texto-secundario">Cardiologia</p>
+                            <div class="flex items-center space-x-2 mt-1 text-xs text-texto-secundario">
+                                <i data-lucide="calendar" class="w-3 h-3"></i> <span>22 de out, 2025</span>
+                                <i data-lucide="clock" class="w-3 h-3 ml-2"></i> <span>14:30</span>
+                            </div>
+                        </div>
+                    </div>
+                     <div class="border-t border-campo pt-3 flex gap-3">
+                         <button class="flex-1 text-center rounded-md bg-campo px-3 py-2 text-xs font-semibold text-texto-principal shadow-sm hover:bg-gray-600">Remarcar</button>
+                         <button class="flex-1 text-center rounded-md bg-red-500/80 px-3 py-2 text-xs font-semibold text-white shadow-sm hover:bg-red-600">Cancelar</button>
+                     </div>
+                 </div>
+                 <!-- Card Consulta Próxima (Exemplo 2) -->
+                  <div class="bg-fundo-secundario p-4 rounded-xl space-y-3 shadow-lg">
+                    <div class="flex items-start space-x-3">
+                        <img src="https://placehold.co/40x40/A5B4FC/FFFFFF?text=MP" alt="Foto Dra. Mariana" class="w-10 h-10 rounded-full">
+                        <div class="flex-1">
+                            <p class="font-semibold text-texto-principal text-sm">Dra. Mariana Pinto</p>
+                            <p class="text-xs text-texto-secundario">Dermatologia</p>
+                            <div class="flex items-center space-x-2 mt-1 text-xs text-texto-secundario">
+                                <i data-lucide="calendar" class="w-3 h-3"></i> <span>29 de out, 2025</span>
+                                <i data-lucide="clock" class="w-3 h-3 ml-2"></i> <span>10:00</span>
+                            </div>
+                        </div>
+                    </div>
+                     <div class="border-t border-campo pt-3 flex gap-3">
+                         <button class="flex-1 text-center rounded-md bg-campo px-3 py-2 text-xs font-semibold text-texto-principal shadow-sm hover:bg-gray-600">Remarcar</button>
+                         <button class="flex-1 text-center rounded-md bg-red-500/80 px-3 py-2 text-xs font-semibold text-white shadow-sm hover:bg-red-600">Cancelar</button>
+                     </div>
+                 </div>
+            </div>
+
+            <!-- Lista de Consultas Passadas -->
+            <div id="past-list" class="space-y-3 hidden">
+                <!-- Card Consulta Passada (Exemplo 1) -->
+                 <div class="bg-fundo-secundario p-4 rounded-xl space-y-2 shadow-lg opacity-70"> <!-- Opacidade para diferenciar -->
+                    <div class="flex items-start space-x-3">
+                        <img src="https://placehold.co/40x40/FBCFE8/FFFFFF?text=AS" alt="Foto Dra. Ana" class="w-10 h-10 rounded-full">
+                        <div class="flex-1">
+                            <p class="font-semibold text-texto-principal text-sm">Dra. Ana Sousa</p>
+                            <p class="text-xs text-texto-secundario">Cardiologia</p>
+                            <div class="flex items-center space-x-2 mt-1 text-xs text-texto-secundario">
+                                <i data-lucide="calendar" class="w-3 h-3"></i> <span>15 de set, 2025</span>
+                                <i data-lucide="clock" class="w-3 h-3 ml-2"></i> <span>09:30</span>
+                            </div>
+                        </div>
+                    </div>
+                     <div class="border-t border-campo pt-2 flex justify-end">
+                         <a href="#" class="text-xs text-ciano-vibrante font-semibold hover:underline">Ver detalhes</a>
+                     </div>
+                 </div>
+                 <!-- Card Consulta Passada (Exemplo 2) -->
+                 <div class="bg-fundo-secundario p-4 rounded-xl space-y-2 shadow-lg opacity-70">
+                    <div class="flex items-start space-x-3">
+                        <img src="https://placehold.co/40x40/BFDBFE/FFFFFF?text=RG" alt="Foto Dr. Rui" class="w-10 h-10 rounded-full">
+                        <div class="flex-1">
+                            <p class="font-semibold text-texto-principal text-sm">Dr. Rui Gomes</p>
+                            <p class="text-xs text-texto-secundario">Ortopedia</p>
+                            <div class="flex items-center space-x-2 mt-1 text-xs text-texto-secundario">
+                                <i data-lucide="calendar" class="w-3 h-3"></i> <span>01 de ago, 2025</span>
+                                <i data-lucide="clock" class="w-3 h-3 ml-2"></i> <span>11:00</span>
+                            </div>
+                        </div>
+                    </div>
+                     <div class="border-t border-campo pt-2 flex justify-end">
+                         <a href="#" class="text-xs text-ciano-vibrante font-semibold hover:underline">Ver detalhes</a>
+                     </div>
+                 </div>
+            </div>
+
+         </div>
+    </div>
+
+    <!-- ECRÃ 6: HISTÓRICO CLÍNICO / PRONTUÁRIO -->
+    <div id="my-history-screen" class="screen screen-scrollable hidden bg-fundo-principal h-full w-full">
+         <div class="p-4 space-y-4">
+             <header class="flex items-center space-x-4 mb-4">
+                 <button id="back-myhistory-to-dashboard" class="p-2"> <!-- Botão Voltar -->
+                     <i data-lucide="arrow-left" class="text-texto-principal w-6 h-6"></i>
+                 </button>
+                 <h1 class="text-xl font-bold text-texto-principal">Histórico Clínico</h1>
+            </header>
+
+            <!-- Secções do Histórico -->
+            <div class="space-y-6">
+                <!-- Secção: Resumo (Opcional) -->
+                <div class="bg-fundo-secundario p-4 rounded-xl shadow-lg">
+                     <h2 class="font-semibold text-texto-principal text-base mb-3">Resumo Rápido</h2>
+                     <div class="space-y-2 text-sm">
+                         <p><strong class="text-texto-secundario">Tipo Sanguíneo:</strong> O+</p>
+                         <p><strong class="text-texto-secundario">Alergias:</strong> Penicilina</p>
+                         <p><strong class="text-texto-secundario">Condições Crónicas:</strong> Hipertensão</p>
+                     </div>
+                </div>
+
+                <!-- Secção: Últimas Consultas -->
+                <div>
+                    <h2 class="font-semibold text-texto-principal mb-3 text-base">Últimas Consultas</h2>
+                    <div class="space-y-3">
+                        <!-- Card Consulta Passada (Reutilizar estilo de Tela 5) -->
+                         <div class="bg-fundo-secundario p-4 rounded-xl space-y-2 shadow-lg opacity-90">
+                            <div class="flex items-start space-x-3">
+                                <img src="https://placehold.co/40x40/FBCFE8/FFFFFF?text=AS" alt="Foto Dra. Ana" class="w-10 h-10 rounded-full">
+                                <div class="flex-1">
+                                    <p class="font-semibold text-texto-principal text-sm">Dra. Ana Sousa</p>
+                                    <p class="text-xs text-texto-secundario">Cardiologia</p>
+                                    <div class="flex items-center space-x-2 mt-1 text-xs text-texto-secundario">
+                                        <i data-lucide="calendar" class="w-3 h-3"></i> <span>15 de set, 2025</span>
+                                    </div>
+                                </div>
+                            </div>
+                             <div class="border-t border-campo pt-2 flex justify-end">
+                                 <a href="#" class="text-xs text-ciano-vibrante font-semibold hover:underline">Ver detalhes</a>
+                             </div>
+                         </div>
+                         <!-- Adicionar mais consultas -->
+                    </div>
+                </div>
+
+                <!-- Secção: Resultados de Exames -->
+                 <div>
+                    <h2 class="font-semibold text-texto-principal mb-3 text-base">Resultados de Exames</h2>
+                    <div class="space-y-3">
+                        <!-- Card Exame -->
+                         <div class="bg-fundo-secundario p-4 rounded-xl flex items-center justify-between shadow-lg hover:bg-campo cursor-pointer transition-colors">
+                            <div class="flex items-center space-x-3">
+                                <div class="bg-ciano-vibrante/20 p-2 rounded-lg">
+                                     <i data-lucide="flask-conical" class="text-ciano-vibrante w-5 h-5"></i>
+                                </div>
+                                <div>
+                                    <p class="font-semibold text-texto-principal text-sm">Hemograma Completo</p>
+                                    <p class="text-xs text-texto-secundario">Realizado em 10 de set, 2025</p>
+                                </div>
+                            </div>
+                             <i data-lucide="chevron-right" class="text-texto-secundario"></i>
+                         </div>
+                         <div class="bg-fundo-secundario p-4 rounded-xl flex items-center justify-between shadow-lg hover:bg-campo cursor-pointer transition-colors">
+                            <div class="flex items-center space-x-3">
+                                <div class="bg-ciano-vibrante/20 p-2 rounded-lg">
+                                     <i data-lucide="monitor-dot" class="text-ciano-vibrante w-5 h-5"></i>
+                                </div>
+                                <div>
+                                    <p class="font-semibold text-texto-principal text-sm">Raio-X Tórax</p>
+                                    <p class="text-xs text-texto-secundario">Realizado em 05 de ago, 2025</p>
+                                </div>
+                            </div>
+                             <i data-lucide="chevron-right" class="text-texto-secundario"></i>
+                         </div>
+                         <!-- Adicionar mais exames -->
+                    </div>
+                 </div>
+
+                 <!-- Secção: Receitas -->
+                 <div>
+                    <h2 class="font-semibold text-texto-principal mb-3 text-base">Receitas Médicas</h2>
+                     <div class="space-y-3">
+                         <!-- Card Receita -->
+                          <div class="bg-fundo-secundario p-4 rounded-xl flex items-center justify-between shadow-lg hover:bg-campo cursor-pointer transition-colors">
+                            <div class="flex items-center space-x-3">
+                                <div class="bg-ciano-vibrante/20 p-2 rounded-lg">
+                                     <i data-lucide="pilcrow" class="text-ciano-vibrante w-5 h-5"></i> <!-- Ícone de Pilula -->
+                                </div>
+                                <div>
+                                    <p class="font-semibold text-texto-principal text-sm">Losartana 50mg</p>
+                                    <p class="text-xs text-texto-secundario">Emitida por Dra. Ana Sousa em 15 de set, 2025</p>
+                                </div>
+                            </div>
+                             <i data-lucide="chevron-right" class="text-texto-secundario"></i>
+                         </div>
+                         <!-- Adicionar mais receitas -->
+                     </div>
+                 </div>
+
+            </div>
+         </div>
+    </div>
+
+    <!-- ECRÃ 7: TELEMEDICINA -->
+    <div id="telemedicine-screen" class="screen hidden bg-fundo-principal h-full w-full">
+         <div class="p-4 space-y-4 flex flex-col h-full"> <!-- Flex column para ocupar altura -->
+             <!-- Vista Sala de Espera -->
+             <div id="waiting-room-view" class="flex flex-col flex-grow items-center justify-center text-center space-y-6">
+                 <header class="absolute top-4 left-4">
+                     <button id="back-telemedicine-to-dashboard" class="p-2"> <!-- Botão Voltar -->
+                         <i data-lucide="arrow-left" class="text-texto-principal w-6 h-6"></i>
+                     </button>
+                 </header>
+                 <div class="bg-ciano-vibrante/20 p-6 rounded-full">
+                     <i data-lucide="video" class="text-ciano-vibrante w-12 h-12"></i>
+                 </div>
+                 <h1 class="text-2xl font-bold text-texto-principal">Teleconsulta Agendada</h1>
+                 <div class="bg-fundo-secundario p-4 rounded-lg text-sm w-full max-w-xs">
+                    <p class="font-semibold text-texto-principal">Dr. Carlos Andrade</p>
+                    <p class="text-xs text-texto-secundario">Cardiologia</p>
+                    <div class="flex items-center justify-center space-x-2 mt-2 text-xs text-texto-secundario">
+                        <i data-lucide="calendar" class="w-3 h-3"></i> <span>Hoje</span>
+                        <i data-lucide="clock" class="w-3 h-3 ml-2"></i> <span>16:00</span>
+                    </div>
+                 </div>
+                 <p class="text-texto-secundario animate-pulse">A aguardar o médico...</p> <!-- Status -->
+                 <button id="join-call-btn" class="w-full max-w-xs flex justify-center rounded-md bg-ciano-vibrante px-3 py-3 text-sm font-semibold text-white shadow-sm hover:bg-azul-suave">Entrar na Consulta</button>
+             </div>
+
+             <!-- Vista da Chamada Ativa -->
+              <div id="call-view" class="hidden flex-col h-full w-full">
+                <!-- Vídeo Principal (Médico) -->
+                <div class="video-placeholder flex-grow w-full mb-2 relative">
+                    <i data-lucide="user-square-2" class="w-24 h-24 text-campo"></i>
+                    <!-- Preview do Paciente (canto) -->
+                    <div class="absolute bottom-3 right-3 w-24 h-32 video-placeholder border-2 border-fundo-secundario">
+                         <i data-lucide="user" class="w-8 h-8 text-campo"></i>
+                    </div>
+                </div>
+                <!-- Controlos da Chamada -->
+                <div class="flex justify-center items-center gap-6 p-4 bg-fundo-secundario rounded-lg">
+                    <button class="p-3 bg-campo rounded-full text-texto-principal hover:bg-gray-600">
+                        <i data-lucide="mic"></i>
+                    </button>
+                    <button class="p-3 bg-campo rounded-full text-texto-principal hover:bg-gray-600">
+                        <i data-lucide="video"></i>
+                    </button>
+                    <button id="end-call-btn" class="p-4 bg-vermelho-erro rounded-full text-white hover:bg-red-700"> <!-- Botão Desligar -->
+                        <i data-lucide="phone-off"></i>
+                    </button>
+                </div>
+            </div>
+         </div>
+    </div>
+
+    <!-- ECRÃ 8: NOTIFICAÇÕES -->
+    <div id="notifications-screen" class="screen screen-scrollable hidden bg-fundo-principal h-full w-full">
+         <div class="p-4 space-y-4">
+             <header class="flex items-center space-x-4 mb-4">
+                 <button id="back-notifications-to-dashboard" class="p-2"> <!-- Botão Voltar -->
+                     <i data-lucide="arrow-left" class="text-texto-principal w-6 h-6"></i>
+                 </button>
+                 <h1 class="text-xl font-bold text-texto-principal">Notificações</h1>
+            </header>
+
+            <!-- Lista de Notificações -->
+            <div class="space-y-3">
+                 <!-- Notificação Não Lida -->
+                 <div class="bg-fundo-secundario p-4 rounded-xl flex items-start space-x-3 shadow-lg cursor-pointer hover:bg-campo notification-unread">
+                    <div class="bg-ciano-vibrante/20 p-2 rounded-lg mt-1">
+                         <i data-lucide="calendar-check" class="text-ciano-vibrante w-5 h-5"></i>
+                    </div>
+                    <div class="flex-1">
+                        <p class="font-semibold text-texto-principal text-sm">Confirmação de Consulta</p>
+                        <p class="text-xs text-texto-secundario mt-1">Sua consulta com Dr. Carlos Andrade foi confirmada para 22 de out às 14:30.</p>
+                        <p class="text-xs text-texto-secundario mt-2">Há 5 minutos</p>
+                    </div>
+                 </div>
+                 <!-- Notificação Lida -->
+                 <div class="bg-fundo-secundario p-4 rounded-xl flex items-start space-x-3 shadow-lg cursor-pointer hover:bg-campo opacity-80">
+                    <div class="bg-campo/50 p-2 rounded-lg mt-1"> <!-- Cor diferente para lida -->
+                         <i data-lucide="flask-conical" class="text-texto-secundario w-5 h-5"></i>
+                    </div>
+                    <div class="flex-1">
+                        <p class="font-semibold text-texto-principal text-sm">Resultado de Exame Disponível</p>
+                        <p class="text-xs text-texto-secundario mt-1">O resultado do seu Hemograma Completo já está disponível para visualização.</p>
+                        <p class="text-xs text-texto-secundario mt-2">Ontem</p>
+                    </div>
+                 </div>
+                 <!-- Notificação Lida -->
+                  <div class="bg-fundo-secundario p-4 rounded-xl flex items-start space-x-3 shadow-lg cursor-pointer hover:bg-campo opacity-80">
+                    <div class="bg-campo/50 p-2 rounded-lg mt-1">
+                         <i data-lucide="bell-ring" class="text-texto-secundario w-5 h-5"></i>
+                    </div>
+                    <div class="flex-1">
+                        <p class="font-semibold text-texto-principal text-sm">Lembrete de Consulta</p>
+                        <p class="text-xs text-texto-secundario mt-1">Não se esqueça da sua consulta com Dra. Mariana Pinto amanhã às 10:00.</p>
+                        <p class="text-xs text-texto-secundario mt-2">2 dias atrás</p>
+                    </div>
+                 </div>
+            </div>
+         </div>
+    </div>
+
+    <!-- ECRÃ 9: MENSAGENS -->
+    <div id="messages-screen" class="screen screen-scrollable hidden bg-fundo-principal h-full w-full">
+         <div class="p-4 space-y-4">
+             <header class="flex items-center space-x-4 mb-4">
+                 <button id="back-messages-to-dashboard" class="p-2"> <!-- Botão Voltar -->
+                     <i data-lucide="arrow-left" class="text-texto-principal w-6 h-6"></i>
+                 </button>
+                 <h1 class="text-xl font-bold text-texto-principal">Mensagens</h1>
+            </header>
+
+            <!-- Lista de Mensagens/Conversas -->
+            <div class="space-y-3">
+                 <!-- Mensagem Não Lida -->
+                 <div class="bg-fundo-secundario p-4 rounded-xl flex items-center space-x-3 shadow-lg cursor-pointer hover:bg-campo message-unread">
+                     <img src="https://placehold.co/40x40/BAE6FD/FFFFFF?text=CS" alt="Avatar Clínica" class="w-10 h-10 rounded-full">
+                     <div class="flex-1 overflow-hidden">
+                        <div class="flex justify-between items-baseline">
+                            <p class="font-semibold text-texto-principal text-sm truncate">Clínica VidaPlus</p>
+                            <span class="text-xs text-ciano-vibrante whitespace-nowrap">Agora</span>
+                        </div>
+                        <p class="text-xs text-texto-secundario mt-1 truncate">Instruções importantes para a sua próxima consulta...</p>
+                    </div>
+                 </div>
+                 <!-- Mensagem Lida -->
+                 <div class="bg-fundo-secundario p-4 rounded-xl flex items-center space-x-3 shadow-lg cursor-pointer hover:bg-campo opacity-80">
+                     <img src="https://placehold.co/40x40/7DD3FC/FFFFFF?text=CA" alt="Avatar Dr. Carlos" class="w-10 h-10 rounded-full">
+                     <div class="flex-1 overflow-hidden">
+                        <div class="flex justify-between items-baseline">
+                            <p class="text-texto-principal text-sm truncate">Dr. Carlos Andrade</p>
+                            <span class="text-xs text-texto-secundario whitespace-nowrap">Ontem</span>
+                        </div>
+                        <p class="text-xs text-texto-secundario mt-1 truncate">Olá João, sobre o resultado do seu exame...</p>
+                    </div>
+                 </div>
+                 <!-- Mensagem Lida -->
+                 <div class="bg-fundo-secundario p-4 rounded-xl flex items-center space-x-3 shadow-lg cursor-pointer hover:bg-campo opacity-80">
+                     <img src="https://placehold.co/40x40/BAE6FD/FFFFFF?text=CS" alt="Avatar Clínica" class="w-10 h-10 rounded-full">
+                     <div class="flex-1 overflow-hidden">
+                        <div class="flex justify-between items-baseline">
+                            <p class="text-texto-principal text-sm truncate">Clínica VidaPlus</p>
+                            <span class="text-xs text-texto-secundario whitespace-nowrap">3 dias atrás</span>
+                        </div>
+                        <p class="text-xs text-texto-secundario mt-1 truncate">Confirmação de agendamento</p>
+                    </div>
+                 </div>
+            </div>
+         </div>
+    </div>
+
+
+    <!-- Menu de Navegação Inferior -->
     <nav id="bottom-nav" class="fixed bottom-0 left-0 right-0 bg-fundo-secundario border-t border-campo hidden" style="max-width: 420px; margin: 0 auto;">
         <div class="flex justify-around p-3">
             <a href="#dashboard" class="nav-link flex flex-col items-center text-ciano-vibrante" data-target="dashboard-screen">
                 <i data-lucide="home"></i>
                 <span class="text-xs font-bold">Início</span>
             </a>
-            <a href="#consultas" class="nav-link flex flex-col items-center text-texto-secundario hover:text-ciano-vibrante" data-target="specialty-screen"> <!-- Temporariamente aponta para especialidades -->
+            <a href="#consultas" class="nav-link flex flex-col items-center text-texto-secundario hover:text-ciano-vibrante" data-target="my-appointments-screen">
                 <i data-lucide="calendar-days"></i>
                 <span class="text-xs">Consultas</span>
             </a>
-            <a href="#resultados" class="nav-link flex flex-col items-center text-texto-secundario hover:text-ciano-vibrante" data-target="#">
-                <i data-lucide="file-text"></i>
-                <span class="text-xs">Resultados</span>
+            <a href="#historico" class="nav-link flex flex-col items-center text-texto-secundario hover:text-ciano-vibrante" data-target="my-history-screen">
+                <i data-lucide="clipboard-list"></i>
+                <span class="text-xs">Histórico</span>
             </a>
-             <a href="#mensagens" class="nav-link flex flex-col items-center text-texto-secundario hover:text-ciano-vibrante" data-target="#">
+             <a href="#mensagens" class="nav-link flex flex-col items-center text-texto-secundario hover:text-ciano-vibrante" data-target="messages-screen"> <!-- Atualizado -->
                 <i data-lucide="message-square"></i>
                 <span class="text-xs">Mensagens</span>
             </a>
@@ -376,108 +885,248 @@
 </div>
 
     <script>
-        // --- LÓGICA DE NAVEGAÇÃO ENTRE ECRÃS ---
+        // --- ESTADO DA APLICAÇÃO ---
+        let selectedSpecialty = '';
+        let selectedProfessional = { name: '', img: '' };
+        let selectedDate = '22 de Outubro, 2025';
+        let selectedTime = '';
+
+        // --- REFERÊNCIAS AOS ELEMENTOS ---
         const loginScreen = document.getElementById('login-screen');
         const registerScreen = document.getElementById('register-screen');
         const dashboardScreen = document.getElementById('dashboard-screen');
-        const specialtyScreen = document.getElementById('specialty-screen'); // Novo ecrã
-        const bottomNav = document.getElementById('bottom-nav'); // Menu inferior
+        const specialtyScreen = document.getElementById('specialty-screen');
+        const professionalScreen = document.getElementById('professional-screen');
+        const datetimeScreen = document.getElementById('datetime-screen');
+        const confirmationScreen = document.getElementById('confirmation-screen');
+        const successScreen = document.getElementById('success-screen');
+        const myAppointmentsScreen = document.getElementById('my-appointments-screen');
+        const myHistoryScreen = document.getElementById('my-history-screen');
+        const telemedicineScreen = document.getElementById('telemedicine-screen');
+        const notificationsScreen = document.getElementById('notifications-screen');
+        const messagesScreen = document.getElementById('messages-screen'); // Novo
+        const bottomNav = document.getElementById('bottom-nav');
         const bodyElement = document.body;
 
-        const allScreens = [loginScreen, registerScreen, dashboardScreen, specialtyScreen];
+        const allScreens = [loginScreen, registerScreen, dashboardScreen, specialtyScreen, professionalScreen, datetimeScreen, confirmationScreen, successScreen, myAppointmentsScreen, myHistoryScreen, telemedicineScreen, notificationsScreen, messagesScreen];
 
+        // Links e Botões de Navegação
         const goToRegisterLink = document.getElementById('go-to-register');
         const goToLoginLink = document.getElementById('go-to-login');
         const loginForm = document.getElementById('login-form');
-        const goToScheduleBtn = document.getElementById('go-to-schedule'); // Botão "Agendar Consulta"
-        const backToDashboardBtn = document.getElementById('back-to-dashboard'); // Botão "Voltar"
-        const navLinks = document.querySelectorAll('.nav-link'); // Links do menu inferior
+        const goToScheduleBtn = document.getElementById('go-to-schedule');
+        const goToTelemedicineBtn = document.getElementById('go-to-telemedicine');
+        const goToNotificationsBtn = document.getElementById('go-to-notifications');
+        const viewAllAppointmentsLink = document.getElementById('view-all-appointments');
+        const backSpecialtyToDashboardBtn = document.getElementById('back-specialty-to-dashboard');
+        const backProfessionalToSpecialtyBtn = document.getElementById('back-professional-to-specialty');
+        const backDatetimeToProfessionalBtn = document.getElementById('back-datetime-to-professional');
+        const backConfirmationToDatetimeBtn = document.getElementById('back-confirmation-to-datetime');
+        const confirmAppointmentBtn = document.getElementById('confirm-appointment-btn');
+        const backToHomeBtn = document.getElementById('back-to-home-btn');
+        const backMyAppointmentsToDashboardBtn = document.getElementById('back-myappointments-to-dashboard');
+        const backMyHistoryToDashboardBtn = document.getElementById('back-myhistory-to-dashboard');
+        const backTelemedicineToDashboardBtn = document.getElementById('back-telemedicine-to-dashboard');
+        const backNotificationsToDashboardBtn = document.getElementById('back-notifications-to-dashboard');
+        const backMessagesToDashboardBtn = document.getElementById('back-messages-to-dashboard'); // Novo
+        const navLinks = document.querySelectorAll('.nav-link');
 
+        // Elementos do Ecrã "Minhas Consultas"
+        const tabUpcoming = document.getElementById('tab-upcoming');
+        const tabPast = document.getElementById('tab-past');
+        const upcomingList = document.getElementById('upcoming-list');
+        const pastList = document.getElementById('past-list');
+
+        // Elementos do Ecrã "Telemedicina"
+        const waitingRoomView = document.getElementById('waiting-room-view');
+        const callView = document.getElementById('call-view');
+        const joinCallBtn = document.getElementById('join-call-btn');
+        const endCallBtn = document.getElementById('end-call-btn');
+
+
+        // --- FUNÇÃO PARA MOSTRAR/ESCONDER ECRÃS ---
         function showScreen(screenToShow) {
             allScreens.forEach(screen => {
                 if(screen) screen.classList.add('hidden');
             });
             if(screenToShow) screenToShow.classList.remove('hidden');
 
-            // Mostrar/Esconder menu inferior e ajustar body
-            const showNav = screenToShow === dashboardScreen || screenToShow === specialtyScreen;
-             if(bottomNav) bottomNav.classList.toggle('hidden', !showNav);
+            const screensWithNav = [dashboardScreen, specialtyScreen, professionalScreen, datetimeScreen, confirmationScreen, myAppointmentsScreen, myHistoryScreen, notificationsScreen, messagesScreen]; // Adicionado messagesScreen
+            const showNav = screensWithNav.includes(screenToShow);
 
-             bodyElement.classList.toggle('has-scroll', showNav); // Adiciona classe ao body se for ecrã com scroll
+             if(bottomNav) bottomNav.classList.toggle('hidden', !showNav);
+             // Adiciona scroll apenas se necessário
+             bodyElement.classList.toggle('has-scroll', showNav || screenToShow === successScreen || screenToShow === telemedicineScreen || screenToShow === notificationsScreen || screenToShow === messagesScreen);
         }
 
-        // Navegação inicial (começa no login)
+        // Navegação inicial
         showScreen(loginScreen);
 
-        // Ir para o ecrã de cadastro
-        if(goToRegisterLink) goToRegisterLink.addEventListener('click', (e) => {
-            e.preventDefault();
-            showScreen(registerScreen);
-        });
+        // --- EVENT LISTENERS PARA NAVEGAÇÃO ---
+        if(goToRegisterLink) goToRegisterLink.addEventListener('click', (e) => { e.preventDefault(); showScreen(registerScreen); });
+        if(goToLoginLink) goToLoginLink.addEventListener('click', (e) => { e.preventDefault(); showScreen(loginScreen); });
+        if(loginForm) loginForm.addEventListener('submit', (e) => { e.preventDefault(); showScreen(dashboardScreen); updateBottomNav('dashboard-screen'); });
+        if(goToScheduleBtn) goToScheduleBtn.addEventListener('click', (e) => { e.preventDefault(); showScreen(specialtyScreen); updateBottomNav(myAppointmentsScreen.id); }); // Ativa Consultas
+        if(goToTelemedicineBtn) goToTelemedicineBtn.addEventListener('click', (e) => { e.preventDefault(); showScreen(telemedicineScreen); resetTelemedicineView(); });
+        if(goToNotificationsBtn) goToNotificationsBtn.addEventListener('click', (e) => { e.preventDefault(); showScreen(notificationsScreen); updateBottomNav('dashboard-screen'); }); // Vai para notificações, mantém Início ativo
 
-        // Voltar para o ecrã de login (do cadastro)
-        if(goToLoginLink) goToLoginLink.addEventListener('click', (e) => {
-            e.preventDefault();
-            showScreen(loginScreen);
-        });
-
-        // Fazer login e ir para o dashboard
-        if(loginForm) loginForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            showScreen(dashboardScreen);
-            updateBottomNav('dashboard-screen'); // Ativa o link 'Início'
-        });
-
-        // Ir para Agendar Consulta (Escolha de Especialidade)
-        if(goToScheduleBtn) goToScheduleBtn.addEventListener('click', (e) => {
+        // Ir para Minhas Consultas
+        if(viewAllAppointmentsLink) viewAllAppointmentsLink.addEventListener('click', (e) => {
              e.preventDefault();
-             showScreen(specialtyScreen);
-             updateBottomNav('specialty-screen'); // Ativa o link 'Consultas'
+             showScreen(myAppointmentsScreen);
+             updateBottomNav(myAppointmentsScreen.id);
         });
 
-        // Voltar do Agendamento para o Dashboard
-        if(backToDashboardBtn) backToDashboardBtn.addEventListener('click', (e) => {
-             e.preventDefault();
-             showScreen(dashboardScreen);
-             updateBottomNav('dashboard-screen'); // Ativa o link 'Início'
-        });
+        // Botões Voltar
+        if(backSpecialtyToDashboardBtn) backSpecialtyToDashboardBtn.addEventListener('click', (e) => { e.preventDefault(); showScreen(dashboardScreen); updateBottomNav('dashboard-screen'); });
+        if(backProfessionalToSpecialtyBtn) backProfessionalToSpecialtyBtn.addEventListener('click', (e) => { e.preventDefault(); showScreen(specialtyScreen); updateBottomNav(myAppointmentsScreen.id); });
+        if(backDatetimeToProfessionalBtn) backDatetimeToProfessionalBtn.addEventListener('click', (e) => { e.preventDefault(); showScreen(professionalScreen); updateBottomNav(myAppointmentsScreen.id); });
+        if(backConfirmationToDatetimeBtn) backConfirmationToDatetimeBtn.addEventListener('click', (e) => { e.preventDefault(); showScreen(datetimeScreen); updateBottomNav(myAppointmentsScreen.id); });
+        if(backMyAppointmentsToDashboardBtn) backMyAppointmentsToDashboardBtn.addEventListener('click', (e) => { e.preventDefault(); showScreen(dashboardScreen); updateBottomNav('dashboard-screen'); });
+        if(backMyHistoryToDashboardBtn) backMyHistoryToDashboardBtn.addEventListener('click', (e) => { e.preventDefault(); showScreen(dashboardScreen); updateBottomNav('dashboard-screen'); });
+        if(backTelemedicineToDashboardBtn) backTelemedicineToDashboardBtn.addEventListener('click', (e) => { e.preventDefault(); showScreen(dashboardScreen); updateBottomNav('dashboard-screen'); });
+        if(backNotificationsToDashboardBtn) backNotificationsToDashboardBtn.addEventListener('click', (e) => { e.preventDefault(); showScreen(dashboardScreen); updateBottomNav('dashboard-screen'); });
+        if(backMessagesToDashboardBtn) backMessagesToDashboardBtn.addEventListener('click', (e) => { e.preventDefault(); showScreen(dashboardScreen); updateBottomNav('dashboard-screen'); }); // Novo Voltar
 
-         // Navegação pelo Menu Inferior
+        // Navegação pelo Menu Inferior
          navLinks.forEach(link => {
             link.addEventListener('click', (e) => {
                 e.preventDefault();
                 const targetScreenId = link.getAttribute('data-target');
-                // Adiciona verificação se targetScreenId existe e não é '#'
                 if (targetScreenId && targetScreenId !== '#') {
                     const targetScreen = document.getElementById(targetScreenId);
                     if (targetScreen) {
+                        if (targetScreenId === 'dashboard-screen') { resetAppointmentState(); }
                         showScreen(targetScreen);
                         updateBottomNav(targetScreenId);
-                    } else {
-                        console.warn(`Ecrã com ID '${targetScreenId}' não encontrado.`); // Aviso se o ecrã não existir
-                    }
-                } else {
-                     console.log(`Link do menu sem alvo definido: ${link.textContent.trim()}`); // Informa se o link não tem alvo
-                }
+                    } else { console.warn(`Ecrã com ID '${targetScreenId}' não encontrado.`); }
+                } else { console.log(`Link do menu sem alvo definido: ${link.textContent.trim()}`); }
             });
          });
 
          function updateBottomNav(activeScreenId) {
              navLinks.forEach(link => {
                  const target = link.getAttribute('data-target');
-                 const icon = link.querySelector('i');
                  const text = link.querySelector('span');
-                 if (target === activeScreenId) {
-                     link.classList.remove('text-texto-secundario');
-                     link.classList.add('text-ciano-vibrante');
-                     text.classList.add('font-bold');
-                 } else {
-                     link.classList.add('text-texto-secundario');
-                     link.classList.remove('text-ciano-vibrante');
-                     text.classList.remove('font-bold');
-                 }
+                 const isConsultasFlow = ['specialty-screen', 'professional-screen', 'datetime-screen', 'confirmation-screen', 'my-appointments-screen'].includes(activeScreenId);
+                 const isHistoryActive = activeScreenId === 'my-history-screen';
+                 const isMessagesActive = activeScreenId === 'messages-screen'; // Novo
+                 // O link 'Histórico' só fica ativo quando my-history-screen é o ecrã ativo
+                 const isActive = (target === activeScreenId) ||
+                                (link.getAttribute('data-target') === 'my-appointments-screen' && isConsultasFlow) ||
+                                (link.getAttribute('data-target') === 'my-history-screen' && isHistoryActive) ||
+                                (link.getAttribute('data-target') === 'messages-screen' && isMessagesActive); // Novo
+
+
+                 link.classList.toggle('text-ciano-vibrante', isActive);
+                 link.classList.toggle('text-texto-secundario', !isActive);
+                 text.classList.toggle('font-bold', isActive);
              });
          }
+
+
+        // --- LÓGICA DO FLUXO DE AGENDAMENTO ---
+        const specialtyCards = document.querySelectorAll('.specialty-card');
+        const professionalCards = document.querySelectorAll('.professional-card');
+        const timeSlots = document.querySelectorAll('.time-slot:not([disabled])');
+        const goToConfirmationBtn = document.getElementById('go-to-confirmation');
+
+        specialtyCards.forEach(card => {
+            card.addEventListener('click', () => {
+                selectedSpecialty = card.getAttribute('data-specialty');
+                document.getElementById('professional-specialty-title').textContent = selectedSpecialty;
+                showScreen(professionalScreen);
+                updateBottomNav(myAppointmentsScreen.id);
+            });
+        });
+        professionalCards.forEach(card => {
+            card.addEventListener('click', () => {
+                selectedProfessional.name = card.querySelector('.font-bold').textContent;
+                selectedProfessional.img = card.querySelector('img').src;
+                document.getElementById('datetime-professional-name').textContent = selectedProfessional.name;
+                document.getElementById('datetime-professional-specialty').textContent = selectedSpecialty;
+                document.getElementById('datetime-professional-img').src = selectedProfessional.img;
+                showScreen(datetimeScreen);
+                updateBottomNav(myAppointmentsScreen.id);
+            });
+        });
+         timeSlots.forEach(slot => {
+             slot.addEventListener('click', () => {
+                 timeSlots.forEach(s => s.classList.remove('selected'));
+                 slot.classList.add('selected');
+                 selectedTime = slot.textContent;
+                 if (goToConfirmationBtn) goToConfirmationBtn.classList.remove('hidden');
+             });
+         });
+         if(goToConfirmationBtn) goToConfirmationBtn.addEventListener('click', () => {
+             if (!selectedTime) { console.error("Por favor, selecione um horário."); return; }
+             document.getElementById('confirm-professional-name').textContent = selectedProfessional.name;
+             document.getElementById('confirm-specialty').textContent = selectedSpecialty;
+             document.getElementById('confirm-professional-img').src = selectedProfessional.img;
+             document.getElementById('confirm-date').textContent = selectedDate;
+             document.getElementById('confirm-time').textContent = selectedTime;
+             showScreen(confirmationScreen);
+             updateBottomNav(myAppointmentsScreen.id);
+         });
+        if(confirmAppointmentBtn) confirmAppointmentBtn.addEventListener('click', () => {
+             document.getElementById('success-professional-name').textContent = selectedProfessional.name;
+             document.getElementById('success-date-time').textContent = `${selectedDate} às ${selectedTime}`;
+             showScreen(successScreen);
+             if(bottomNav) bottomNav.classList.add('hidden');
+        });
+        if(backToHomeBtn) backToHomeBtn.addEventListener('click', () => {
+             resetAppointmentState(); showScreen(dashboardScreen); updateBottomNav('dashboard-screen');
+        });
+        function resetAppointmentState() {
+             selectedSpecialty = ''; selectedProfessional = { name: '', img: '' }; selectedTime = '';
+             timeSlots.forEach(s => s.classList.remove('selected'));
+             if (goToConfirmationBtn) goToConfirmationBtn.classList.add('hidden');
+        }
+
+        // --- LÓGICA DAS ABAS EM "MINHAS CONSULTAS" ---
+        if (tabUpcoming && tabPast && upcomingList && pastList) {
+            tabUpcoming.addEventListener('click', () => {
+                tabUpcoming.classList.add('active');
+                tabPast.classList.remove('active');
+                upcomingList.classList.remove('hidden');
+                pastList.classList.add('hidden');
+            });
+            tabPast.addEventListener('click', () => {
+                tabPast.classList.add('active');
+                tabUpcoming.classList.remove('active');
+                pastList.classList.remove('hidden');
+                upcomingList.classList.add('hidden');
+            });
+            // Garantir que a aba Próximas está ativa por defeito
+             tabUpcoming.classList.add('active');
+             tabPast.classList.remove('active');
+             upcomingList.classList.remove('hidden');
+             pastList.classList.add('hidden');
+        }
+
+        // --- LÓGICA DO ECRÃ DE TELEMEDICINA ---
+        if(joinCallBtn && waitingRoomView && callView) {
+             joinCallBtn.addEventListener('click', () => {
+                 waitingRoomView.classList.add('hidden');
+                 callView.classList.remove('hidden');
+                 if(bottomNav) bottomNav.classList.add('hidden'); // Esconder nav durante a chamada
+             });
+        }
+        if(endCallBtn && waitingRoomView && callView) {
+             endCallBtn.addEventListener('click', () => {
+                 // Ao desligar, volta para o dashboard
+                 showScreen(dashboardScreen);
+                 updateBottomNav('dashboard-screen');
+                 // Resetar a vista da telemedicina para a próxima vez
+                 resetTelemedicineView();
+             });
+        }
+        function resetTelemedicineView() {
+            if(waitingRoomView && callView) {
+                 waitingRoomView.classList.remove('hidden');
+                 callView.classList.add('hidden');
+            }
+        }
 
 
         // --- LÓGICA DO FORMULÁRIO DE CADASTRO MULTI-PASSO ---
@@ -486,116 +1135,57 @@
         const nextBtn = document.getElementById('next-btn');
         const progressIndicator = document.getElementById('progress-indicator');
         const stepTitle = document.getElementById('step-title');
-        
-        const titles = [
-            "Vamos começar. Quem é você?",
-            "Onde podemos te encontrar?",
-            "Para sua segurança, crie uma senha"
-        ];
-
+        const titles = [ "Vamos começar. Quem é você?", "Onde podemos te encontrar?", "Para sua segurança, crie uma senha" ];
         let currentStep = 0;
-
         function updateStep() {
-            // Verifica se os elementos existem antes de tentar acedê-los
-            if (!steps[0] || !progressIndicator || !stepTitle || !prevBtn || !nextBtn) return; 
-
-            steps.forEach((step, index) => {
-                 if(step) step.classList.toggle('hidden', index !== currentStep);
-            });
-            
-            progressIndicator.textContent = `Passo ${currentStep + 1} de ${steps.length}`;
-            stepTitle.textContent = titles[currentStep];
-
-            prevBtn.classList.toggle('hidden', currentStep === 0);
-            nextBtn.textContent = currentStep === steps.length - 1 ? 'Finalizar Cadastro' : 'Avançar';
-            
-            // Ajusta a largura dos botões
+            if (!steps[0] || !progressIndicator || !stepTitle || !prevBtn || !nextBtn) return;
+            steps.forEach((step, index) => { if(step) step.classList.toggle('hidden', index !== currentStep); });
+            progressIndicator.textContent = `Passo ${currentStep + 1} de ${steps.length}`; stepTitle.textContent = titles[currentStep];
+            prevBtn.classList.toggle('hidden', currentStep === 0); nextBtn.textContent = currentStep === steps.length - 1 ? 'Finalizar Cadastro' : 'Avançar';
             if (currentStep === 0) {
-                 prevBtn.classList.add('hidden'); // Garante que o botão voltar está escondido
-                 nextBtn.classList.add('w-full'); // Botão avançar ocupa largura total
-                 if (nextBtn.parentElement.classList.contains('justify-between')) {
-                     nextBtn.parentElement.classList.remove('justify-between');
-                     nextBtn.parentElement.classList.add('justify-end'); // Alinha botão 'Avançar' à direita
-                 }
+                 prevBtn.classList.add('hidden'); nextBtn.classList.add('w-full');
+                 if (nextBtn.parentElement.classList.contains('justify-between')) { nextBtn.parentElement.classList.remove('justify-between'); nextBtn.parentElement.classList.add('justify-end'); }
             } else {
-                 prevBtn.classList.remove('hidden'); // Mostra botão voltar
-                 nextBtn.classList.remove('w-full'); // Botão avançar não ocupa largura total
-                 if (nextBtn.parentElement.classList.contains('justify-end')) {
-                    nextBtn.parentElement.classList.remove('justify-end');
-                    nextBtn.parentElement.classList.add('justify-between'); // Alinha botões nas extremidades
-                 }
+                 prevBtn.classList.remove('hidden'); nextBtn.classList.remove('w-full');
+                 if (nextBtn.parentElement.classList.contains('justify-end')) { nextBtn.parentElement.classList.remove('justify-end'); nextBtn.parentElement.classList.add('justify-between'); }
             }
         }
-
        if(nextBtn) nextBtn.addEventListener('click', () => {
-            // Validação básica (pode ser expandida)
-            let valid = true;
-            const currentStepElement = steps[currentStep];
-            if (!currentStepElement) return; // Segurança extra
-
+            let valid = true; const currentStepElement = steps[currentStep]; if (!currentStepElement) return;
             const currentStepInputs = currentStepElement.querySelectorAll('input[required], select[required]');
             currentStepInputs.forEach(input => {
-                if (!input.value) {
-                    valid = false;
-                    // Adicionar feedback visual de erro se necessário
-                    input.classList.add('border-red-500', 'border'); 
-                } else {
-                     input.classList.remove('border-red-500', 'border');
-                }
+                if (!input.value) { valid = false; input.classList.add('border-red-500', 'border'); }
+                else { input.classList.remove('border-red-500', 'border'); }
             });
-
-            if (!valid) {
-                 // Usar uma mensagem mais amigável em vez de alert
-                 // Exemplo: mostrar uma mensagem de erro perto do formulário
-                 console.error('Por favor, preencha todos os campos obrigatórios.');
-                 return;
-            }
-
-
-            if (currentStep < steps.length - 1) {
-                currentStep++;
-                updateStep();
-            } else {
-                // Lógica para submeter o formulário de cadastro
-                 console.log("Submetendo formulário...");
-                // document.getElementById('registration-form').submit(); // Descomentar para submissão real
-            }
+            if (!valid) { console.error('Por favor, preencha todos os campos obrigatórios.'); return; }
+            if (currentStep < steps.length - 1) { currentStep++; updateStep(); }
+            else { console.log("Submetendo formulário..."); /* document.getElementById('registration-form').submit(); */ }
         });
-
         if(prevBtn) prevBtn.addEventListener('click', () => {
             if (currentStep > 0) {
-                // Limpar erros ao voltar
-                const currentStepElement = steps[currentStep];
-                 if (!currentStepElement) return; // Segurança extra
-                 const currentStepInputs = currentStepElement.querySelectorAll('input, select');
-                 currentStepInputs.forEach(input => input.classList.remove('border-red-500', 'border'));
-                 
-                currentStep--;
-                updateStep();
+                const currentStepElement = steps[currentStep]; if (!currentStepElement) return;
+                const currentStepInputs = currentStepElement.querySelectorAll('input, select');
+                currentStepInputs.forEach(input => input.classList.remove('border-red-500', 'border'));
+                currentStep--; updateStep();
             }
         });
         
         // --- LÓGICA DE PESQUISA DE ESPECIALIDADES ---
         const specialtySearchInput = document.getElementById('specialty-search');
         const specialtyGrid = document.getElementById('specialty-grid');
-        const specialtyCards = specialtyGrid ? specialtyGrid.querySelectorAll('.specialty-card') : [];
-
+        const specialtyCardsQuery = specialtyGrid ? specialtyGrid.querySelectorAll('.specialty-card') : [];
        if(specialtySearchInput) specialtySearchInput.addEventListener('input', (e) => {
-            const searchTerm = e.target.value.toLowerCase().trim(); // Trim para remover espaços
-            specialtyCards.forEach(card => {
+            const searchTerm = e.target.value.toLowerCase().trim();
+            specialtyCardsQuery.forEach(card => {
                 const specialtyName = card.getAttribute('data-specialty').toLowerCase();
-                 // Usa includes() para pesquisa parcial
-                if (specialtyName.includes(searchTerm)) {
-                    card.classList.remove('hidden'); // Usa classes do Tailwind para mostrar/esconder
-                } else {
-                    card.classList.add('hidden');
-                }
+                card.classList.toggle('hidden', !specialtyName.includes(searchTerm));
             });
         });
 
         // Inicializa o estado do formulário e ativa os ícones
-        updateStep(); 
+        updateStep();
         lucide.createIcons();
     </script>
 </body>
 </html>
+
