@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale-1.0">
+    <title>SGHSS VidaPlus - Profissional</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Ícones (Lucide Icons) -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <script>
+        // Configuração de cores personalizadas do Tailwind
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'fundo-principal': '#1E293B',    // Slate 800
+                        'fundo-secundario': '#334155',  // Slate 700
+                        'fundo-sidebar': '#0F172A',     // Slate 900
+                        'campo': '#475569',           // Slate 600
+                        'texto-principal': '#F1F5F9',   // Slate 100
+                        'texto-secundario': '#94A3B8',  // Slate 400
+                        'ciano-vibrante': '#06B6D4',
+                        'azul-suave': '#22D3EE',
+                    },
+                    fontFamily: {
+                        'sans': ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        html, body {
+            height: 100%;
+            font-family: 'Inter', sans-serif;
+            background-color: #1E293B;
+        }
+        /* Esconder a barra de scroll padrão */
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="text-texto-principal">
+
+    <!-- ECRÃ DE LOGIN DO PROFISSIONAL (TELA 9) -->
+    <div id="login-screen-prof" class="flex items-center justify-center min-h-screen p-4">
+        <div class="w-full max-w-sm mx-auto bg-fundo-secundario rounded-xl shadow-lg p-8 space-y-8">
+            <div class="flex flex-col items-center space-y-4">
+                <div class="w-24 h-24 bg-ciano-vibrante rounded-full flex items-center justify-center">
+                    <i data-lucide="stethoscope" class="text-white w-12 h-12"></i>
+                </div>
+                <h1 class="text-3xl font-bold text-texto-principal tracking-tight">Portal Profissional</h1>
+                <p class="text-texto-secundario">Acesse sua conta para continuar</p>
+            </div>
+            <form class="space-y-6" id="login-form-prof">
+                <div>
+                    <label for="prof-id" class="block text-sm font-medium text-texto-secundario">ID Profissional / E-mail</label>
+                    <div class="mt-2">
+                        <input id="prof-id" name="login" type="text" required placeholder="Digite sua identificação"
+                               class="block w-full rounded-md border-0 bg-campo p-3 text-texto-principal placeholder:text-texto-secundario focus:ring-2 focus:ring-inset focus:ring-ciano-vibrante sm:text-sm">
+                    </div>
+                </div>
+                <div>
+                    <div class="flex items-center justify-between">
+                        <label for="prof-password" class="block text-sm font-medium text-texto-secundario">Palavra-passe</label>
+                        <div class="text-sm">
+                            <a href="#" class="font-semibold text-ciano-vibrante hover:text-azul-suave">Esqueceu a senha?</a>
+                        </div>
+                    </div>
+                    <div class="mt-2">
+                        <input id="prof-password" name="password" type="password" required placeholder="••••••••"
+                               class="block w-full rounded-md border-0 bg-campo p-3 text-texto-principal placeholder:text-texto-secundario focus:ring-2 focus:ring-inset focus:ring-ciano-vibrante sm:text-sm">
+                    </div>
+                </div>
+                <div>
+                    <button type="submit"
+                            class="flex w-full justify-center rounded-md bg-ciano-vibrante px-3 py-3 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-azul-suave transition-colors duration-200">
+                        Entrar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ECRÃ DO DASHBOARD DO PROFISSIONAL (TELA 10) -->
+    <div id="dashboard-screen-prof" class="hidden h-screen">
+        <div class="flex h-full">
+            <!-- Navegação Lateral (Sidebar) -->
+            <aside class="w-64 bg-fundo-sidebar p-6 flex flex-col no-scrollbar">
+                <!-- Logo -->
+                <div class="flex items-center space-x-3 mb-10">
+                    <div class="w-10 h-10 bg-ciano-vibrante rounded-lg flex items-center justify-center">
+                        <i data-lucide="stethoscope" class="text-white w-6 h-6"></i>
+                    </div>
+                    <h1 class="text-xl font-bold text-texto-principal">VidaPlus PRO</h1>
+                </div>
+                
+                <!-- Menu de Navegação -->
+                <nav class="flex-grow space-y-2">
+                    <a href="#" class="flex items-center space-x-3 bg-ciano-vibrante/20 text-ciano-vibrante p-3 rounded-lg font-semibold">
+                        <i data-lucide="home" class="w-5 h-5"></i>
+                        <span>Início</span>
+                    </a>
+                    <a href="#" class="flex items-center space-x-3 text-texto-secundario p-3 rounded-lg hover:bg-fundo-secundario">
+                        <i data-lucide="calendar" class="w-5 h-5"></i>
+                        <span>Agenda</span>
+                    </a>
+                    <a href="#" class="flex items-center space-x-3 text-texto-secundario p-3 rounded-lg hover:bg-fundo-secundario">
+                        <i data-lucide="users" class="w-5 h-5"></i>
+                        <span>Pacientes</span>
+                    </a>
+                    <a href="#" class="flex items-center space-x-3 text-texto-secundario p-3 rounded-lg hover:bg-fundo-secundario">
+                        <i data-lucide="message-square" class="w-5 h-5"></i>
+                        <span>Mensagens</span>
+                    </a>
+                </nav>
+                
+                <!-- Perfil do Utilizador (Rodapé do Sidebar) -->
+                <div class="border-t border-campo pt-4">
+                    <div class="flex items-center space-x-3">
+                        <img src="https://placehold.co/40x40/7DD3FC/FFFFFF?text=CA" alt="Foto Dr. Carlos" class="w-10 h-10 rounded-full">
+                        <div>
+                            <p class="font-semibold text-texto-principal text-sm">Dr. Carlos Andrade</p>
+                            <a href="#" class="text-xs text-texto-secundario hover:text-ciano-vibrante">Ver Perfil</a>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+            
+            <!-- Conteúdo Principal -->
+            <main class="flex-1 bg-fundo-principal p-8 overflow-y-auto no-scrollbar">
+                <header class="mb-8">
+                    <h1 class="text-3xl font-bold text-texto-principal">Bem-vindo, Dr. Carlos!</h1>
+                    <p class="text-texto-secundario">Aqui está um resumo do seu dia.</p>
+                </header>
+                
+                <!-- Métricas Rápidas -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                    <div class="bg-fundo-secundario p-6 rounded-xl shadow-lg">
+                        <div class="flex items-center space-x-4">
+                            <div class="p-3 rounded-full bg-ciano-vibrante/20">
+                                <i data-lucide="users" class="w-6 h-6 text-ciano-vibrante"></i>
+                            </div>
+                            <div>
+                                <p class="text-texto-secundario text-sm">Pacientes em Espera</p>
+                                <p class="text-3xl font-bold text-texto-principal">3</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-fundo-secundario p-6 rounded-xl shadow-lg">
+                        <div class="flex items-center space-x-4">
+                            <div class="p-3 rounded-full bg-ciano-vibrante/20">
+                                <i data-lucide="calendar" class="w-6 h-6 text-ciano-vibrante"></i>
+                            </div>
+                            <div>
+                                <p class="text-texto-secundario text-sm">Consultas Hoje</p>
+                                <p class="text-3xl font-bold text-texto-principal">14</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-fundo-secundario p-6 rounded-xl shadow-lg">
+                        <div class="flex items-center space-x-4">
+                            <div class="p-3 rounded-full bg-ciano-vibrante/20">
+                                <i data-lucide="file-check" class="w-6 h-6 text-ciano-vibrante"></i>
+                            </div>
+                            <div>
+                                <p class="text-texto-secundario text-sm">Laudos Pendentes</p>
+                                <p class="text-3xl font-bold text-texto-principal">5</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-fundo-secundario p-6 rounded-xl shadow-lg">
+                        <div class="flex items-center space-x-4">
+                            <div class="p-3 rounded-full bg-ciano-vibrante/20">
+                                <i data-lucide="video" class="w-6 h-6 text-ciano-vibrante"></i>
+                            </div>
+                            <div>
+                                <p class="text-texto-secundario text-sm">Teleconsultas</p>
+                                <p class="text-3xl font-bold text-texto-principal">2</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Agenda do Dia -->
+                <div class="bg-fundo-secundario p-6 rounded-xl shadow-lg">
+                    <h2 class="text-xl font-bold text-texto-principal mb-4">Agenda do Dia</h2>
+                    <div class="space-y-4">
+                        
+                        <!-- Item da Agenda (Integração) -->
+                        <div class="bg-campo p-4 rounded-lg flex items-center justify-between">
+                            <div class="flex items-center space-x-4">
+                                <span class="font-semibold text-ciano-vibrante">14:30</span>
+                                <img src="https://placehold.co/40x40/06B6D4/FFFFFF?text=JP" alt="Foto Paciente" class="w-10 h-10 rounded-full">
+                                <div>
+                                    <p class="font-bold text-texto-principal">João Pereira</p>
+                                    <p class="text-sm text-texto-secundario">Consulta de Cardiologia (Agendada pelo Paciente)</p>
+                                </div>
+                            </div>
+                            <button class="px-4 py-2 text-sm font-semibold text-texto-principal bg-fundo-secundario rounded-lg border border-campo hover:bg-campo">Abrir Prontuário</button>
+                        </div>
+                        
+                        <!-- Item da Agenda (Exemplo 2) -->
+                        <div class="bg-campo p-4 rounded-lg flex items-center justify-between">
+                            <div class="flex items-center space-x-4">
+                                <span class="font-semibold text-texto-secundario">15:00</span>
+                                <img src="https://placehold.co/40x40/FBCFE8/FFFFFF?text=AS" alt="Foto Paciente" class="w-10 h-10 rounded-full">
+                                <div>
+                                    <p class="font-bold text-texto-principal">Dra. Ana Sousa</p>
+                                    <p class="text-sm text-texto-secundario">Teleconsulta (Retorno)</p>
+                                </div>
+                            </div>
+                            <button class="px-4 py-2 text-sm font-semibold text-texto-principal bg-fundo-secundario rounded-lg border border-campo hover:bg-campo">Iniciar Chamada</button>
+                        </div>
+
+                        <!-- Item da Agenda (Exemplo 3) -->
+                        <div class="bg-campo p-4 rounded-lg flex items-center justify-between">
+                            <div class="flex items-center space-x-4">
+                                <span class="font-semibold text-texto-secundario">15:30</span>
+                                <img src="https://placehold.co/40x40/A5B4FC/FFFFFF?text=MP" alt="Foto Paciente" class="w-10 h-10 rounded-full">
+                                <div>
+                                    <p class="font-bold text-texto-principal">Dra. Mariana Pinto</p>
+                                    <p class="text-sm text-texto-secundario">Consulta de Rotina (Dermatologia)</p>
+                                </div>
+                            </div>
+                            <button class="px-4 py-2 text-sm font-semibold text-texto-principal bg-fundo-secundario rounded-lg border border-campo hover:bg-campo">Abrir Prontuário</button>
+                        </div>
+
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script>
+        // --- LÓGICA DE NAVEGAÇÃO PROFISSIONAL ---
+        const loginScreenProf = document.getElementById('login-screen-prof');
+        const dashboardScreenProf = document.getElementById('dashboard-screen-prof');
+        const loginFormProf = document.getElementById('login-form-prof');
+
+        // Navegação inicial (mostrar login)
+        showProfScreen(loginScreenProf);
+
+        function showProfScreen(screenToShow) {
+            [loginScreenProf, dashboardScreenProf].forEach(screen => {
+                if (screen) screen.classList.add('hidden');
+            });
+            if (screenToShow) screenToShow.classList.remove('hidden');
+        }
+
+        // Evento de Login
+        if (loginFormProf) {
+            loginFormProf.addEventListener('submit', (e) => {
+                e.preventDefault();
+                // Simula login bem-sucedido
+                showProfScreen(dashboardScreenProf);
+            });
+        }
+        
+        // Ativa os ícones
+        lucide.createIcons();
+    </script>
+</body>
+</html>
