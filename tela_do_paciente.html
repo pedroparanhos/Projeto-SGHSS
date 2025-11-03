@@ -367,6 +367,10 @@
                          <div class="bg-ciano-vibrante/20 p-3 rounded-full"> <i data-lucide="heart-pulse" class="text-ciano-vibrante w-6 h-6"></i> </div>
                          <p class="font-semibold text-texto-principal text-sm">Cardiologia</p>
                      </button>
+                     <button class="specialty-card bg-fundo-secundario p-4 rounded-xl flex flex-col items-center justify-center text-center space-y-2 hover:bg-campo transition-colors" data-specialty="Dermatologia">
+                        <div class="bg-ciano-vibrante/20 p-3 rounded-full"> <i data-lucide="user" class="text-ciano-vibrante w-6 h-6"></i> </div>
+                        <p class="font-semibold text-texto-principal text-sm">Dermatologia</p>
+                     </button>
                      <button class="specialty-card bg-fundo-secundario p-4 rounded-xl flex flex-col items-center justify-center text-center space-y-2 hover:bg-campo transition-colors" data-specialty="Ortopedia">
                         <div class="bg-ciano-vibrante/20 p-3 rounded-full"> <i data-lucide="bone" class="text-ciano-vibrante w-6 h-6"></i> </div>
                         <p class="font-semibold text-texto-principal text-sm">Ortopedia</p>
@@ -412,7 +416,7 @@
                          <img src="https://placehold.co/48x48/7DD3FC/FFFFFF?text=CA" alt="Foto Dr. Carlos" class="w-12 h-12 rounded-full">
                          <div class="flex-1 text-left">
                              <p class="font-bold text-texto-principal">Dr. Carlos Andrade</p>
-                             <p class="text-sm text-texto-secundario">Próximo horário: Hoje, 16:00</p>
+                             <p class="text-sm text-texto-secundario">Disponível</p>
                          </div>
                          <i data-lucide="chevron-right" class="text-texto-secundario"></i>
                      </button>
@@ -420,7 +424,7 @@
                          <img src="https://placehold.co/48x48/FBCFE8/FFFFFF?text=AS" alt="Foto Dra. Ana" class="w-12 h-12 rounded-full">
                          <div class="flex-1 text-left">
                              <p class="font-bold text-texto-principal">Dra. Ana Sousa</p>
-                             <p class="text-sm text-texto-secundario">Próximo horário: Amanhã, 09:30</p>
+                             <p class="text-sm text-texto-secundario">Disponível</p>
                          </div>
                          <i data-lucide="chevron-right" class="text-texto-secundario"></i>
                      </button>
@@ -444,28 +448,21 @@
                          </div>
                     </div>
                     <!-- Layout Desktop: Calendário e Horários lado a lado -->
-                    <div class="mt-4 lg:flex lg:gap-6 max-w-2xl">
-                        <!-- Calendário Placeholder -->
-                        <div class="bg-fundo-secundario p-4 rounded-xl lg:flex-1">
-                            <p class="text-center text-texto-secundario">[Componente de calendário interativo]</p>
-                            <div class="h-40 lg:h-64 flex items-center justify-center">
-                                 <i data-lucide="calendar-days" class="w-16 h-16 text-campo"></i>
-                            </div>
-                        </div>
+                    <div class="mt-4 lg:flex lg:gap-6">
                         <!-- Grelha de Horários -->
-                        <div class="mt-4 lg:mt-0 lg:w-48">
-                             <h2 class="font-semibold text-texto-principal mb-3 text-base">Horários</h2>
-                             <div class="grid grid-cols-3 gap-3" id="time-slots-grid">
+                        <div class="mt-4 lg:mt-0">
+                             <h2 class="font-semibold text-texto-principal mb-3 text-base">Horários Disponíveis - Amanhã</h2>
+                             <div class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-3" id="time-slots-grid">
                                  <button class="time-slot bg-campo p-3 rounded-lg text-center text-sm font-semibold text-texto-principal border-2 border-transparent hover:border-ciano-vibrante">09:00</button>
-                                 <button class="time-slot bg-campo p-3 rounded-lg text-center text-sm font-semibold text-texto-principal border-2 border-transparent hover:border-ciano-vibrante">09:30</button>
-                                 <button class="time-slot bg-fundo-secundario p-3 rounded-lg text-center text-sm font-semibold text-texto-secundario cursor-not-allowed" disabled>10:00</button>
-                                 <button class="time-slot bg-campo p-3 rounded-lg text-center text-sm font-semibold text-texto-principal border-2 border-transparent hover:border-ciano-vibrante">10:30</button>
+                                 <button class="time-slot bg-campo p-3 rounded-lg text-center text-sm font-semibold text-texto-principal border-2 border-transparent hover:border-ciano-vibrante">10:00</button>
                                  <button class="time-slot bg-campo p-3 rounded-lg text-center text-sm font-semibold text-texto-principal border-2 border-transparent hover:border-ciano-vibrante">11:00</button>
-                                 <button class="time-slot bg-campo p-3 rounded-lg text-center text-sm font-semibold text-texto-principal border-2 border-transparent hover:border-ciano-vibrante">11:30</button>
+                                 <button class="time-slot bg-campo p-3 rounded-lg text-center text-sm font-semibold text-texto-principal border-2 border-transparent hover:border-ciano-vibrante">13:00</button>
+                                 <button class="time-slot bg-campo p-3 rounded-lg text-center text-sm font-semibold text-texto-principal border-2 border-transparent hover:border-ciano-vibrante">14:00</button>
+                                 <button class="time-slot bg-campo p-3 rounded-lg text-center text-sm font-semibold text-texto-principal border-2 border-transparent hover:border-ciano-vibrante">15:00</button>
                              </div>
                         </div>
                     </div>
-                    <button id="go-to-confirmation" class="w-full max-w-2xl flex justify-center rounded-md bg-ciano-vibrante px-3 py-3 text-sm font-semibold text-white shadow-sm hover:bg-azul-suave mt-6 hidden">Avançar para Confirmação</button>
+                    <button id="go-to-confirmation" class="w-full flex justify-center rounded-md bg-ciano-vibrante px-3 py-3 text-sm font-semibold text-white shadow-sm hover:bg-azul-suave mt-6 hidden">Avançar para Confirmação</button>
                 </div>
             </div>
 
@@ -625,7 +622,7 @@
             </div>
 
             <!-- ECRÃ 7: TELEMEDICINA -->
-            <div id="telemedicine-screen" class="app-screen p-0 lg:p-4 flex-1 flex-col hidden">
+            <div id="telemedicine-screen" class="app-screen flex-1 flex-col hidden">
                  <div id="waiting-room-view" class="flex flex-col flex-grow items-center justify-center text-center space-y-6 max-w-sm mx-auto p-4">
                      <header class="absolute top-4 left-4 lg:hidden">
                          <button id="back-telemedicine-to-dashboard" class="p-2"> <i data-lucide="arrow-left" class="text-texto-principal w-6 h-6"></i> </button>
@@ -640,7 +637,7 @@
                      <button id="join-call-btn" class="w-full max-w-xs flex justify-center rounded-md bg-ciano-vibrante px-3 py-3 text-sm font-semibold text-white shadow-sm hover:bg-azul-suave">Entrar na Consulta</button>
                  </div>
                  
-                 <div id="call-view" class="hidden flex-1 flex-col h-full w-full max-w-4xl mx-auto p-4 lg:p-0">
+                 <div id="call-view" class="hidden flex-1 flex-col h-full w-full max-w-4xl mx-auto p-4 lg:p-0 fixed inset-0 lg:static lg:relative">
                     <div class="video-placeholder flex-grow w-full mb-2 relative">
                         <i data-lucide="user-square-2" class="w-24 h-24 text-campo"></i>
                         <div class="absolute bottom-3 right-3 w-24 h-32 lg:w-32 lg:h-48 video-placeholder border-2 border-fundo-secundario">
@@ -701,7 +698,7 @@
                          <div class="flex-1 overflow-hidden">
                             <div class="flex justify-between items-baseline">
                                 <p class="font-semibold text-texto-principal text-sm truncate">Clínica VidaPlus</p>
-                                <span class="text-xs text-ciano-vibrante whitespace-nowkrap">Agora</span>
+                                <span class="text-xs text-ciano-vibrante whitespace-nowrap">Agora</span>
                             </div>
                             <p class="text-xs text-texto-secundario mt-1 truncate">Instruções importantes para a sua próxima consulta...</p>
                         </div>
@@ -830,13 +827,13 @@
         }
 
         function showAppScreen(screenToShow) {
-            // Controlo especial para telemedicina
+             // Controlo especial para telemedicina (travar scroll)
              if (screenToShow && screenToShow.id === 'telemedicine-screen') {
-                document.body.classList.add('overflow-hidden'); // Trava o scroll
+                document.body.classList.add('overflow-hidden');
             } else {
                 document.body.classList.remove('overflow-hidden');
             }
-
+            
             appScreens.forEach(screen => {
                 if(screen) screen.classList.add('hidden');
             });
