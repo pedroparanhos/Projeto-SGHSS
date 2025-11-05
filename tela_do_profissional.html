@@ -59,6 +59,19 @@
             color: #06B6D4; /* ciano-vibrante */
             font-weight: 600;
         }
+        .tab-btn {
+            padding: 0.75rem 1rem; /* py-3 px-4 */
+            border-bottom-width: 2px;
+            border-color: transparent;
+            color: #94A3B8; /* texto-secundario */
+            font-weight: 500;
+            transition: border-color 0.2s, color 0.2s;
+        }
+        .tab-btn.active {
+            border-bottom-color: #06B6D4; /* ciano-vibrante */
+            color: #F1F5F9; /* texto-principal */
+            font-weight: 600;
+        }
         .tab-btn-agenda {
             padding: 0.5rem 1.5rem; /* py-2 px-6 */
             border-radius: 0.5rem; /* rounded-lg */
@@ -70,6 +83,11 @@
             background-color: #06B6D4; /* ciano-vibrante */
             color: #FFFFFF; /* white */
             font-weight: 600;
+        }
+        /* Indicador de notificação não lida */
+        .notification-unread::before {
+            content: ''; display: inline-block; width: 8px; height: 8px;
+            border-radius: 50%; background-color: #06B6D4; margin-right: 8px; vertical-align: middle;
         }
     </style>
 </head>
@@ -118,7 +136,7 @@
     </div>
 
     <!-- LAYOUT DA APLICAÇÃO (Após Login) -->
-    <div id="app-layout" class="hidden lg:flex min-h-screen">
+    <div id="app-layout" class="hidden min-h-screen">
         
         <!-- NAVEGAÇÃO LATERAL (DESKTOP) -->
         <aside class="flex-col w-64 fixed inset-y-0 z-50 bg-fundo-sidebar p-6 hidden lg:flex">
@@ -170,7 +188,7 @@
                 <header class="flex justify-between items-center">
                     <h1 class="text-3xl font-bold text-texto-principal">Painel de Controlo</h1>
                     <div class="flex items-center space-x-4">
-                        <button class="relative p-2 bg-fundo-secundario rounded-full">
+                        <button id="go-to-notifications-desktop" class="relative p-2 bg-fundo-secundario rounded-full">
                              <i data-lucide="bell" class="text-texto-secundario w-5 h-5"></i>
                              <span class="absolute top-1 right-1 flex h-2 w-2">
                                  <span class="relative inline-flex rounded-full h-2 w-2 bg-ciano-vibrante"></span>
@@ -218,7 +236,7 @@
                                         <p class="text-sm text-texto-secundario">14:30 - Cardiologia</p>
                                     </div>
                                 </div>
-                                <button class="px-4 py-2 text-xs font-semibold bg-ciano-vibrante text-white rounded-md hover:bg-azul-suave">Ver Prontuário</button>
+                                <button class="btn-ver-prontuario px-4 py-2 text-xs font-semibold bg-ciano-vibrante text-white rounded-md hover:bg-azul-suave" data-paciente="João Pereira">Ver Prontuário</button>
                             </div>
                             
                             <!-- Outra Consulta Exemplo -->
@@ -243,11 +261,10 @@
                 <!-- Cabeçalho -->
                 <header class="flex flex-col md:flex-row justify-between md:items-center gap-4">
                     <h1 class="text-3xl font-bold text-texto-principal">Minha Agenda</h1>
-                    <!-- Controles de Visualização Removidos -->
                 </header>
             
                 <!-- Layout da Agenda (Apenas Lista) -->
-                <div class="space-y-4 max-w-lg">
+                <div class="space-y-4">
                     <h2 class="text-xl font-semibold text-texto-principal">Consultas de Hoje</h2>
                     <!-- Lista de consultas (copiada do dashboard) -->
                     <div class="bg-fundo-secundario rounded-xl shadow-lg p-4 space-y-4">
@@ -260,7 +277,7 @@
                                     <p class="text-xs text-texto-secundario">14:30 - Cardiologia</p>
                                 </div>
                             </div>
-                            <button class="px-3 py-2 text-xs font-semibold bg-ciano-vibrante text-white rounded-md hover:bg-azul-suave"> <i data-lucide="file-text" class="w-4 h-4"></i> </button>
+                            <button class="btn-ver-prontuario px-3 py-2 text-xs font-semibold bg-ciano-vibrante text-white rounded-md hover:bg-azul-suave" data-paciente="João Pereira"> <i data-lucide="file-text" class="w-4 h-4"></i> </button>
                         </div>
                         
                         <!-- Outra Consulta Exemplo -->
@@ -278,13 +295,156 @@
                 </div>
             </div>
 
-            <!-- ECRÃ 12: GESTÃO DE PACIENTES (Placeholder) -->
+            <!-- ECRÃ 13: GESTÃO DE PACIENTES -->
             <div id="pacientes-screen" class="app-screen p-4 lg:p-8 space-y-6 hidden">
                  <h1 class="text-3xl font-bold text-texto-principal">Gestão de Pacientes</h1>
-                 <p class="text-texto-secundario">Ecrã para procurar e gerir pacientes (Tela 13).</p>
+                 
+                 <!-- Barra de Pesquisa -->
+                 <div class="relative">
+                     <input type="search" id="paciente-search" placeholder="Procurar paciente por nome ou CPF..."
+                            class="block w-full rounded-md border-0 bg-campo p-3 pl-10 text-texto-principal placeholder:text-texto-secundario focus:ring-2 focus:ring-inset focus:ring-ciano-vibrante sm:text-sm">
+                     <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                         <i data-lucide="search" class="w-5 h-5 text-texto-secundario"></i>
+                     </div>
+                 </div>
+
+                 <!-- Lista de Resultados -->
+                 <div id="pacientes-list" class="space-y-3">
+                     <!-- Item Paciente (Exemplo) -->
+                     <div class="paciente-item bg-fundo-secundario p-4 rounded-xl flex items-center justify-between shadow-lg" data-nome="João Pereira">
+                         <div class="flex items-center space-x-3">
+                             <img src="https://placehold.co/40x40/06B6D4/FFFFFF?text=JP" alt="Avatar João Pereira" class="w-10 h-10 rounded-full">
+                             <div>
+                                 <p class="font-semibold text-texto-principal text-sm">João Pereira</p>
+                                 <p class="text-xs text-texto-secundario">CPF: 123.456.789-00</p>
+                             </div>
+                         </div>
+                         <button class="btn-ver-prontuario px-3 py-2 text-xs font-semibold bg-ciano-vibrante text-white rounded-md hover:bg-azul-suave" data-paciente="João Pereira">Ver Prontuário</button>
+                     </div>
+                     <!-- Item Paciente (Exemplo) -->
+                     <div class="paciente-item bg-fundo-secundario p-4 rounded-xl flex items-center justify-between shadow-lg" data-nome="Maria Silva">
+                         <div class="flex items-center space-x-3">
+                             <img src="https://placehold.co/40x40/FBCFE8/FFFFFF?text=MS" alt="Avatar Maria Silva" class="w-10 h-10 rounded-full">
+                             <div>
+                                 <p class="font-semibold text-texto-principal text-sm">Maria Silva</p>
+                                 <p class="text-xs text-texto-secundario">CPF: 987.654.321-00</p>
+                             </div>
+                         </div>
+                         <button class="btn-ver-prontuario px-3 py-2 text-xs font-semibold bg-ciano-vibrante text-white rounded-md hover:bg-azul-suave" data-paciente="Maria Silva">Ver Prontuário</button>
+                     </div>
+                 </div>
             </div>
 
-            <!-- ECRÃ 13: MENSAGENS (Placeholder) -->
+            <!-- ECRÃ 12: ECRÃ DE ATENDIMENTO (PRONTUÁRIO) -->
+            <div id="atendimento-screen" class="app-screen p-4 lg:p-8 space-y-6 hidden">
+                <!-- Cabeçalho -->
+                <header class="flex items-center space-x-4">
+                     <button id="back-atendimento-to-pacientes" class="p-2">
+                         <i data-lucide="arrow-left" class="text-texto-principal w-6 h-6"></i>
+                     </button>
+                     <h1 class="text-3xl font-bold text-texto-principal">Prontuário: <span id="prontuario-paciente-nome">Nome do Paciente</span></h1>
+                </header>
+
+                <!-- Sub-Cabeçalho Info Paciente -->
+                <div class="bg-fundo-secundario p-4 rounded-xl shadow-lg grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+                    <p><strong class="text-texto-secundario">Idade:</strong> 34 anos</p>
+                    <p><strong class="text-texto-secundario">Alergias:</strong> Penicilina</p>
+                    <p><strong class="text-texto-secundario">Condições:</strong> Hipertensão</p>
+                </div>
+
+                <!-- Abas de Navegação do Prontuário -->
+                <div class="border-b border-campo">
+                    <nav class="-mb-px flex space-x-6">
+                        <button class="tab-btn active" data-tab="resumo">Resumo</button>
+                        <button class="tab-btn" data-tab="historico">Histórico</button>
+                        <button class="tab-btn" data-tab="exames">Exames</button>
+                        <button class="tab-btn" data-tab="receitas">Receitas</button>
+                    </nav>
+                </div>
+
+                <!-- Conteúdo das Abas -->
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <!-- Coluna Principal (Conteúdo da Aba) -->
+                    <div class="lg:col-span-2 space-y-6">
+                        <!-- Aba Resumo (Visível por padrão) -->
+                        <div id="tab-resumo" class="tab-content space-y-4">
+                            <h3 class="text-xl font-semibold text-texto-principal">Resumo da Consulta Atual</h3>
+                            <textarea rows="8" class="block w-full rounded-md border-0 bg-campo p-3 text-texto-principal placeholder:text-texto-secundario focus:ring-2 focus:ring-inset focus:ring-ciano-vibrante" placeholder="Adicionar notas da consulta..."></textarea>
+                            <button class="w-full flex justify-center rounded-md bg-ciano-vibrante px-3 py-3 text-sm font-semibold text-white shadow-sm hover:bg-azul-suave">Salvar Anotações</button>
+                        </div>
+                        
+                        <!-- Aba Histórico (Oculta) -->
+                        <div id="tab-historico" class="tab-content space-y-4 hidden">
+                             <h3 class="text-xl font-semibold text-texto-principal">Histórico de Consultas</h3>
+                             <div class="bg-campo p-4 rounded-lg">
+                                <p class="font-semibold text-texto-principal">15 de Set, 2025 - Dra. Ana Sousa</p>
+                                <p class="text-sm text-texto-secundario mt-1">Paciente relatou dores no peito. Pressão arterial 140/90. Receitado Losartana.</p>
+                             </div>
+                        </div>
+
+                        <!-- Aba Exames (Oculta) -->
+                        <div id="tab-exames" class="tab-content space-y-4 hidden">
+                            <h3 class="text-xl font-semibold text-texto-principal">Resultados de Exames</h3>
+                            <p class="text-texto-secundario">Nenhum exame recente.</p>
+                        </div>
+                        
+                        <!-- Aba Receitas (Oculta) -->
+                        <div id="tab-receitas" class="tab-content space-y-4 hidden">
+                            <h3 class="text-xl font-semibold text-texto-principal">Receitas Emitidas</h3>
+                            <div class="bg-campo p-4 rounded-lg">
+                                <p class="font-semibold text-texto-principal">Losartana 50mg (Uso contínuo)</p>
+                                <p class="text-sm text-texto-secundario mt-1">Emitida em 15 de Set, 2025 por Dra. Ana Sousa.</p>
+                             </div>
+                        </div>
+                    </div>
+
+                    <!-- Coluna Lateral (Ações Rápidas) -->
+                    <div class="lg:col-span-1 space-y-4">
+                        <h3 class="text-xl font-semibold text-texto-principal">Ações</h3>
+                        <div class="bg-fundo-secundario p-4 rounded-xl shadow-lg space-y-3">
+                            <button class="w-full flex items-center justify-center gap-2 rounded-md bg-campo px-3 py-3 text-sm font-semibold text-texto-principal shadow-sm hover:bg-gray-600">
+                                <i data-lucide="pilcrow" class="w-4 h-4"></i> Emitir Receita
+                            </button>
+                            <button class="w-full flex items-center justify-center gap-2 rounded-md bg-campo px-3 py-3 text-sm font-semibold text-texto-principal shadow-sm hover:bg-gray-600">
+                                <i data-lucide="flask-conical" class="w-4 h-4"></i> Solicitar Exame
+                            </button>
+                             <button class="w-full flex items-center justify-center gap-2 rounded-md bg-campo px-3 py-3 text-sm font-semibold text-texto-principal shadow-sm hover:bg-gray-600">
+                                <i data-lucide="file-plus" class="w-4 h-4"></i> Anexar Documento
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ECRÃ 14: NOTIFICAÇÕES (Adicionado) -->
+            <div id="notifications-screen" class="app-screen p-4 lg:p-8 space-y-6 hidden">
+                 <header class="flex items-center space-x-4">
+                     <button id="back-notifications-to-dashboard" class="p-2">
+                         <i data-lucide="arrow-left" class="text-texto-principal w-6 h-6"></i>
+                     </button>
+                     <h1 class="text-3xl font-bold text-texto-principal">Notificações</h1>
+                 </header>
+                 <div class="space-y-3">
+                     <div class="bg-fundo-secundario p-4 rounded-xl flex items-start space-x-3 shadow-lg cursor-pointer hover:bg-campo notification-unread">
+                        <div class="bg-ciano-vibrante/20 p-2 rounded-lg mt-1"> <i data-lucide="file-text" class="text-ciano-vibrante w-5 h-5"></i> </div>
+                        <div class="flex-1">
+                            <p class="font-semibold text-texto-principal text-sm">Novo resultado de exame</p>
+                            <p class="text-xs text-texto-secundario mt-1">O resultado de Hemograma do paciente João Pereira está disponível.</p>
+                            <p class="text-xs text-texto-secundario mt-2">Há 15 minutos</p>
+                        </div>
+                     </div>
+                     <div class="bg-fundo-secundario p-4 rounded-xl flex items-start space-x-3 shadow-lg cursor-pointer hover:bg-campo opacity-80">
+                        <div class="bg-campo/50 p-2 rounded-lg mt-1"> <i data-lucide="calendar-check" class="text-texto-secundario w-5 h-5"></i> </div>
+                        <div class="flex-1">
+                            <p class="font-semibold text-texto-principal text-sm">Consulta confirmada</p>
+                            <p class="text-xs text-texto-secundario mt-1">Maria Silva confirmou a teleconsulta de hoje às 15:00.</p>
+                            <p class="text-xs text-texto-secundario mt-2">Há 1 hora</p>
+                        </div>
+                     </div>
+                </div>
+            </div>
+
+            <!-- ECRÃ 15: MENSAGENS (Placeholder) -->
             <div id="mensagens-screen" class="app-screen p-4 lg:p-8 space-y-6 hidden">
                  <h1 class="text-3xl font-bold text-texto-principal">Mensagens</h1>
                  <p class="text-texto-secundario">Ecrã para mensagens do profissional.</p>
@@ -304,12 +464,40 @@
         const dashboardScreen = document.getElementById('dashboard-screen');
         const agendaScreen = document.getElementById('agenda-screen');
         const pacientesScreen = document.getElementById('pacientes-screen');
+        const atendimentoScreen = document.getElementById('atendimento-screen');
         const mensagensScreen = document.getElementById('mensagens-screen');
+        const notificationsScreen = document.getElementById('notifications-screen'); // Ecrã adicionado
 
-        const appScreens = [dashboardScreen, agendaScreen, pacientesScreen, mensagensScreen];
+        const appScreens = [dashboardScreen, agendaScreen, pacientesScreen, atendimentoScreen, mensagensScreen, notificationsScreen]; // Ecrã adicionado
         
         // Referências à Navegação
         const sidebarLinks = document.querySelectorAll('aside .sidebar-link');
+        const btnsVerProntuario = document.querySelectorAll('.btn-ver-prontuario');
+        const btnVoltarAtendimento = document.getElementById('back-atendimento-to-pacientes');
+        const btnGoToNotifications = document.getElementById('go-to-notifications-desktop'); // Botão do sino
+        const btnBackFromNotifications = document.getElementById('back-notifications-to-dashboard'); // Botão voltar das notificações
+
+        function showLayout(layoutToShow) {
+            // Esconde ambos os layouts primeiro
+            if (authLayout) {
+                authLayout.classList.add('hidden');
+                authLayout.classList.remove('flex'); // Remove 'flex'
+            }
+            if (appLayout) {
+                appLayout.classList.add('hidden');
+                appLayout.classList.remove('lg:flex'); // Remove 'lg:flex'
+            }
+            
+            // Mostra o layout desejado e aplica a classe de display correta
+            if(layoutToShow) {
+                layoutToShow.classList.remove('hidden');
+                if (layoutToShow === authLayout) {
+                    layoutToShow.classList.add('flex'); // Adiciona 'flex' para o auth
+                } else if (layoutToShow === appLayout) {
+                    layoutToShow.classList.add('lg:flex'); // Adiciona 'lg:flex' para o app
+                }
+            }
+        }
 
         function showAppScreen(screenToShow) {
             // Esconde todos os ecrãs
@@ -322,7 +510,14 @@
             // Atualiza o estado ativo da sidebar
             sidebarLinks.forEach(link => {
                 const target = link.getAttribute('data-target');
-                link.classList.toggle('active', target === (screenToShow ? screenToShow.id : ''));
+                let isActive = target === (screenToShow ? screenToShow.id : '');
+                
+                // Lógica especial para manter "Pacientes" ativo durante o atendimento
+                if (screenToShow && screenToShow.id === 'atendimento-screen' && target === 'pacientes-screen') {
+                    isActive = true;
+                }
+
+                link.classList.toggle('active', isActive);
             });
             
             // Re-renderiza os ícones
@@ -350,11 +545,7 @@
         if (loginForm) {
             loginForm.addEventListener('submit', (e) => {
                 e.preventDefault();
-                if (authLayout) authLayout.classList.add('hidden');
-                if (appLayout) {
-                    appLayout.classList.remove('hidden');
-                    appLayout.classList.add('lg:flex');
-                }
+                showLayout(appLayout);
                 showAppScreen(dashboardScreen); // Mostra o dashboard ao logar
             });
         }
@@ -363,21 +554,88 @@
         if (logoutBtn) {
             logoutBtn.addEventListener('click', (e) => {
                 e.preventDefault();
-                if (appLayout) {
-                    appLayout.classList.add('hidden');
-                    appLayout.classList.remove('lg:flex');
-                }
-                if (authLayout) authLayout.classList.remove('hidden');
+                showLayout(authLayout);
                 showAppScreen(null); // Esconde todos os ecrãs
             });
         }
-        
-        // Estado inicial (mostra o dashboard se o layout da app estiver visível)
-        if (appLayout && !appLayout.classList.contains('hidden')) {
-            showAppScreen(dashboardScreen);
-        } else {
-            showAppScreen(null); // Esconde todos os ecrãs da app se estiver no login
+
+        // --- Lógica Específica dos Ecrãs ---
+
+        // Navegação para Notificações
+        if (btnGoToNotifications) {
+            btnGoToNotifications.addEventListener('click', (e) => {
+                e.preventDefault();
+                showAppScreen(notificationsScreen);
+            });
         }
+        if (btnBackFromNotifications) {
+            btnBackFromNotifications.addEventListener('click', (e) => {
+                e.preventDefault();
+                showAppScreen(dashboardScreen);
+            });
+        }
+
+
+        // Navegação para o Prontuário (Tela 12)
+        const prontuarioPacienteNome = document.getElementById('prontuario-paciente-nome');
+        btnsVerProntuario.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const nomePaciente = e.currentTarget.getAttribute('data-paciente');
+                if (prontuarioPacienteNome) {
+                    prontuarioPacienteNome.textContent = nomePaciente;
+                }
+                showAppScreen(atendimentoScreen);
+            });
+        });
+
+        // Voltar do Prontuário para a Lista de Pacientes
+        if (btnVoltarAtendimento) {
+            btnVoltarAtendimento.addEventListener('click', (e) => {
+                e.preventDefault();
+                showAppScreen(pacientesScreen);
+            });
+        }
+
+        // Lógica da Pesquisa de Pacientes (Tela 13)
+        const pacienteSearch = document.getElementById('paciente-search');
+        const pacientesList = document.getElementById('pacientes-list');
+        if (pacienteSearch && pacientesList) {
+            const pacientesItems = pacientesList.querySelectorAll('.paciente-item');
+            pacienteSearch.addEventListener('input', (e) => {
+                const searchTerm = e.target.value.toLowerCase();
+                pacientesItems.forEach(item => {
+                    const nome = item.getAttribute('data-nome').toLowerCase();
+                    item.classList.toggle('hidden', !nome.includes(searchTerm));
+                });
+            });
+        }
+        
+        // Lógica das Abas do Prontuário (Tela 12)
+        const tabButtons = document.querySelectorAll('#atendimento-screen .tab-btn');
+        const tabContents = document.querySelectorAll('#atendimento-screen .tab-content');
+        if (tabButtons.length > 0) {
+            tabButtons.forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    // Desativa todos
+                    tabButtons.forEach(b => b.classList.remove('active'));
+                    tabContents.forEach(c => c.classList.add('hidden'));
+                    
+                    // Ativa o clicado
+                    const targetTab = e.currentTarget.getAttribute('data-tab');
+                    e.currentTarget.classList.add('active');
+                    const targetContent = document.getElementById(`tab-${targetTab}`);
+                    if (targetContent) {
+                        targetContent.classList.remove('hidden');
+                    }
+                });
+            });
+        }
+
+
+        // Estado inicial
+        showLayout(authLayout);
+        showAppScreen(null); // Esconde todos os ecrãs da app se estiver no login
 
         // Ativa os ícones no carregamento inicial
         if (typeof lucide !== 'undefined') {
@@ -386,4 +644,3 @@
     </script>
 </body>
 </html>
-
