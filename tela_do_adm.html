@@ -134,7 +134,7 @@
                     <i data-lucide="home" class="w-5 h-5"></i>
                     <span>Início</span>
                 </a>
-                <a href="#" class="sidebar-link" data-target="admin-management-screen">
+                <a href="#" class="sidebar-link" data-target="admin-gestao-hub-screen"> <!-- ATUALIZADO AQUI -->
                     <i data-lucide="sliders-horizontal" class="w-5 h-5"></i>
                     <span>Gestão</span>
                 </a>
@@ -190,24 +190,24 @@
                 <div>
                     <h2 class="text-xl font-semibold text-texto-principal mb-4">Acesso Rápido</h2>
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <button class="btn-go-to-management bg-fundo-secundario p-5 rounded-xl flex items-center space-x-4 hover:bg-campo">
+                        <button class="btn-go-to-management bg-fundo-secundario p-5 rounded-xl flex items-center space-x-4 hover:bg-campo" data-target="admin-management-screen">
                             <i data-lucide="user-cog" class="w-8 h-8 text-ciano-vibrante"></i>
                             <div>
                                 <p class="text-lg font-semibold text-texto-principal">Gerir Cadastros</p>
                                 <p class="text-texto-secundario text-sm text-left">Pacientes e Profissionais</p>
                             </div>
                         </button>
-                        <button class="btn-go-to-management bg-fundo-secundario p-5 rounded-xl flex items-center space-x-4 hover:bg-campo">
+                        <button class="btn-go-to-management bg-fundo-secundario p-5 rounded-xl flex items-center space-x-4 hover:bg-campo" data-target="admin-relatorios-screen">
                             <i data-lucide="clipboard-list" class="w-8 h-8 text-ciano-vibrante"></i>
                             <div>
                                 <p class="text-lg font-semibold text-texto-principal">Gerar Relatórios</p>
                                 <p class="text-texto-secundario text-sm text-left">Financeiros e Suprimentos</p>
                             </div>
                         </button>
-                        <button class="btn-go-to-management bg-fundo-secundario p-5 rounded-xl flex items-center space-x-4 hover:bg-campo">
+                        <button class="btn-go-to-management bg-fundo-secundario p-5 rounded-xl flex items-center space-x-4 hover:bg-campo" data-target="admin-fluxos-screen">
                             <i data-lucide="building" class="w-8 h-8 text-ciano-vibrante"></i>
                             <div>
-                                <p class="text-lg font-semibold text-texto-principal">Controlo de Fluxos</p>
+                                <p class="text-lg font-semibold text-texto-principal">Controle de Fluxos</p>
                                 <p class="text-texto-secundario text-sm text-left">Internações e Leitos</p>
                             </div>
                         </button>
@@ -215,10 +215,56 @@
                 </div>
             </div>
 
-            <!-- ECRÃ 16: GESTÃO DE CADASTROS E FLUXOS -->
+            <!-- ECRÃ DE HUB DE GESTÃO (NOVO) -->
+            <div id="admin-gestao-hub-screen" class="app-screen p-4 lg:p-8 space-y-6 hidden">
+                <header class="flex justify-between items-center">
+                    <div class="flex items-center gap-4">
+                        <button id="back-gestao-hub-to-dashboard" class="p-2 rounded-full hover:bg-fundo-secundario">
+                            <i data-lucide="arrow-left" class="w-6 h-6 text-texto-principal"></i>
+                        </button>
+                        <h1 class="text-3xl font-bold text-texto-principal">Gestão</h1>
+                    </div>
+                </header>
+                
+                <h2 class="text-xl font-semibold text-texto-principal">Selecione uma área para gerir:</h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <!-- Gerir Cadastros -->
+                    <button class="btn-go-to-screen bg-fundo-secundario p-5 rounded-xl flex items-center space-x-4 hover:bg-campo" data-target="admin-management-screen">
+                        <i data-lucide="user-cog" class="w-8 h-8 text-ciano-vibrante"></i>
+                        <div>
+                            <p class="text-lg font-semibold text-texto-principal text-left">Gerir Cadastros</p>
+                            <p class="text-texto-secundario text-sm text-left">Pacientes e Profissionais</p>
+                        </div>
+                    </button>
+                    <!-- Gerar Relatórios -->
+                    <button class="btn-go-to-screen bg-fundo-secundario p-5 rounded-xl flex items-center space-x-4 hover:bg-campo" data-target="admin-relatorios-screen">
+                        <i data-lucide="clipboard-list" class="w-8 h-8 text-ciano-vibrante"></i>
+                        <div>
+                            <p class="text-lg font-semibold text-texto-principal text-left">Gerar Relatórios</p>
+                            <p class="text-texto-secundario text-sm text-left">Financeiros e Suprimentos</p>
+                        </div>
+                    </button>
+                    <!-- Controle de Fluxos -->
+                    <button class="btn-go-to-screen bg-fundo-secundario p-5 rounded-xl flex items-center space-x-4 hover:bg-campo" data-target="admin-fluxos-screen">
+                        <i data-lucide="building" class="w-8 h-8 text-ciano-vibrante"></i>
+                        <div>
+                            <p class="text-lg font-semibold text-texto-principal text-left">Controle de Fluxos</p>
+                            <p class="text-texto-secundario text-sm text-left">Internações e Leitos</p>
+                        </div>
+                    </button>
+                </div>
+            </div>
+
+            <!-- ECRÃ 16.1: GESTÃO DE CADASTROS -->
             <div id="admin-management-screen" class="app-screen p-4 lg:p-8 space-y-6 hidden">
                  <header class="flex justify-between items-center">
-                    <h1 class="text-3xl font-bold text-texto-principal">Gestão de Cadastros e Fluxos</h1>
+                    <div class="flex items-center gap-4">
+                        <button id="back-management-to-dashboard" class="p-2 rounded-full hover:bg-fundo-secundario">
+                            <i data-lucide="arrow-left" class="w-6 h-6 text-texto-principal"></i>
+                        </button>
+                        <h1 class="text-3xl font-bold text-texto-principal">Gestão de Cadastros</h1>
+                    </div>
                 </header>
                 
                 <!-- Abas Secundárias (Pacientes / Profissionais) -->
@@ -269,7 +315,7 @@
                     </div>
                 </div>
                 <!-- Sub-conteúdo: Profissionais (Oculto) -->
-                <div id="subtab-cad-profissionais" class="subtab-content space-y-4">
+                <div id="subtab-cad-profissionais" class="subtab-content space-y-4 hidden">
                     <div class="flex justify-between items-center">
                         <h3 class="text-xl font-semibold text-texto-principal">Lista de Profissionais</h3>
                         <button class="flex items-center gap-2 px-4 py-2 text-xs font-semibold bg-ciano-vibrante text-white rounded-md hover:bg-azul-suave"> <i data-lucide="plus" class="w-4 h-4"></i> Adicionar Profissional </button>
@@ -311,6 +357,159 @@
                 </div>
             </div>
 
+            <!-- ECRÃ 16.2: CONTROLe DE FLUXOS -->
+            <div id="admin-fluxos-screen" class="app-screen p-4 lg:p-8 space-y-6 hidden">
+                <header class="flex justify-between items-center">
+                    <div class="flex items-center gap-4">
+                        <button id="back-fluxos-to-dashboard" class="p-2 rounded-full hover:bg-fundo-secundario">
+                            <i data-lucide="arrow-left" class="w-6 h-6 text-texto-principal"></i>
+                        </button>
+                        <h1 class="text-3xl font-bold text-texto-principal">Controle de Fluxos</h1>
+                    </div>
+                </header>
+            
+                <!-- Sub-conteúdo: Controle de Fluxo (Leitos) -->
+                <div id="subtab-fluxos" class="subtab-content space-y-4">
+                    <h3 class="text-xl font-semibold text-texto-principal">Gestão de Internações e Leitos</h3>
+                    
+                    <!-- Métricas de Leitos -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div class="bg-fundo-sidebar p-5 rounded-xl flex items-center space-x-4">
+                            <i data-lucide="bed-double" class="w-8 h-8 text-amarelo-alerta"></i>
+                            <div>
+                                <p class="text-texto-secundario text-sm">Leitos Ocupados</p>
+                                <p class="text-2xl font-bold text-texto-principal">82 / 100</p>
+                            </div>
+                        </div>
+                        <div class="bg-fundo-sidebar p-5 rounded-xl flex items-center space-x-4">
+                            <i data-lucide="bed" class="w-8 h-8 text-green-400"></i>
+                            <div>
+                                <p class="text-texto-secundario text-sm">Leitos Livres</p>
+                                <p class="text-2xl font-bold text-texto-principal">18</p>
+                            </div>
+                        </div>
+                        <div class="bg-fundo-sidebar p-5 rounded-xl flex items-center space-x-4">
+                            <i data-lucide="alert-triangle" class="w-8 h-8 text-vermelho-erro"></i>
+                            <div>
+                                <p class="text-texto-secundario text-sm">Altas Previstas (Hoje)</p>
+                                <p class="text-2xl font-bold text-texto-principal">5</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tabela de Leitos -->
+                    <div class="overflow-x-auto bg-fundo-secundario rounded-lg shadow">
+                        <table class="min-w-full divide-y divide-campo">
+                            <thead class="bg-fundo-secundario">
+                                <tr>
+                                    <th scope="col" class="py-3.5 px-4 text-left text-sm font-semibold text-texto-principal">Andar</th>
+                                    <th scope="col" class="py-3.5 px-4 text-left text-sm font-semibold text-texto-principal">Quarto</th>
+                                    <th scope="col" class="py-3.5 px-4 text-left text-sm font-semibold text-texto-principal">Leito</th>
+                                    <th scope="col" class="py-3.5 px-4 text-left text-sm font-semibold text-texto-principal">Status</th>
+                                    <th scope="col" class="py-3.5 px-4 text-left text-sm font-semibold text-texto-principal">Paciente</th>
+                                    <th scope="col" class="py-3.5 px-4 text-left text-sm font-semibold text-texto-principal">Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-campo bg-fundo-sidebar">
+                                <tr>
+                                    <td class="whitespace-nowrap py-4 px-4 text-sm text-texto-secundario">Ala Sul - 2ºA</td>
+                                    <td class="whitespace-nowrap py-4 px-4 text-sm text-texto-secundario">204</td>
+                                    <td class="whitespace-nowrap py-4 px-4 text-sm font-medium text-texto-principal">204-A</td>
+                                    <td class="whitespace-nowrap py-4 px-4 text-sm">
+                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-amarelo-alerta/20 text-amarelo-alerta">OCUPADO</span>
+                                    </td>
+                                    <td class="whitespace-nowrap py-4 px-4 text-sm text-texto-secundario">João Pereira</td>
+                                    <td class="whitespace-nowrap py-4 px-4 text-sm space-x-2">
+                                        <button class="text-ciano-vibrante hover:text-azul-suave"><i data-lucide="eye" class="w-4 h-4"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="whitespace-nowrap py-4 px-4 text-sm text-texto-secundario">Ala Sul - 2ºA</td>
+                                    <td class="whitespace-nowrap py-4 px-4 text-sm text-texto-secundario">204</td>
+                                    <td class="whitespace-nowrap py-4 px-4 text-sm font-medium text-texto-principal">204-B</td>
+                                    <td class="whitespace-nowrap py-4 px-4 text-sm">
+                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-400/20 text-green-400">LIVRE</span>
+                                    </td>
+                                    <td class="whitespace-nowrap py-4 px-4 text-sm text-texto-secundario">-</td>
+                                    <td class="whitespace-nowrap py-4 px-4 text-sm space-x-2">
+                                        <button class="text-ciano-vibrante hover:text-azul-suave"><i data-lucide="plus-circle" class="w-4 h-4"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="whitespace-nowrap py-4 px-4 text-sm text-texto-secundario">UTI - 3º</td>
+                                    <td class="whitespace-nowrap py-4 px-4 text-sm text-texto-secundario">301</td>
+                                    <td class="whitespace-nowrap py-4 px-4 text-sm font-medium text-texto-principal">UTI-05</td>
+                                    <td class="whitespace-nowrap py-4 px-4 text-sm">
+                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-vermelho-erro/20 text-vermelho-erro">BLOQUEADO</span>
+                                    </td>
+                                    <td class="whitespace-nowrap py-4 px-4 text-sm text-texto-secundario">Manutenção</td>
+                                    <td class="whitespace-nowrap py-4 px-4 text-sm space-x-2">
+                                        <button class="text-ciano-vibrante hover:text-azul-suave"><i data-lucide="wrench" class="w-4 h-4"></i></button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ECRÃ 16.3: FERRAMENTA DE RELATÓRIOS -->
+            <div id="admin-relatorios-screen" class="app-screen p-4 lg:p-8 space-y-6 hidden">
+                <header class="flex justify-between items-center">
+                    <div class="flex items-center gap-4">
+                        <button id="back-relatorios-to-dashboard" class="p-2 rounded-full hover:bg-fundo-secundario">
+                            <i data-lucide="arrow-left" class="w-6 h-6 text-texto-principal"></i>
+                        </button>
+                        <h1 class="text-3xl font-bold text-texto-principal">Ferramenta de Relatórios</h1>
+                    </div>
+                </header>
+
+                <!-- Sub-conteúdo: Ferramenta de Relatórios -->
+                <div id="subtab-relatorios" class="subtab-content space-y-6">
+                    <h3 class="text-xl font-semibold text-texto-principal">Gerador de Relatórios</h3>
+                    
+                    <div class="bg-fundo-secundario p-6 rounded-xl max-w-2xl space-y-6">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label for="report-type" class="block text-sm font-medium text-texto-secundario">Tipo de Relatório</label>
+                                <select id="report-type" class="mt-1 block w-full rounded-md border-0 bg-campo p-3 text-texto-principal focus:ring-2 focus:ring-inset focus:ring-ciano-vibrante">
+                                    <option>Financeiro (Receita)</option>
+                                    <option>Ocupação de Leitos</option>
+                                    <option>Atendimentos por Profissional</option>
+                                    <option>Consumo de Suprimentos</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="report-period" class="block text-sm font-medium text-texto-secundario">Período</label>
+                                <select id="report-period" class="mt-1 block w-full rounded-md border-0 bg-campo p-3 text-texto-principal focus:ring-2 focus:ring-inset focus:ring-ciano-vibrante">
+                                    <option>Últimos 7 dias</option>
+                                    <option>Últimos 30 dias</option>
+                                    <option>Mês Atual</option>
+                                    <option>Mês Anterior</option>
+                                    <option>Período Personalizado</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label for="report-start-date" class="block text-sm font-medium text-texto-secundario">Data Inicial</label>
+                                <input type="date" id="report-start-date" disabled class="mt-1 block w-full rounded-md border-0 bg-fundo-sidebar p-3 text-texto-secundario focus:ring-2 focus:ring-inset focus:ring-ciano-vibrante">
+                            </div>
+                            <div>
+                                <label for="report-end-date" class="block text-sm font-medium text-texto-secundario">Data Final</label>
+                                <input type="date" id="report-end-date" disabled class="mt-1 block w-full rounded-md border-0 bg-fundo-sidebar p-3 text-texto-secundario focus:ring-2 focus:ring-inset focus:ring-ciano-vibrante">
+                            </div>
+                        </div>
+                        <div>
+                            <button class="flex items-center justify-center gap-2 w-full rounded-md bg-ciano-vibrante px-3 py-3 text-sm font-semibold text-white shadow-sm hover:bg-azul-suave">
+                                <i data-lucide="download" class="w-4 h-4"></i> Gerar Relatório (.xls)
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
         </main>
     </div>
 
@@ -323,23 +522,27 @@
 
         // Ecrãs
         const dashboardScreen = document.getElementById('admin-dashboard-screen');
+        const gestaoHubScreen = document.getElementById('admin-gestao-hub-screen'); // NOVO
         const managementScreen = document.getElementById('admin-management-screen');
-        const appScreens = [dashboardScreen, managementScreen];
+        const fluxosScreen = document.getElementById('admin-fluxos-screen');
+        const relatoriosScreen = document.getElementById('admin-relatorios-screen');
+        const appScreens = [dashboardScreen, gestaoHubScreen, managementScreen, fluxosScreen, relatoriosScreen]; // ATUALIZADO
         
         // Navegação
         const sidebarLinks = document.querySelectorAll('aside .sidebar-link');
         const quickAccessBtns = document.querySelectorAll('.btn-go-to-management');
+        const gestaoHubBtns = document.querySelectorAll('#admin-gestao-hub-screen .btn-go-to-screen'); // NOVO
 
         // --- FUNÇÕES DE NAVEGAÇÃO ---
 
         function showLayout(layoutToShow) {
             if (authLayout) { authLayout.classList.add('hidden'); authLayout.classList.remove('flex'); }
-            if (appLayout) { appLayout.classList.add('hidden'); appLayout.classList.remove('lg:flex'); }
+            if (appLayout) { appLayout.classList.add('hidden'); appLayout.classList.remove('flex'); }
             
             if(layoutToShow) {
                 layoutToShow.classList.remove('hidden');
                 if (layoutToShow === authLayout) { layoutToShow.classList.add('flex'); } 
-                else if (layoutToShow === appLayout) { layoutToShow.classList.add('lg:flex'); }
+                else if (layoutToShow === appLayout) { layoutToShow.classList.add('flex'); }
             }
         }
 
@@ -349,19 +552,36 @@
 
             sidebarLinks.forEach(link => {
                 const target = link.getAttribute('data-target');
-                link.classList.toggle('active', target === (screenToShow ? screenToShow.id : ''));
+                // Lógica para manter 'Gestão' ativo se qualquer ecrã de gestão estiver ativo
+                const isManagementScreen = (screenToShow && (
+                    screenToShow.id === 'admin-gestao-hub-screen' || // ADICIONADO
+                    screenToShow.id === 'admin-management-screen' || 
+                    screenToShow.id === 'admin-fluxos-screen' || 
+                    screenToShow.id === 'admin-relatorios-screen'
+                ));
+                
+                if (target === 'admin-gestao-hub-screen') { // ATUALIZADO AQUI
+                    link.classList.toggle('active', isManagementScreen);
+                } else {
+                    link.classList.toggle('active', target === (screenToShow ? screenToShow.id : ''));
+                }
             });
             
             if (typeof lucide !== 'undefined') { lucide.createIcons(); }
         }
         
-        // --- LÓGICA DAS ABAS (TELA 16) ---
+        // --- LÓGICA DAS ABAS (TELA 16.1) ---
         
+        const subTabNav = document.getElementById('sub-tabs-nav');
+        const reportPeriodSelect = document.getElementById('report-period');
+        const reportStartDate = document.getElementById('report-start-date');
+        const reportEndDate = document.getElementById('report-end-date');
+
         function showSubTab(subTabId) {
             if (!subTabId) return;
             
             const subTabButtons = document.querySelectorAll('#sub-tabs-nav .subtab-btn');
-            const subTabContents = document.querySelectorAll('.subtab-content');
+            const subTabContents = document.querySelectorAll('#admin-management-screen .subtab-content'); // Corrigido para selecionar apenas abas de G. Cadastros
 
             subTabButtons.forEach(b => b.classList.toggle('active', b.getAttribute('data-subtab') === subTabId));
             subTabContents.forEach(c => c.classList.toggle('hidden', c.id !== `subtab-${subTabId}`));
@@ -370,14 +590,39 @@
         }
 
         // Event Listeners das Sub-Abas
-        document.getElementById('sub-tabs-nav')?.addEventListener('click', (e) => {
-            const target = e.target.closest('.subtab-btn');
-            if (target) {
-                e.preventDefault();
-                const targetSubTab = target.getAttribute('data-subtab');
-                showSubTab(targetSubTab);
-            }
-        });
+        if (subTabNav) {
+            subTabNav.addEventListener('click', (e) => {
+                const target = e.target.closest('.subtab-btn');
+                if (target) {
+                    const targetSubTab = target.getAttribute('data-subtab');
+                    showSubTab(targetSubTab);
+                }
+            });
+        }
+
+        // Lógica do Ecrã de Relatórios
+        if (reportPeriodSelect) {
+            reportPeriodSelect.addEventListener('change', (e) => {
+                const isCustom = e.target.value === 'Período Personalizado';
+                if(reportStartDate && reportEndDate) {
+                    reportStartDate.disabled = !isCustom;
+                    reportEndDate.disabled = !isCustom;
+                    if(isCustom) {
+                        reportStartDate.classList.replace('bg-fundo-sidebar', 'bg-campo');
+                        reportEndDate.classList.replace('bg-fundo-sidebar', 'bg-campo');
+                        reportStartDate.classList.replace('text-texto-secundario', 'text-texto-principal');
+                        reportEndDate.classList.replace('text-texto-secundario', 'text-texto-principal');
+                    } else {
+                        reportStartDate.classList.replace('bg-campo', 'bg-fundo-sidebar');
+                        reportEndDate.classList.replace('bg-campo', 'bg-fundo-sidebar');
+                        reportStartDate.classList.replace('text-texto-principal', 'text-texto-secundario');
+                        reportEndDate.classList.replace('text-texto-principal', 'text-texto-secundario');
+                        reportStartDate.value = '';
+                        reportEndDate.value = '';
+                    }
+                }
+            });
+        }
 
 
         // --- LIGAÇÕES DE NAVEGAÇÃO ---
@@ -390,7 +635,7 @@
                 const targetScreen = document.getElementById(targetScreenId);
                 if (targetScreen) { 
                     showAppScreen(targetScreen);
-                    // Se for para a Gestão, default para a primeira sub-aba
+                    // Se for para a Gestão de Cadastros, default para a primeira sub-aba
                     if (targetScreenId === 'admin-management-screen') {
                         showSubTab('cad-pacientes');
                     }
@@ -398,13 +643,69 @@
             });
         });
 
+        // Botões do HUB de Gestão (NOVO)
+        gestaoHubBtns.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                const targetScreenId = e.currentTarget.getAttribute('data-target');
+                const targetScreen = document.getElementById(targetScreenId);
+                if (targetScreen) { 
+                    showAppScreen(targetScreen);
+                    // Se for para a Gestão de Cadastros, default para a primeira sub-aba
+                    if (targetScreenId === 'admin-management-screen') {
+                        showSubTab('cad-pacientes');
+                    }
+                }
+            });
+        });
+
+        // Voltar da Gestão para o Dashboard
+        const backToDashboardBtn = document.getElementById('back-management-to-dashboard');
+        if (backToDashboardBtn) {
+            backToDashboardBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                showAppScreen(gestaoHubScreen); // Volta para o HUB, não para o dashboard
+            });
+        }
+        
+        // Botões Voltar dos novos ecrãs
+        const backGestaoHubBtn = document.getElementById('back-gestao-hub-to-dashboard'); // NOVO
+        if (backGestaoHubBtn) {
+            backGestaoHubBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                showAppScreen(dashboardScreen);
+            });
+        }
+
+        const backFluxosBtn = document.getElementById('back-fluxos-to-dashboard');
+        if (backFluxosBtn) {
+            backFluxosBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                showAppScreen(gestaoHubScreen); // Volta para o HUB
+            });
+        }
+
+        const backRelatoriosBtn = document.getElementById('back-relatorios-to-dashboard');
+        if (backRelatoriosBtn) {
+            backRelatoriosBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                showAppScreen(gestaoHubScreen); // Volta para o HUB
+            });
+        }
+
+
         // Navegação dos Botões de Acesso Rápido
         quickAccessBtns.forEach(btn => {
             btn.addEventListener('click', (e) => {
-                showAppScreen(managementScreen);
-                // Ação futura: estes botões podem agora levar a sub-abas ou ecrãs diferentes
-                // Por agora, todos levam à gestão de cadastros (primeira sub-aba)
-                showSubTab('cad-pacientes');
+                const targetScreenId = e.currentTarget.getAttribute('data-target'); // Mudei para data-target
+                const targetScreen = document.getElementById(targetScreenId);
+                
+                if (targetScreen) {
+                    showAppScreen(targetScreen);
+                    if (targetScreenId === 'admin-management-screen') {
+                        showSubTab('cad-pacientes');
+                    }
+                }
             });
         });
 
