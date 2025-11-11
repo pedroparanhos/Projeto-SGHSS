@@ -28,6 +28,12 @@
                         'azul-suave': '#22D3EE',
                         'vermelho-erro': '#F43F5E',
                         'amarelo-alerta': '#F59E0B',
+                        // Cores para o mapa de leitos
+                        'leito-livre': '#10B981', // green-500
+                        'leito-ocupado': '#EF4444', // red-500
+                        'leito-alta-hoje': '#EAB308', // yellow-500
+                        'leito-limpeza': '#F97316', // orange-500
+                        'leito-bloqueado': '#6B7280', // gray-500
                     },
                     fontFamily: {
                         'sans': ['Inter', 'sans-serif'],
@@ -72,12 +78,79 @@
             background-color: #475569; /* campo */
             color: #F1F5F9; /* texto-principal */
         }
+
+        /* --- NOVOS ESTILOS PARA SUGESTÕES --- */
+
+        /* Estilos do Mapa de Leitos */
+        .leito-card {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 0.375rem; /* rounded-md */
+            font-weight: 600; /* font-semibold */
+            font-size: 0.875rem; /* text-sm */
+            cursor: pointer;
+            transition: transform 0.1s, box-shadow 0.1s;
+            border: 2px solid transparent;
+            min-height: 50px;
+        }
+        .leito-card:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
+        }
+        /* Cores dos Leitos (Sugestão 1 e 2) */
+        .leito-livre { background-color: rgba(16, 185, 129, 0.2); border-color: #10B981; color: #10B981; }
+        .leito-ocupado { background-color: rgba(239, 68, 68, 0.2); border-color: #EF4444; color: #EF4444; }
+        .leito-alta-hoje { background-color: rgba(234, 179, 8, 0.2); border-color: #EAB308; color: #EAB308; }
+        .leito-limpeza { background-color: rgba(249, 115, 22, 0.2); border-color: #F97316; color: #F97316; }
+        .leito-bloqueado { background-color: rgba(107, 114, 128, 0.2); border-color: #6B7280; color: #6B7280; }
+
+        /* Estilos do Modal (Sugestão 1) */
+        .modal-backdrop {
+            position: fixed;
+            inset: 0;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+            transition: opacity 0.2s;
+        }
+        .modal-content {
+            background-color: #334155; /* fundo-secundario */
+            padding: 1.5rem; /* p-6 */
+            border-radius: 0.5rem; /* rounded-lg */
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 500px;
+            z-index: 101;
+        }
+
+        /* Estilos dos Filtros (Sugestão 4) */
+        .filter-btn {
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem;
+            font-weight: 500;
+            font-size: 0.875rem;
+            color: #94A3B8; /* texto-secundario */
+            background-color: #334155; /* fundo-secundario */
+            transition: background-color 0.2s;
+        }
+        .filter-btn:hover {
+            background-color: #475569; /* campo */
+        }
+        .filter-btn.active {
+            background-color: #06B6D4; /* ciano-vibrante */
+            color: white;
+            font-weight: 600;
+        }
     </style>
 </head>
 <body class="bg-fundo-principal text-texto-principal font-sans">
 
     <!-- LAYOUT DE AUTENTICAÇÃO (Login do Administrador) -->
     <div id="auth-layout" class="min-h-screen flex flex-col items-center justify-center p-4">
+        <!-- ... (Código de Login inalterado) ... -->
         <div id="admin-login-screen" class="auth-screen w-full">
             <div class="w-full max-w-sm mx-auto bg-fundo-secundario rounded-xl shadow-lg p-8 space-y-8">
                 <div class="flex flex-col items-center space-y-4">
@@ -120,27 +193,23 @@
         
         <!-- NAVEGAÇÃO LATERAL (DESKTOP) -->
         <aside class="flex-col w-64 fixed inset-y-0 z-50 bg-fundo-sidebar p-6 hidden lg:flex">
-            <!-- Logo -->
+            <!-- ... (Código da Sidebar inalterado) ... -->
             <div class="flex items-center space-x-3 mb-10">
                 <div class="w-10 h-10 bg-ciano-vibrante rounded-lg flex items-center justify-center">
                     <i data-lucide="heart-pulse" class="text-white w-6 h-6"></i>
                 </div>
                 <h1 class="text-xl font-bold text-texto-principal">VidaPlus</h1>
             </div>
-            
-            <!-- Menu de Navegação -->
             <nav class="flex-1 space-y-2">
                 <a href="#" class="sidebar-link active" data-target="admin-dashboard-screen">
                     <i data-lucide="home" class="w-5 h-5"></i>
                     <span>Início</span>
                 </a>
-                <a href="#" class="sidebar-link" data-target="admin-management-screen">
+                <a href="#" class="sidebar-link" data-target="admin-gestao-hub-screen">
                     <i data-lucide="sliders-horizontal" class="w-5 h-5"></i>
                     <span>Gestão</span>
                 </a>
             </nav>
-            
-            <!-- Perfil do Utilizador (Rodapé do Sidebar) -->
             <div class="border-t border-campo pt-4">
                 <div class="flex items-center space-x-3">
                     <img src="https://placehold.co/40x40/EAB308/FFFFFF?text=A" alt="Avatar do Administrador" class="w-10 h-10 rounded-full">
@@ -156,12 +225,10 @@
         <main class="flex-1 lg:pl-64 flex flex-col">
             <!-- ECRÃ 15: DASHBOARD DO ADMINISTRADOR -->
             <div id="admin-dashboard-screen" class="app-screen p-4 lg:p-8 space-y-6">
-                <!-- Cabeçalho -->
+                <!-- ... (Código do Dashboard inalterado) ... -->
                 <header class="flex justify-between items-center">
                     <h1 class="text-3xl font-bold text-texto-principal">Painel do Administrador</h1>
                 </header>
-
-                <!-- Métricas Chave -->
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div class="bg-fundo-secundario p-5 rounded-xl flex items-center space-x-4">
                         <i data-lucide="users-2" class="w-8 h-8 text-ciano-vibrante"></i>
@@ -185,29 +252,27 @@
                         </div>
                     </div>
                 </div>
-
-                <!-- Acessos Rápidos -->
                 <div>
                     <h2 class="text-xl font-semibold text-texto-principal mb-4">Acesso Rápido</h2>
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <button class="btn-go-to-management bg-fundo-secundario p-5 rounded-xl flex items-center space-x-4 hover:bg-campo">
+                        <button class="btn-go-to-management bg-fundo-secundario p-5 rounded-xl flex items-center space-x-4 hover:bg-campo" data-target="admin-management-screen">
                             <i data-lucide="user-cog" class="w-8 h-8 text-ciano-vibrante"></i>
                             <div>
                                 <p class="text-lg font-semibold text-texto-principal">Gerir Cadastros</p>
                                 <p class="text-texto-secundario text-sm text-left">Pacientes e Profissionais</p>
                             </div>
                         </button>
-                        <button class="btn-go-to-management bg-fundo-secundario p-5 rounded-xl flex items-center space-x-4 hover:bg-campo">
+                        <button class="btn-go-to-management bg-fundo-secundario p-5 rounded-xl flex items-center space-x-4 hover:bg-campo" data-target="admin-relatorios-screen">
                             <i data-lucide="clipboard-list" class="w-8 h-8 text-ciano-vibrante"></i>
                             <div>
                                 <p class="text-lg font-semibold text-texto-principal">Gerar Relatórios</p>
                                 <p class="text-texto-secundario text-sm text-left">Financeiros e Suprimentos</p>
                             </div>
                         </button>
-                        <button class="btn-go-to-management bg-fundo-secundario p-5 rounded-xl flex items-center space-x-4 hover:bg-campo">
+                        <button class="btn-go-to-management bg-fundo-secundario p-5 rounded-xl flex items-center space-x-4 hover:bg-campo" data-target="admin-fluxos-screen">
                             <i data-lucide="building" class="w-8 h-8 text-ciano-vibrante"></i>
                             <div>
-                                <p class="text-lg font-semibold text-texto-principal">Controlo de Fluxos</p>
+                                <p class="text-lg font-semibold text-texto-principal">Controle de Fluxos</p>
                                 <p class="text-texto-secundario text-sm text-left">Internações e Leitos</p>
                             </div>
                         </button>
@@ -215,26 +280,64 @@
                 </div>
             </div>
 
-            <!-- ECRÃ 16: GESTÃO DE CADASTROS E FLUXOS -->
-            <div id="admin-management-screen" class="app-screen p-4 lg:p-8 space-y-6 hidden">
-                 <header class="flex justify-between items-center">
-                    <h1 class="text-3xl font-bold text-texto-principal">Gestão de Cadastros e Fluxos</h1>
+            <!-- ECRÃ DE HUB DE GESTÃO -->
+            <div id="admin-gestao-hub-screen" class="app-screen p-4 lg:p-8 space-y-6 hidden">
+                <!-- ... (Código do Hub de Gestão inalterado) ... -->
+                <header class="flex justify-between items-center">
+                    <div class="flex items-center gap-4">
+                        <button id="back-gestao-hub-to-dashboard" class="p-2 rounded-full hover:bg-fundo-secundario">
+                            <i data-lucide="arrow-left" class="w-6 h-6 text-texto-principal"></i>
+                        </button>
+                        <h1 class="text-3xl font-bold text-texto-principal">Gestão</h1>
+                    </div>
                 </header>
-                
-                <!-- Abas Secundárias (Pacientes / Profissionais) -->
-                <div class="flex space-x-2 bg-fundo-secundario p-1 rounded-lg max-w-xs" id="sub-tabs-nav">
+                <h2 class="text-xl font-semibold text-texto-principal">Selecione uma área para gerir:</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <button class="btn-go-to-screen bg-fundo-secundario p-5 rounded-xl flex items-center space-x-4 hover:bg-campo" data-target="admin-management-screen">
+                        <i data-lucide="user-cog" class="w-8 h-8 text-ciano-vibrante"></i>
+                        <div>
+                            <p class="text-lg font-semibold text-texto-principal text-left">Gerir Cadastros</p>
+                            <p class="text-texto-secundario text-sm text-left">Pacientes e Profissionais</p>
+                        </div>
+                    </button>
+                    <button class="btn-go-to-screen bg-fundo-secundario p-5 rounded-xl flex items-center space-x-4 hover:bg-campo" data-target="admin-relatorios-screen">
+                        <i data-lucide="clipboard-list" class="w-8 h-8 text-ciano-vibrante"></i>
+                        <div>
+                            <p class="text-lg font-semibold text-texto-principal text-left">Gerar Relatórios</p>
+                            <p class="text-texto-secundario text-sm text-left">Financeiros e Suprimentos</p>
+                        </div>
+                    </button>
+                     <button class="btn-go-to-screen bg-fundo-secundario p-5 rounded-xl flex items-center space-x-4 hover:bg-campo" data-target="admin-fluxos-screen">
+                        <i data-lucide="building" class="w-8 h-8 text-ciano-vibrante"></i>
+                        <div>
+                            <p class="text-lg font-semibold text-texto-principal text-left">Controle de Fluxos</p>
+                            <p class="text-texto-secundario text-sm text-left">Internações e Leitos</p>
+                        </div>
+                    </button>                   
+                </div>
+            </div>
+
+            <!-- ECRÃ 16.1: GESTÃO DE CADASTROS -->
+            <div id="admin-management-screen" class="app-screen p-4 lg:p-8 space-y-6 hidden">
+                <!-- ... (Código da Gestão de Cadastros inalterado) ... -->
+                <header class="flex justify-between items-center">
+                    <div class="flex items-center gap-4">
+                        <button id="back-management-to-hub" class="p-2 rounded-full hover:bg-fundo-secundario">
+                            <i data-lucide="arrow-left" class="w-6 h-6 text-texto-principal"></i>
+                        </button>
+                        <h1 class="text-3xl font-bold text-texto-principal">Gestão de Cadastros</h1>
+                    </div>
+                </header>
+                <div class="flex space-x-2 bg-fundo-secundario p-1 rounded-lg max-w-xs" id="sub-tabs-nav-cadastros">
                     <button class="subtab-btn active w-full" data-subtab="cad-pacientes">Pacientes</button>
                     <button class="subtab-btn w-full" data-subtab="cad-profissionais">Profissionais</button>
                 </div>
-
-                <!-- Sub-conteúdo: Pacientes -->
-                <div id="subtab-cad-pacientes" class="subtab-content space-y-4">
+                <div id="subtab-cad-pacientes" class="subtab-content-cadastros space-y-4">
                     <div class="flex justify-between items-center">
                         <h3 class="text-xl font-semibold text-texto-principal">Lista de Pacientes</h3>
                         <button class="flex items-center gap-2 px-4 py-2 text-xs font-semibold bg-ciano-vibrante text-white rounded-md hover:bg-azul-suave"> <i data-lucide="plus" class="w-4 h-4"></i> Adicionar Paciente </button>
                     </div>
                     <input type="search" id="admin-paciente-search" placeholder="Procurar paciente por nome ou CPF..." class="block w-full max-w-lg rounded-md border-0 bg-campo p-3 pl-10 text-texto-principal placeholder:text-texto-secundario focus:ring-2 focus:ring-inset focus:ring-ciano-vibrante">
-                    <!-- Tabela de Pacientes -->
                     <div class="overflow-x-auto bg-fundo-secundario rounded-lg shadow">
                         <table class="min-w-full divide-y divide-campo">
                             <thead class="bg-fundo-secundario">
@@ -268,14 +371,12 @@
                         </table>
                     </div>
                 </div>
-                <!-- Sub-conteúdo: Profissionais (Oculto) -->
-                <div id="subtab-cad-profissionais" class="subtab-content space-y-4">
+                <div id="subtab-cad-profissionais" class="subtab-content-cadastros space-y-4 hidden">
                     <div class="flex justify-between items-center">
                         <h3 class="text-xl font-semibold text-texto-principal">Lista de Profissionais</h3>
                         <button class="flex items-center gap-2 px-4 py-2 text-xs font-semibold bg-ciano-vibrante text-white rounded-md hover:bg-azul-suave"> <i data-lucide="plus" class="w-4 h-4"></i> Adicionar Profissional </button>
                     </div>
                     <input type="search" id="admin-profissional-search" placeholder="Procurar profissional por nome ou CRM..." class="block w-full max-w-lg rounded-md border-0 bg-campo p-3 pl-10 text-texto-principal placeholder:text-texto-secundario focus:ring-2 focus:ring-inset focus:ring-ciano-vibrante">
-                    <!-- Tabela de Profissionais -->
                     <div class="overflow-x-auto bg-fundo-secundario rounded-lg shadow">
                         <table class="min-w-full divide-y divide-campo">
                             <thead class="bg-fundo-secundario">
@@ -311,8 +412,259 @@
                 </div>
             </div>
 
+            <!-- ECRÃ 16.2: CONTROLE DE FLUXOS (TOTALMENTE REFEITO) -->
+            <div id="admin-fluxos-screen" class="app-screen p-4 lg:p-8 space-y-6 hidden">
+                <header class="flex justify-between items-center">
+                    <div class="flex items-center gap-4">
+                        <button id="back-fluxos-to-hub" class="p-2 rounded-full hover:bg-fundo-secundario">
+                            <i data-lucide="arrow-left" class="w-6 h-6 text-texto-principal"></i>
+                        </button>
+                        <h1 class="text-3xl font-bold text-texto-principal">Controle de Fluxos</h1>
+                    </div>
+                </header>
+            
+                <!-- Métricas de Leitos (KPIs Sugestão 5) -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <div class="bg-fundo-secundario p-5 rounded-xl flex items-center space-x-4">
+                        <i data-lucide="bed-double" class="w-8 h-8 text-leito-ocupado"></i>
+                        <div>
+                            <p class="text-texto-secundario text-sm">Leitos Ocupados</p>
+                            <p class="text-2xl font-bold text-texto-principal">82</p>
+                        </div>
+                    </div>
+                    <div class="bg-fundo-secundario p-5 rounded-xl flex items-center space-x-4">
+                        <i data-lucide="bed" class="w-8 h-8 text-leito-livre"></i>
+                        <div>
+                            <p class="text-texto-secundario text-sm">Leitos Livres</p>
+                            <p class="text-2xl font-bold text-texto-principal">18</p>
+                        </div>
+                    </div>
+                    <div class="bg-fundo-secundario p-5 rounded-xl flex items-center space-x-4">
+                        <i data-lucide="spray-can" class="w-8 h-8 text-leito-limpeza"></i>
+                        <div>
+                            <p class="text-texto-secundario text-sm">Em Limpeza</p>
+                            <p class="text-2xl font-bold text-texto-principal">4</p>
+                        </div>
+                    </div>
+                    <div class="bg-fundo-secundario p-5 rounded-xl flex items-center space-x-4">
+                        <i data-lucide="user-check" class="w-8 h-8 text-leito-alta-hoje"></i>
+                        <div>
+                            <p class="text-texto-secundario text-sm">Aguardando Leito</p>
+                            <p class="text-2xl font-bold text-texto-principal">3</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Abas (Sugestão 3) -->
+                <div class="flex space-x-2 bg-fundo-secundario p-1 rounded-lg max-w-md" id="sub-tabs-nav-fluxos">
+                    <button class="subtab-btn active w-full" data-subtab="fluxos-mapa">Mapa de Leitos</button>
+                    <button class="subtab-btn w-full" data-subtab="fluxos-fila">Fila de Espera</button>
+                </div>
+
+                <!-- Conteúdo da Aba 1: Mapa de Leitos (Sugestão 1, 2, 4, 6) -->
+                <div id="subtab-fluxos-mapa" class="subtab-content-fluxos space-y-4">
+                    <!-- Ações Manuais e Filtros (Sugestão 4 e 6) -->
+                    <div class="flex flex-col md:flex-row gap-4 justify-between items-center">
+                        <div id="leito-filters" class="flex flex-wrap gap-2">
+                            <button class="filter-btn active" data-filter="todos">Todos</button>
+                            <button class="filter-btn" data-filter="livre">Livres</button>
+                            <button class="filter-btn" data-filter="ocupado">Ocupados</button>
+                            <button class="filter-btn" data-filter="limpeza">Em Limpeza</button>
+                            <button class="filter-btn" data-filter="bloqueado">Bloqueados</button>
+                        </div>
+                        <button class="flex items-center gap-2 px-4 py-2 text-sm font-semibold bg-ciano-vibrante text-white rounded-md hover:bg-azul-suave w-full md:w-auto">
+                            <i data-lucide="plus" class="w-4 h-4"></i> Alocar Paciente Manualmente
+                        </button>
+                    </div>
+
+                    <!-- Legenda do Mapa -->
+                    <div class="flex flex-wrap gap-x-4 gap-y-2 text-xs text-texto-secundario">
+                        <span class="flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-leito-livre"></span>Livre</span>
+                        <span class="flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-leito-ocupado"></span>Ocupado</span>
+                        <span class="flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-leito-alta-hoje"></span>Alta Hoje</span>
+                        <span class="flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-leito-limpeza"></span>Em Limpeza</span>
+                        <span class="flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-leito-bloqueado"></span>Bloqueado</span>
+                    </div>
+
+                    <!-- Mapa de Leitos Visual (Sugestão 1) -->
+                    <div id="mapa-leitos-grid" class="grid grid-cols-6 sm:grid-cols-8 md:grid-cols-10 lg:grid-cols-12 gap-3 bg-fundo-secundario p-4 rounded-lg">
+                        <!-- Ala Sul 2A -->
+                        <div class="leito-card leito-livre" data-leito="201-A" data-status="livre">201-A</div>
+                        <div class="leito-card leito-ocupado" data-leito="201-B" data-status="ocupado" data-paciente="Maria Silva">201-B</div>
+                        <div class="leito-card leito-livre" data-leito="202-A" data-status="livre">202-A</div>
+                        <div class="leito-card leito-limpeza" data-leito="202-B" data-status="limpeza">202-B</div>
+                        <div class="leito-card leito-livre" data-leito="203-A" data-status="livre">203-A</div>
+                        <div class="leito-card leito-livre" data-leito="203-B" data-status="livre">203-B</div>
+                        <div class="leito-card leito-alta-hoje" data-leito="204-A" data-status="ocupado" data-paciente="João Pereira">204-A</div>
+                        <div class="leito-card leito-ocupado" data-leito="204-B" data-status="ocupado" data-paciente="Carlos Lima">204-B</div>
+                        <div class="leito-card leito-bloqueado" data-leito="205-A" data-status="bloqueado">205-A</div>
+                        <div class="leito-card leito-livre" data-leito="205-B" data-status="livre">205-B</div>
+                        <div class="leito-card leito-limpeza" data-leito="206-A" data-status="limpeza">206-A</div>
+                        <div class="leito-card leito-livre" data-leito="206-B" data-status="livre">206-B</div>
+                        <!-- UTI 3 -->
+                        <div class="leito-card leito-ocupado" data-leito="UTI-01" data-status="ocupado" data-paciente="Ana Costa">UTI-01</div>
+                        <div class="leito-card leito-ocupado" data-leito="UTI-02" data-status="ocupado" data-paciente="Pedro Nunes">UTI-02</div>
+                        <div class="leito-card leito-limpeza" data-leito="UTI-03" data-status="limpeza">UTI-03</div>
+                        <div class="leito-card leito-bloqueado" data-leito="UTI-04" data-status="bloqueado">UTI-04</div>
+                        <div class="leito-card leito-ocupado" data-leito="UTI-05" data-status="ocupado" data-paciente="Sara Jorge">UTI-05</div>
+                        <div class="leito-card leito-livre" data-leito="UTI-06" data-status="livre">UTI-06</div>
+                    </div>
+                </div>
+
+                <!-- Conteúdo da Aba 2: Fila de Espera (Sugestão 3) -->
+                <div id="subtab-fluxos-fila" class="subtab-content-fluxos space-y-4 hidden">
+                    <h3 class="text-xl font-semibold text-texto-principal">Pacientes Aguardando Leito</h3>
+                    <div class="overflow-x-auto bg-fundo-secundario rounded-lg shadow">
+                        <table class="min-w-full divide-y divide-campo">
+                            <thead class="bg-fundo-secundario">
+                                <tr>
+                                    <th scope="col" class="py-3.5 px-4 text-left text-sm font-semibold text-texto-principal">Paciente</th>
+                                    <th scope="col" class="py-3.5 px-4 text-left text-sm font-semibold text-texto-principal">Origem</th>
+                                    <th scope="col" class="py-3.5 px-4 text-left text-sm font-semibold text-texto-principal">Leito Solicitado</th>
+                                    <th scope="col" class="py-3.5 px-4 text-left text-sm font-semibold text-texto-principal">Prioridade</th>
+                                    <th scope="col" class="py-3.5 px-4 text-left text-sm font-semibold text-texto-principal">Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-campo bg-fundo-sidebar">
+                                <tr>
+                                    <td class="whitespace-nowrap py-4 px-4 text-sm font-medium text-texto-principal">Marcos Andrade</td>
+                                    <td class="whitespace-nowrap py-4 px-4 text-sm text-texto-secundario">Emergência</td>
+                                    <td class="whitespace-nowrap py-4 px-4 text-sm text-texto-secundario">Ala Sul (Clínico)</td>
+                                    <td class="whitespace-nowrap py-4 px-4 text-sm">
+                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-vermelho-erro/20 text-vermelho-erro">Alta</span>
+                                    </td>
+                                    <td class="whitespace-nowrap py-4 px-4 text-sm space-x-2">
+                                        <button class="text-ciano-vibrante hover:text-azul-suave"><i data-lucide="check-square" class="w-4 h-4"></i> Alocar</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="whitespace-nowrap py-4 px-4 text-sm font-medium text-texto-principal">Beatriz Lima</td>
+                                    <td class="whitespace-nowrap py-4 px-4 text-sm text-texto-secundario">Pós-Cirúrgico</td>
+                                    <td class="whitespace-nowrap py-4 px-4 text-sm text-texto-secundario">UTI</td>
+                                    <td class="whitespace-nowrap py-4 px-4 text-sm">
+                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-vermelho-erro/20 text-vermelho-erro">Alta</span>
+                                    </td>
+                                    <td class="whitespace-nowrap py-4 px-4 text-sm space-x-2">
+                                        <button class="text-ciano-vibrante hover:text-azul-suave"><i data-lucide="check-square" class="w-4 h-4"></i> Alocar</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="whitespace-nowrap py-4 px-4 text-sm font-medium text-texto-principal">Ricardo Sousa</td>
+                                    <td class="whitespace-nowrap py-4 px-4 text-sm text-texto-secundario">Emergência</td>
+                                    <td class="whitespace-nowrap py-4 px-4 text-sm text-texto-secundario">Ala Sul (Clínico)</td>
+                                    <td class="whitespace-nowrap py-4 px-4 text-sm">
+                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-amarelo-alerta/20 text-amarelo-alerta">Média</span>
+                                    </td>
+                                    <td class="whitespace-nowrap py-4 px-4 text-sm space-x-2">
+                                        <button class="text-ciano-vibrante hover:text-azul-suave"><i data-lucide="check-square" class="w-4 h-4"></i> Alocar</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ECRÃ 16.3: FERRAMENTA DE RELATÓRIOS -->
+            <div id="admin-relatorios-screen" class="app-screen p-4 lg:p-8 space-y-6 hidden">
+                <!-- ... (Código dos Relatórios inalterado) ... -->
+                <header class="flex justify-between items-center">
+                    <div class="flex items-center gap-4">
+                        <button id="back-relatorios-to-hub" class="p-2 rounded-full hover:bg-fundo-secundario">
+                            <i data-lucide="arrow-left" class="w-6 h-6 text-texto-principal"></i>
+                        </button>
+                        <h1 class="text-3xl font-bold text-texto-principal">Ferramenta de Relatórios</h1>
+                    </div>
+                </header>
+                <div id="subtab-relatorios" class="subtab-content space-y-6">
+                    <h3 class="text-xl font-semibold text-texto-principal">Gerador de Relatórios</h3>
+                    <div class="bg-fundo-secundario p-6 rounded-xl max-w-2xl space-y-6">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label for="report-type" class="block text-sm font-medium text-texto-secundario">Tipo de Relatório</label>
+                                <select id="report-type" class="mt-1 block w-full rounded-md border-0 bg-campo p-3 text-texto-principal focus:ring-2 focus:ring-inset focus:ring-ciano-vibrante">
+                                    <option>Financeiro (Receita)</option>
+                                    <option>Ocupação de Leitos</option>
+                                    <option>Atendimentos por Profissional</option>
+                                    <option>Consumo de Suprimentos</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="report-period" class="block text-sm font-medium text-texto-secundario">Período</label>
+                                <select id="report-period" class="mt-1 block w-full rounded-md border-0 bg-campo p-3 text-texto-principal focus:ring-2 focus:ring-inset focus:ring-ciano-vibrante">
+                                    <option>Últimos 7 dias</option>
+                                    <option>Últimos 30 dias</option>
+                                    <option>Mês Atual</option>
+                                    <option>Mês Anterior</option>
+                                    <option>Período Personalizado</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label for="report-start-date" class="block text-sm font-medium text-texto-secundario">Data Inicial</label>
+                                <input type="date" id="report-start-date" disabled class="mt-1 block w-full rounded-md border-0 bg-fundo-sidebar p-3 text-texto-secundario focus:ring-2 focus:ring-inset focus:ring-ciano-vibrante">
+                            </div>
+                            <div>
+                                <label for="report-end-date" class="block text-sm font-medium text-texto-secundario">Data Final</label>
+                                <input type="date" id="report-end-date" disabled class="mt-1 block w-full rounded-md border-0 bg-fundo-sidebar p-3 text-texto-secundario focus:ring-2 focus:ring-inset focus:ring-ciano-vibrante">
+                            </div>
+                        </div>
+                        <div>
+                            <button class="flex items-center justify-center gap-2 w-full rounded-md bg-ciano-vibrante px-3 py-3 text-sm font-semibold text-white shadow-sm hover:bg-azul-suave">
+                                <i data-lucide="download" class="w-4 h-4"></i> Gerar Relatório (.xls)
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </main>
     </div>
+
+    <!-- MODAL DO LEITO (Sugestão 1 e 6) -->
+    <div id="leito-modal" class="modal-backdrop hidden">
+        <div class="modal-content space-y-4">
+            <!-- Cabeçalho do Modal -->
+            <div class="flex justify-between items-center">
+                <h2 class="text-xl font-bold text-texto-principal">Leito: <span id="modal-leito-numero">---</span></h2>
+                <button id="modal-close-btn" class="p-1 rounded-full text-texto-secundario hover:bg-campo hover:text-texto-principal">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+            
+            <!-- Info do Paciente -->
+            <div id="modal-paciente-info" class="space-y-1">
+                <p class="text-sm text-texto-secundario">Status: <span id="modal-leito-status" class="font-semibold text-texto-principal">---</span></p>
+                <p class="text-sm text-texto-secundario">Paciente: <span id="modal-paciente-nome" class="font-semibold text-texto-principal">---</span></p>
+            </div>
+
+            <!-- Ações Contextuais (Sugestão 6) -->
+            <div id="modal-actions" class="flex flex-col gap-3 pt-4 border-t border-campo">
+                <!-- Ação: Livre -->
+                <button id="btn-modal-alocar" class="hidden w-full flex items-center justify-center gap-2 rounded-md bg-ciano-vibrante px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-azul-suave">
+                    <i data-lucide="check-square" class="w-4 h-4"></i> Alocar Paciente
+                </button>
+                <!-- Ação: Ocupado -->
+                <button id="btn-modal-ver-prontuario" class="hidden w-full flex items-center justify-center gap-2 rounded-md bg-campo px-3 py-2 text-sm font-semibold text-texto-principal shadow-sm hover:bg-gray-600">
+                    <i data-lucide="file-text" class="w-4 h-4"></i> Ver Prontuário
+                </button>
+                <button id="btn-modal-programar-alta" class="hidden w-full flex items-center justify-center gap-2 rounded-md bg-campo px-3 py-2 text-sm font-semibold text-texto-principal shadow-sm hover:bg-gray-600">
+                    <i data-lucide="user-check" class="w-4 h-4"></i> Programar Alta
+                </button>
+                <!-- Ação: Em Limpeza -->
+                <button id="btn-modal-marcar-livre" class="hidden w-full flex items-center justify-center gap-2 rounded-md bg-leito-livre/80 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-leito-livre">
+                    <i data-lucide="check" class="w-4 h-4"></i> Marcar como Livre
+                </button>
+                <!-- Ação: Bloqueado -->
+                <p id="p-modal-bloqueado" class="hidden text-sm text-center text-amarelo-alerta">Este leito está em manutenção.</p>
+                <button id="btn-modal-desbloquear" class="hidden w-full flex items-center justify-center gap-2 rounded-md bg-campo px-3 py-2 text-sm font-semibold text-texto-principal shadow-sm hover:bg-gray-600">
+                    <i data-lucide="wrench" class="w-4 h-4"></i> Desbloquear Leito
+                </button>
+            </div>
+        </div>
+    </div>
+
 
     <script>
         // --- REFERÊNCIAS AOS LAYOUTS E ECRÃS ---
@@ -323,23 +675,27 @@
 
         // Ecrãs
         const dashboardScreen = document.getElementById('admin-dashboard-screen');
+        const gestaoHubScreen = document.getElementById('admin-gestao-hub-screen');
         const managementScreen = document.getElementById('admin-management-screen');
-        const appScreens = [dashboardScreen, managementScreen];
+        const fluxosScreen = document.getElementById('admin-fluxos-screen');
+        const relatoriosScreen = document.getElementById('admin-relatorios-screen');
+        const appScreens = [dashboardScreen, gestaoHubScreen, managementScreen, fluxosScreen, relatoriosScreen];
         
         // Navegação
         const sidebarLinks = document.querySelectorAll('aside .sidebar-link');
         const quickAccessBtns = document.querySelectorAll('.btn-go-to-management');
+        const gestaoHubBtns = document.querySelectorAll('#admin-gestao-hub-screen .btn-go-to-screen');
 
         // --- FUNÇÕES DE NAVEGAÇÃO ---
 
         function showLayout(layoutToShow) {
             if (authLayout) { authLayout.classList.add('hidden'); authLayout.classList.remove('flex'); }
-            if (appLayout) { appLayout.classList.add('hidden'); appLayout.classList.remove('lg:flex'); }
+            if (appLayout) { appLayout.classList.add('hidden'); appLayout.classList.remove('flex'); }
             
             if(layoutToShow) {
                 layoutToShow.classList.remove('hidden');
                 if (layoutToShow === authLayout) { layoutToShow.classList.add('flex'); } 
-                else if (layoutToShow === appLayout) { layoutToShow.classList.add('lg:flex'); }
+                else if (layoutToShow === appLayout) { layoutToShow.classList.add('flex'); }
             }
         }
 
@@ -349,35 +705,189 @@
 
             sidebarLinks.forEach(link => {
                 const target = link.getAttribute('data-target');
-                link.classList.toggle('active', target === (screenToShow ? screenToShow.id : ''));
+                const isManagementScreen = (screenToShow && (
+                    screenToShow.id === 'admin-gestao-hub-screen' ||
+                    screenToShow.id === 'admin-management-screen' || 
+                    screenToShow.id === 'admin-fluxos-screen' || 
+                    screenToShow.id === 'admin-relatorios-screen'
+                ));
+                
+                if (target === 'admin-gestao-hub-screen') {
+                    link.classList.toggle('active', isManagementScreen);
+                } else {
+                    link.classList.toggle('active', target === (screenToShow ? screenToShow.id : ''));
+                }
             });
             
             if (typeof lucide !== 'undefined') { lucide.createIcons(); }
         }
         
-        // --- LÓGICA DAS ABAS (TELA 16) ---
-        
-        function showSubTab(subTabId) {
-            if (!subTabId) return;
-            
-            const subTabButtons = document.querySelectorAll('#sub-tabs-nav .subtab-btn');
-            const subTabContents = document.querySelectorAll('.subtab-content');
+        // --- LÓGICA DAS ABAS (TELA 16.1 - CADASTROS) ---
+        const subTabNavCadastros = document.getElementById('sub-tabs-nav-cadastros');
+        if (subTabNavCadastros) {
+            subTabNavCadastros.addEventListener('click', (e) => {
+                const target = e.target.closest('.subtab-btn');
+                if (target) {
+                    const targetSubTab = target.getAttribute('data-subtab');
+                    
+                    const subTabButtons = subTabNavCadastros.querySelectorAll('.subtab-btn');
+                    const subTabContents = document.querySelectorAll('#admin-management-screen .subtab-content-cadastros');
 
-            subTabButtons.forEach(b => b.classList.toggle('active', b.getAttribute('data-subtab') === subTabId));
-            subTabContents.forEach(c => c.classList.toggle('hidden', c.id !== `subtab-${subTabId}`));
+                    subTabButtons.forEach(b => b.classList.toggle('active', b.getAttribute('data-subtab') === targetSubTab));
+                    subTabContents.forEach(c => c.classList.toggle('hidden', c.id !== `subtab-${targetSubTab}`));
+                    
+                    if (typeof lucide !== 'undefined') { lucide.createIcons(); }
+                }
+            });
+        }
+        
+        // --- LÓGICA DAS ABAS (TELA 16.2 - FLUXOS) (Sugestão 3) ---
+        const subTabNavFluxos = document.getElementById('sub-tabs-nav-fluxos');
+        if (subTabNavFluxos) {
+            subTabNavFluxos.addEventListener('click', (e) => {
+                const target = e.target.closest('.subtab-btn');
+                if (target) {
+                    const targetSubTab = target.getAttribute('data-subtab');
+                    
+                    const subTabButtons = subTabNavFluxos.querySelectorAll('.subtab-btn');
+                    const subTabContents = document.querySelectorAll('#admin-fluxos-screen .subtab-content-fluxos');
+
+                    subTabButtons.forEach(b => b.classList.toggle('active', b.getAttribute('data-subtab') === targetSubTab));
+                    subTabContents.forEach(c => c.classList.toggle('hidden', c.id !== `subtab-${targetSubTab}`));
+                    
+                    if (typeof lucide !== 'undefined') { lucide.createIcons(); }
+                }
+            });
+        }
+        
+        // --- LÓGICA DOS FILTROS (TELA 16.2 - FLUXOS) (Sugestão 4) ---
+        const filterButtons = document.querySelectorAll('#leito-filters .filter-btn');
+        const leitosGrid = document.getElementById('mapa-leitos-grid');
+        if (filterButtons.length > 0 && leitosGrid) {
+            const leitoCards = leitosGrid.querySelectorAll('.leito-card');
             
-            if (typeof lucide !== 'undefined') { lucide.createIcons(); }
+            filterButtons.forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const filter = e.currentTarget.getAttribute('data-filter');
+                    
+                    // Atualiza botão ativo
+                    filterButtons.forEach(b => b.classList.remove('active'));
+                    e.currentTarget.classList.add('active');
+
+                    // Lógica de filtro
+                    leitoCards.forEach(card => {
+                        const status = card.getAttribute('data-status');
+                        if (filter === 'todos') {
+                            card.classList.remove('hidden');
+                        } else {
+                            card.classList.toggle('hidden', status !== filter);
+                        }
+                    });
+                });
+            });
+        }
+        
+        // --- LÓGICA DO MODAL (TELA 16.2 - FLUXOS) (Sugestão 1 e 6) ---
+        const leitoModal = document.getElementById('leito-modal');
+        const modalCloseBtn = document.getElementById('modal-close-btn');
+        const modalLeitoNumero = document.getElementById('modal-leito-numero');
+        const modalLeitoStatus = document.getElementById('modal-leito-status');
+        const modalPacienteNome = document.getElementById('modal-paciente-nome');
+        
+        // Botões de ação do Modal
+        const btnModalAlocar = document.getElementById('btn-modal-alocar');
+        const btnModalVerProntuario = document.getElementById('btn-modal-ver-prontuario');
+        const btnModalProgramarAlta = document.getElementById('btn-modal-programar-alta');
+        const btnModalMarcarLivre = document.getElementById('btn-modal-marcar-livre');
+        const pModalBloqueado = document.getElementById('p-modal-bloqueado');
+        const btnModalDesbloquear = document.getElementById('btn-modal-desbloquear');
+        const allModalActions = [btnModalAlocar, btnModalVerProntuario, btnModalProgramarAlta, btnModalMarcarLivre, pModalBloqueado, btnModalDesbloquear];
+
+        function openLeitoModal(leito, status, paciente) {
+            if (!leitoModal) return;
+
+            // Esconde todas as ações
+            allModalActions.forEach(btn => btn.classList.add('hidden'));
+
+            // Preenche info
+            modalLeitoNumero.textContent = leito;
+            modalLeitoStatus.textContent = status.charAt(0).toUpperCase() + status.slice(1);
+            modalPacienteNome.textContent = paciente || "Nenhum";
+
+            // Mostra ações contextuais
+            switch (status) {
+                case 'livre':
+                    btnModalAlocar.classList.remove('hidden');
+                    break;
+                case 'ocupado':
+                    btnModalVerProntuario.classList.remove('hidden');
+                    btnModalProgramarAlta.classList.remove('hidden');
+                    break;
+                case 'limpeza':
+                    btnModalMarcarLivre.classList.remove('hidden');
+                    break;
+                case 'bloqueado':
+                    pModalBloqueado.classList.remove('hidden');
+                    btnModalDesbloquear.classList.remove('hidden');
+                    break;
+            }
+
+            // Mostra o modal
+            leitoModal.classList.remove('hidden');
         }
 
-        // Event Listeners das Sub-Abas
-        document.getElementById('sub-tabs-nav')?.addEventListener('click', (e) => {
-            const target = e.target.closest('.subtab-btn');
-            if (target) {
-                e.preventDefault();
-                const targetSubTab = target.getAttribute('data-subtab');
-                showSubTab(targetSubTab);
-            }
-        });
+        function closeLeitoModal() {
+            if (leitoModal) leitoModal.classList.add('hidden');
+        }
+
+        // Event Listeners do Modal
+        if (leitosGrid) {
+            leitosGrid.addEventListener('click', (e) => {
+                const card = e.target.closest('.leito-card');
+                if (card) {
+                    const leito = card.getAttribute('data-leito');
+                    const status = card.getAttribute('data-status');
+                    const paciente = card.getAttribute('data-paciente');
+                    openLeitoModal(leito, status, paciente);
+                }
+            });
+        }
+        if (modalCloseBtn) modalCloseBtn.addEventListener('click', closeLeitoModal);
+        if (leitoModal) {
+            leitoModal.addEventListener('click', (e) => {
+                if (e.target === leitoModal) { // Fecha se clicar no backdrop
+                    closeLeitoModal();
+                }
+            });
+        }
+
+
+        // --- LÓGICA DO RELATÓRIO (TELA 16.3) ---
+        const reportPeriodSelect = document.getElementById('report-period');
+        const reportStartDate = document.getElementById('report-start-date');
+        const reportEndDate = document.getElementById('report-end-date');
+        if (reportPeriodSelect) {
+            reportPeriodSelect.addEventListener('change', (e) => {
+                const isCustom = e.target.value === 'Período Personalizado';
+                if(reportStartDate && reportEndDate) {
+                    reportStartDate.disabled = !isCustom;
+                    reportEndDate.disabled = !isCustom;
+                    if(isCustom) {
+                        reportStartDate.classList.replace('bg-fundo-sidebar', 'bg-campo');
+                        reportEndDate.classList.replace('bg-fundo-sidebar', 'bg-campo');
+                        reportStartDate.classList.replace('text-texto-secundario', 'text-texto-principal');
+                        reportEndDate.classList.replace('text-texto-secundario', 'text-texto-principal');
+                    } else {
+                        reportStartDate.classList.replace('bg-campo', 'bg-fundo-sidebar');
+                        reportEndDate.classList.replace('bg-campo', 'bg-fundo-sidebar');
+                        reportStartDate.classList.replace('text-texto-principal', 'text-texto-secundario');
+                        reportEndDate.classList.replace('text-texto-principal', 'text-texto-secundario');
+                        reportStartDate.value = '';
+                        reportEndDate.value = '';
+                    }
+                }
+            });
+        }
 
 
         // --- LIGAÇÕES DE NAVEGAÇÃO ---
@@ -390,21 +900,61 @@
                 const targetScreen = document.getElementById(targetScreenId);
                 if (targetScreen) { 
                     showAppScreen(targetScreen);
-                    // Se for para a Gestão, default para a primeira sub-aba
                     if (targetScreenId === 'admin-management-screen') {
-                        showSubTab('cad-pacientes');
+                        // Não é mais necessário, pois a aba já vem ativa por padrão
                     }
                 }
             });
         });
 
-        // Navegação dos Botões de Acesso Rápido
+        // Botões do HUB de Gestão
+        gestaoHubBtns.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                const targetScreenId = e.currentTarget.getAttribute('data-target');
+                const targetScreen = document.getElementById(targetScreenId);
+                if (targetScreen) { 
+                    showAppScreen(targetScreen);
+                    if (targetScreenId === 'admin-management-screen') {
+                        // Ativa a primeira aba por padrão
+                        const firstTabBtn = document.querySelector('#sub-tabs-nav-cadastros .subtab-btn');
+                        if(firstTabBtn) showSubTab(firstTabBtn.getAttribute('data-subtab'));
+                    }
+                    if (targetScreenId === 'admin-fluxos-screen') {
+                        // Ativa a primeira aba por padrão
+                        const firstTabBtn = document.querySelector('#sub-tabs-nav-fluxos .subtab-btn');
+                        if(firstTabBtn) showSubTab(firstTabBtn.getAttribute('data-subtab'));
+                    }
+                }
+            });
+        });
+        
+        // Botões Voltar para o HUB
+        document.getElementById('back-management-to-hub').addEventListener('click', (e) => { e.preventDefault(); showAppScreen(gestaoHubScreen); });
+        document.getElementById('back-fluxos-to-hub').addEventListener('click', (e) => { e.preventDefault(); showAppScreen(gestaoHubScreen); });
+        document.getElementById('back-relatorios-to-hub').addEventListener('click', (e) => { e.preventDefault(); showAppScreen(gestaoHubScreen); });
+
+        // Botão Voltar do HUB para o Dashboard
+        document.getElementById('back-gestao-hub-to-dashboard').addEventListener('click', (e) => { e.preventDefault(); showAppScreen(dashboardScreen); });
+
+
+        // Navegação dos Botões de Acesso Rápido (Dashboard)
         quickAccessBtns.forEach(btn => {
             btn.addEventListener('click', (e) => {
-                showAppScreen(managementScreen);
-                // Ação futura: estes botões podem agora levar a sub-abas ou ecrãs diferentes
-                // Por agora, todos levam à gestão de cadastros (primeira sub-aba)
-                showSubTab('cad-pacientes');
+                const targetScreenId = e.currentTarget.getAttribute('data-target');
+                const targetScreen = document.getElementById(targetScreenId);
+                
+                if (targetScreen) {
+                    showAppScreen(targetScreen);
+                    if (targetScreenId === 'admin-management-screen') {
+                        const firstTabBtn = document.querySelector('#sub-tabs-nav-cadastros .subtab-btn');
+                        if(firstTabBtn) showSubTab(firstTabBtn.getAttribute('data-subtab'));
+                    }
+                     if (targetScreenId === 'admin-fluxos-screen') {
+                        const firstTabBtn = document.querySelector('#sub-tabs-nav-fluxos .subtab-btn');
+                        if(firstTabBtn) showSubTab(firstTabBtn.getAttribute('data-subtab'));
+                    }
+                }
             });
         });
 
