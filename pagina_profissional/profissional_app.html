@@ -12,85 +12,14 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
-    <script>
-        // Configuração de cores personalizadas do Tailwind
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        'fundo-principal': '#1E293B',
-                        'fundo-secundario': '#334155',
-                        'fundo-sidebar': '#0F172A', 
-                        'campo': '#475569',
-                        'texto-principal': '#F1F5F9',
-                        'texto-secundario': '#94A3B8',
-                        'ciano-vibrante': '#06B6D4',
-                        'azul-suave': '#22D3EE',
-                        'vermelho-erro': '#F43F5E',
-                    },
-                    fontFamily: {
-                        'sans': ['Inter', 'sans-serif'],
-                    }
-                }
-            }
-        }
-    </script>
-    <style>
-        html, body {
-            height: 100%;
-            font-family: 'Inter', sans-serif;
-            background-color: #1E293B;
-        }
-        body {
-            min-height: 100vh;
-        }
-        .sidebar-link {
-            display: flex; align-items: center; gap: 0.75rem; /* space-x-3 */
-            padding: 0.75rem; /* p-3 */ border-radius: 0.5rem; /* rounded-lg */
-            color: #94A3B8; /* texto-secundario */
-            transition: background-color 0.2s, color 0.2s;
-        }
-        .sidebar-link:hover {
-            background-color: #334155; /* fundo-secundario */
-            color: #F1F5F9; /* texto-principal */
-        }
-        .sidebar-link.active {
-            background-color: rgba(6, 182, 212, 0.1); /* ciano-vibrante/10 */
-            color: #06B6D4; /* ciano-vibrante */
-            font-weight: 600;
-        }
-        .tab-btn {
-            padding: 0.75rem 1rem; /* py-3 px-4 */
-            border-bottom-width: 2px;
-            border-color: transparent;
-            color: #94A3B8; /* texto-secundario */
-            font-weight: 500;
-            transition: border-color 0.2s, color 0.2s;
-        }
-        .tab-btn.active {
-            border-bottom-color: #06B6D4; /* ciano-vibrante */
-            color: #F1F5F9; /* texto-principal */
-            font-weight: 600;
-        }
-        .tab-btn-agenda {
-            padding: 0.5rem 1.5rem; /* py-2 px-6 */
-            border-radius: 0.5rem; /* rounded-lg */
-            color: #94A3B8; /* texto-secundario */
-            font-weight: 500;
-            transition: background-color 0.2s, color 0.2s;
-        }
-        .tab-btn-agenda.active {
-            background-color: #06B6D4; /* ciano-vibrante */
-            color: #FFFFFF; /* white */
-            font-weight: 600;
-        }
-        /* Indicador de notificação não lida */
-        .notification-unread::before {
-            content: ''; display: inline-block; width: 8px; height: 8px;
-            border-radius: 50%; background-color: #06B6D4; margin-right: 8px; vertical-align: middle;
-        }
-    </style>
+    
+    <!-- Configuração de cores personalizadas do Tailwind (Arquivo separado) -->
+    <script src="profissional_tailwind.config.js"></script>
+    
+    <!-- Estilos personalizados (Arquivo separado) -->
+    <link rel="stylesheet" href="profissional_style.css">
 </head>
+
 <body class="bg-fundo-principal text-texto-principal font-sans">
 
     <!-- LAYOUT DE AUTENTICAÇÃO (Login do Profissional) -->
@@ -101,7 +30,7 @@
                     <div class="w-24 h-24 bg-ciano-vibrante rounded-full flex items-center justify-center">
                         <i data-lucide="stethoscope" class="text-white w-12 h-12"></i>
                     </div>
-                    <h1 class="text-3xl font-bold text-texto-principal tracking-tight">Portal Profissional</h1>
+                    <h1 class="text-3xl font-bold text-texto-principal tracking-tight">Portal do Profissional</h1>
                     <p class="text-texto-secundario">Acesse sua conta para continuar</p>
                 </div>
                 <form class="space-y-6" id="login-form-profissional">
@@ -377,8 +306,8 @@
                         <div id="tab-historico" class="tab-content space-y-4 hidden">
                              <h3 class="text-xl font-semibold text-texto-principal">Histórico de Consultas</h3>
                              <div class="bg-campo p-4 rounded-lg">
-                                <p class="font-semibold text-texto-principal">15 de Set, 2025 - Dra. Ana Sousa</p>
-                                <p class="text-sm text-texto-secundario mt-1">Paciente relatou dores no peito. Pressão arterial 140/90. Receitado Losartana.</p>
+                                 <p class="font-semibold text-texto-principal">15 de Set, 2025 - Dra. Ana Sousa</p>
+                                 <p class="text-sm text-texto-secundario mt-1">Paciente relatou dores no peito. Pressão arterial 140/90. Receitado Losartana.</p>
                              </div>
                         </div>
 
@@ -426,22 +355,22 @@
                  </header>
                  <div class="space-y-3">
                      <div class="bg-fundo-secundario p-4 rounded-xl flex items-start space-x-3 shadow-lg cursor-pointer hover:bg-campo notification-unread">
-                        <div class="bg-ciano-vibrante/20 p-2 rounded-lg mt-1"> <i data-lucide="file-text" class="text-ciano-vibrante w-5 h-5"></i> </div>
-                        <div class="flex-1">
-                            <p class="font-semibold text-texto-principal text-sm">Novo resultado de exame</p>
-                            <p class="text-xs text-texto-secundario mt-1">O resultado de Hemograma do paciente João Pereira está disponível.</p>
-                            <p class="text-xs text-texto-secundario mt-2">Há 15 minutos</p>
-                        </div>
+                         <div class="bg-ciano-vibrante/20 p-2 rounded-lg mt-1"> <i data-lucide="file-text" class="text-ciano-vibrante w-5 h-5"></i> </div>
+                         <div class="flex-1">
+                             <p class="font-semibold text-texto-principal text-sm">Novo resultado de exame</p>
+                             <p class="text-xs text-texto-secundario mt-1">O resultado de Hemograma do paciente João Pereira está disponível.</p>
+                             <p class="text-xs text-texto-secundario mt-2">Há 15 minutos</p>
+                         </div>
                      </div>
                      <div class="bg-fundo-secundario p-4 rounded-xl flex items-start space-x-3 shadow-lg cursor-pointer hover:bg-campo opacity-80">
-                        <div class="bg-campo/50 p-2 rounded-lg mt-1"> <i data-lucide="calendar-check" class="text-texto-secundario w-5 h-5"></i> </div>
-                        <div class="flex-1">
-                            <p class="font-semibold text-texto-principal text-sm">Consulta confirmada</p>
-                            <p class="text-xs text-texto-secundario mt-1">Maria Silva confirmou a teleconsulta de hoje às 15:00.</p>
-                            <p class="text-xs text-texto-secundario mt-2">Há 1 hora</p>
-                        </div>
+                         <div class="bg-campo/50 p-2 rounded-lg mt-1"> <i data-lucide="calendar-check" class="text-texto-secundario w-5 h-5"></i> </div>
+                         <div class="flex-1">
+                             <p class="font-semibold text-texto-principal text-sm">Consulta confirmada</p>
+                             <p class="text-xs text-texto-secundario mt-1">Maria Silva confirmou a teleconsulta de hoje às 15:00.</p>
+                             <p class="text-xs text-texto-secundario mt-2">Há 1 hora</p>
+                         </div>
                      </div>
-                </div>
+                 </div>
             </div>
 
             <!-- ECRÃ 15: MENSAGENS (Placeholder) -->
@@ -453,194 +382,7 @@
         </main>
     </div>
 
-    <script>
-        // --- NAVEGAÇÃO BÁSICA ---
-        const authLayout = document.getElementById('auth-layout');
-        const appLayout = document.getElementById('app-layout');
-        const loginForm = document.getElementById('login-form-profissional');
-        const logoutBtn = document.getElementById('logout-btn-desktop');
-
-        // Referências aos ecrãs
-        const dashboardScreen = document.getElementById('dashboard-screen');
-        const agendaScreen = document.getElementById('agenda-screen');
-        const pacientesScreen = document.getElementById('pacientes-screen');
-        const atendimentoScreen = document.getElementById('atendimento-screen');
-        const mensagensScreen = document.getElementById('mensagens-screen');
-        const notificationsScreen = document.getElementById('notifications-screen'); // Ecrã adicionado
-
-        const appScreens = [dashboardScreen, agendaScreen, pacientesScreen, atendimentoScreen, mensagensScreen, notificationsScreen]; // Ecrã adicionado
-        
-        // Referências à Navegação
-        const sidebarLinks = document.querySelectorAll('aside .sidebar-link');
-        const btnsVerProntuario = document.querySelectorAll('.btn-ver-prontuario');
-        const btnVoltarAtendimento = document.getElementById('back-atendimento-to-pacientes');
-        const btnGoToNotifications = document.getElementById('go-to-notifications-desktop'); // Botão do sino
-        const btnBackFromNotifications = document.getElementById('back-notifications-to-dashboard'); // Botão voltar das notificações
-
-        function showLayout(layoutToShow) {
-            // Esconde ambos os layouts primeiro
-            if (authLayout) {
-                authLayout.classList.add('hidden');
-                authLayout.classList.remove('flex'); // Remove 'flex'
-            }
-            if (appLayout) {
-                appLayout.classList.add('hidden');
-                appLayout.classList.remove('lg:flex'); // Remove 'lg:flex'
-            }
-            
-            // Mostra o layout desejado e aplica a classe de display correta
-            if(layoutToShow) {
-                layoutToShow.classList.remove('hidden');
-                if (layoutToShow === authLayout) {
-                    layoutToShow.classList.add('flex'); // Adiciona 'flex' para o auth
-                } else if (layoutToShow === appLayout) {
-                    layoutToShow.classList.add('lg:flex'); // Adiciona 'lg:flex' para o app
-                }
-            }
-        }
-
-        function showAppScreen(screenToShow) {
-            // Esconde todos os ecrãs
-            appScreens.forEach(screen => {
-                if(screen) screen.classList.add('hidden');
-            });
-            // Mostra o ecrã alvo
-            if(screenToShow) screenToShow.classList.remove('hidden');
-
-            // Atualiza o estado ativo da sidebar
-            sidebarLinks.forEach(link => {
-                const target = link.getAttribute('data-target');
-                let isActive = target === (screenToShow ? screenToShow.id : '');
-                
-                // Lógica especial para manter "Pacientes" ativo durante o atendimento
-                if (screenToShow && screenToShow.id === 'atendimento-screen' && target === 'pacientes-screen') {
-                    isActive = true;
-                }
-
-                link.classList.toggle('active', isActive);
-            });
-            
-            // Re-renderiza os ícones
-            if (typeof lucide !== 'undefined') {
-                lucide.createIcons();
-            }
-        }
-        
-        // Navegação da Sidebar
-        sidebarLinks.forEach(link => {
-            link.addEventListener('click', (e) => {
-                e.preventDefault();
-                const targetScreenId = e.currentTarget.getAttribute('data-target');
-                const targetScreen = document.getElementById(targetScreenId);
-                
-                if (targetScreen) {
-                    showAppScreen(targetScreen);
-                } else {
-                    console.warn(`Ecrã com ID '${targetScreenId}' não encontrado.`);
-                }
-            });
-        });
-
-        // Simula o login
-        if (loginForm) {
-            loginForm.addEventListener('submit', (e) => {
-                e.preventDefault();
-                showLayout(appLayout);
-                showAppScreen(dashboardScreen); // Mostra o dashboard ao logar
-            });
-        }
-
-        // Simula o logout
-        if (logoutBtn) {
-            logoutBtn.addEventListener('click', (e) => {
-                e.preventDefault();
-                showLayout(authLayout);
-                showAppScreen(null); // Esconde todos os ecrãs
-            });
-        }
-
-        // --- Lógica Específica dos Ecrãs ---
-
-        // Navegação para Notificações
-        if (btnGoToNotifications) {
-            btnGoToNotifications.addEventListener('click', (e) => {
-                e.preventDefault();
-                showAppScreen(notificationsScreen);
-            });
-        }
-        if (btnBackFromNotifications) {
-            btnBackFromNotifications.addEventListener('click', (e) => {
-                e.preventDefault();
-                showAppScreen(dashboardScreen);
-            });
-        }
-
-
-        // Navegação para o Prontuário (Tela 12)
-        const prontuarioPacienteNome = document.getElementById('prontuario-paciente-nome');
-        btnsVerProntuario.forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                const nomePaciente = e.currentTarget.getAttribute('data-paciente');
-                if (prontuarioPacienteNome) {
-                    prontuarioPacienteNome.textContent = nomePaciente;
-                }
-                showAppScreen(atendimentoScreen);
-            });
-        });
-
-        // Voltar do Prontuário para a Lista de Pacientes
-        if (btnVoltarAtendimento) {
-            btnVoltarAtendimento.addEventListener('click', (e) => {
-                e.preventDefault();
-                showAppScreen(pacientesScreen);
-            });
-        }
-
-        // Lógica da Pesquisa de Pacientes (Tela 13)
-        const pacienteSearch = document.getElementById('paciente-search');
-        const pacientesList = document.getElementById('pacientes-list');
-        if (pacienteSearch && pacientesList) {
-            const pacientesItems = pacientesList.querySelectorAll('.paciente-item');
-            pacienteSearch.addEventListener('input', (e) => {
-                const searchTerm = e.target.value.toLowerCase();
-                pacientesItems.forEach(item => {
-                    const nome = item.getAttribute('data-nome').toLowerCase();
-                    item.classList.toggle('hidden', !nome.includes(searchTerm));
-                });
-            });
-        }
-        
-        // Lógica das Abas do Prontuário (Tela 12)
-        const tabButtons = document.querySelectorAll('#atendimento-screen .tab-btn');
-        const tabContents = document.querySelectorAll('#atendimento-screen .tab-content');
-        if (tabButtons.length > 0) {
-            tabButtons.forEach(btn => {
-                btn.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    // Desativa todos
-                    tabButtons.forEach(b => b.classList.remove('active'));
-                    tabContents.forEach(c => c.classList.add('hidden'));
-                    
-                    // Ativa o clicado
-                    const targetTab = e.currentTarget.getAttribute('data-tab');
-                    e.currentTarget.classList.add('active');
-                    const targetContent = document.getElementById(`tab-${targetTab}`);
-                    if (targetContent) {
-                        targetContent.classList.remove('hidden');
-                    }
-                });
-            });
-        }
-
-
-        // Estado inicial
-        showLayout(authLayout);
-        showAppScreen(null); // Esconde todos os ecrãs da app se estiver no login
-
-        // Ativa os ícones no carregamento inicial
-        if (typeof lucide !== 'undefined') {
-            lucide.createIcons();
-        }
-    </script>
+    <!-- Lógica da Aplicação (Arquivo separado) -->
+    <script src="profissional_app.js"></script>
 </body>
 </html>
