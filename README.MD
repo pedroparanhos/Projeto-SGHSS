@@ -89,3 +89,5 @@ Recomendação: Para garantir que todos os scripts carreguem corretamente, é re
 Pedro Paranhos
 
 GitHub: @pedroparanhos
+
+<!-- English Gemini -->
