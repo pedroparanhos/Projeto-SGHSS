@@ -2,32 +2,6 @@ SGHSS VidaPlus - Sistema de Gestão Hospitalar
 
 SGHSS VidaPlus é um protótipo de interface de um Sistema de Gestão Hospitalar. Este projeto foi desenvolvido como uma demonstração front-end e inclui três portais distintos, cada um com funcionalidades específicas para diferentes tipos de usuários: Pacientes, Profissionais de Saúde e Administradores.
 
-🚀 Acesso ao Projeto
-
-1. Demonstração Ao Vivo (GitHub Pages)
-
-A forma mais fácil e recomendada de ver o projeto é acessando a demo ao vivo hospedada no GitHub Pages:
-
-https://pedroparanhos.github.io/Projeto-SGHSS/
-
-2. Executando Localmente
-
-Se preferir inspecionar o código-fonte ou executar o projeto na sua máquina:
-
-Clone este repositório:
-
-git clone [https://github.com/pedroparanhos/Projeto-SGHSS.git](https://github.com/pedroparanhos/Projeto-SGHSS.git)
-
-
-Abra a pasta do projeto:
-
-cd Projeto-SGHSS
-
-
-Abra o arquivo index.html no seu navegador de preferência.
-
-Recomendação: Para garantir que todos os scripts carreguem corretamente, é recomendado servir os arquivos usando um servidor local. Se você usa o VS Code, pode fazer isso facilmente com a extensão Live Server.
-
 ✨ Funcionalidades
 
 O projeto é dividido em três áreas principais, acessíveis a partir do index.html:
@@ -78,7 +52,7 @@ Controle de Fluxos: Mapa de leitos interativo (livre, ocupado, limpeza, bloquead
 
 Relatórios: Ferramenta para geração de relatórios (financeiros, ocupação, etc.).
 
-🚀 Tecnologias Utilizadas
+🛠️ Tecnologias Utilizadas
 
 Este projeto é uma aplicação front-end pura, sem necessidade de build steps ou backend.
 
@@ -92,9 +66,26 @@ Tailwind CSS (via CDN) (Framework de estilização utility-first para prototipag
 
 Lucide Icons (Biblioteca de ícones)
 
+💻 Como Executar
+
+Se preferir inspecionar o código-fonte ou executar o projeto na sua máquina:
+
+Clone este repositório:
+
+git clone [https://github.com/pedroparanhos/Projeto-SGHSS.git](https://github.com/pedroparanhos/Projeto-SGHSS.git)
+
+
+Abra a pasta do projeto:
+
+cd Projeto-SGHSS
+
+
+Abra o arquivo index.html no seu navegador de preferência.
+
+Recomendação: Para garantir que todos os scripts carreguem corretamente, é recomendado servir os arquivos usando um servidor local. Se você usa o VS Code, pode fazer isso facilmente com a extensão Live Server.
+
 👨‍💻 Autor
 
 Pedro Paranhos
 
 GitHub: @pedroparanhos
-
