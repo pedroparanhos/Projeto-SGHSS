@@ -12,6 +12,13 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+
+    <!-- Scripts do Firebase -->
+    <script src="[https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js](https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js)"></script>
+    <script src="[https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js](https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js)"></script>
+    <script src="[https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js](https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js)"></script>
+    <script src="../firebase-init.js"></script> 
+
     <script>
         // Configuração de cores personalizadas do Tailwind
         tailwind.config = {
@@ -69,37 +76,37 @@
         <!-- Grelha de Seleção de Portal -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
             
-            <!-- 1. Portal do Paciente (Link Corrigido) -->
+            <!-- 1. Portal do Paciente -->
             <a href="pagina_paciente/paciente.html" class="portal-card bg-fundo-secundario rounded-xl shadow-lg p-8 text-center block">
                 <div class="inline-flex items-center justify-center w-16 h-16 bg-ciano-vibrante/20 rounded-full mb-5">
                     <i data-lucide="user" class="w-8 h-8 text-ciano-vibrante"></i>
                 </div>
                 <h2 class="text-1xl font-bold text-texto-principal mb-2">Portal do Paciente</h2>
-                <p class="text-texto-secundario mb-6">Agende consultas, veja o seu histórico e aceda à telemedicina.</p>
+                <p class="text-texto-secundario mb-6">Agende consultas, veja o seu histórico e acessa à telemedicina.</p>
                 <span class="font-semibold text-ciano-vibrante flex items-center justify-center gap-2">
                     Acessar agora <i data-lucide="arrow-right" class="w-4 h-4"></i>
                 </span>
             </a>
 
-            <!-- 2. Portal do Profissional (Link Corrigido) -->
+            <!-- 2. Portal do Profissional -->
             <a href="pagina_profissional/profissional_app.html" class="portal-card bg-fundo-secundario rounded-xl shadow-lg p-8 text-center block">
                 <div class="inline-flex items-center justify-center w-16 h-16 bg-ciano-vibrante/20 rounded-full mb-5">
                     <i data-lucide="stethoscope" class="w-8 h-8 text-ciano-vibrante"></i>
                 </div>
                 <h2 class="text-1xl font-bold text-texto-principal mb-2">Portal do Profissional</h2>
-                <p class="text-texto-secundario mb-6">Consulte a sua agenda, gira pacientes e aceda a prontuários.</p>
+                <p class="text-texto-secundario mb-6">Consulte a sua agenda, gerencie pacientes e acesse prontuários.</p>
                 <span class="font-semibold text-ciano-vibrante flex items-center justify-center gap-2">
                     Acessar agora <i data-lucide="arrow-right" class="w-4 h-4"></i>
                 </span>
             </a>
 
-            <!-- 3. Portal do Administrador (Link Corrigido) -->
+            <!-- 3. Portal do Administrador -->
             <a href="pagina_adm/admin.html" class="portal-card bg-fundo-secundario rounded-xl shadow-lg p-8 text-center block">
                 <div class="inline-flex items-center justify-center w-16 h-16 bg-ciano-vibrante/20 rounded-full mb-5">
                     <i data-lucide="shield-check" class="w-8 h-8 text-ciano-vibrante"></i>
                 </div>
                 <h2 class="text-1xl font-bold text-texto-principal mb-2">Portal do Administrador</h2>
-                <p class="text-texto-secundario mb-6">Gira cadastros, fluxos do hospital e visualize relatórios.</p>
+                <p class="text-texto-secundario mb-6">Gerencie cadastros, fluxos do hospital e visualize relatórios.</p>
                 <span class="font-semibold text-ciano-vibrante flex items-center justify-center gap-2">
                     Acessar agora <i data-lucide="arrow-right" class="w-4 h-4"></i>
                 </span>
