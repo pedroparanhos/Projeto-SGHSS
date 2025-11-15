@@ -1,3 +1,27 @@
+// (PASSO 12 - FASE 3) Auth Guard
+auth.onAuthStateChanged((user) => {
+    if (user) {
+        // O utilizador está logado.
+        db.collection("usuarios").doc(user.uid).get().then(doc => {
+            if (doc.exists && doc.data().tipo === "ADMIN") {
+                showLayout(appLayout);
+                showAppScreen(dashboardScreen); // Mostra o dashboard por padrão
+                iniciarListenerMapaDeLeitos(); // Inicia o listener do mapa
+            } else {
+                // Logado, mas não é admin. Expulsar.
+                console.warn("Tentativa de acesso não autorizada (não-admin)");
+                auth.signOut();
+            }
+        });
+
+    } else {
+        // O utilizador não está logado.
+        showLayout(authLayout); 
+        showAppScreen(null); 
+    }
+});
+
+
 // --- REFERÊNCIAS AOS LAYOUTS E ECRÃS ---
 const authLayout = document.getElementById('auth-layout');
 const appLayout = document.getElementById('app-layout');
@@ -95,7 +119,7 @@ if (subTabNavFluxos) {
 const filterButtons = document.querySelectorAll('#leito-filters .filter-btn');
 const leitosGrid = document.getElementById('mapa-leitos-grid');
 if (filterButtons.length > 0 && leitosGrid) {
-    const leitoCards = leitosGrid.querySelectorAll('.leito-card');
+    // const leitoCards = leitosGrid.querySelectorAll('.leito-card'); // Removido, pois os cards são dinâmicos
     
     filterButtons.forEach(btn => {
         btn.addEventListener('click', (e) => {
@@ -105,8 +129,9 @@ if (filterButtons.length > 0 && leitosGrid) {
             filterButtons.forEach(b => b.classList.remove('active'));
             e.currentTarget.classList.add('active');
 
-            // Lógica de filtro
-            leitoCards.forEach(card => {
+            // Lógica de filtro (AGORA ATUA SOBRE OS FILHOS DO GRID)
+            const leitoCardsAtuais = leitosGrid.querySelectorAll('.leito-card');
+            leitoCardsAtuais.forEach(card => {
                 const status = card.getAttribute('data-status');
                 if (filter === 'todos') {
                     card.classList.remove('hidden');
@@ -172,17 +197,7 @@ function closeLeitoModal() {
 }
 
 // Event Listeners do Modal
-if (leitosGrid) {
-    leitosGrid.addEventListener('click', (e) => {
-        const card = e.target.closest('.leito-card');
-        if (card) {
-            const leito = card.getAttribute('data-leito');
-            const status = card.getAttribute('data-status');
-            const paciente = card.getAttribute('data-paciente');
-            openLeitoModal(leito, status, paciente);
-        }
-    });
-}
+// (O listener de clique no 'leitosGrid' foi movido para a função 'iniciarListenerMapaDeLeitos' no Passo 10)
 if (modalCloseBtn) modalCloseBtn.addEventListener('click', closeLeitoModal);
 if (leitoModal) {
     leitoModal.addEventListener('click', (e) => {
@@ -191,6 +206,28 @@ if (leitoModal) {
         }
     });
 }
+
+// (PASSO 11 - FASE 2) Lógica de atualização dos botões do modal
+if (btnModalMarcarLivre) {
+    btnModalMarcarLivre.addEventListener('click', () => {
+        const leitoId = modalLeitoNumero.textContent; // Pega o ID do leito do modal
+        if (!leitoId) return;
+
+        // Atualiza o documento no Firestore
+        db.collection("leitos").doc(leitoId).update({
+            status: "livre",
+            paciente: "", // Limpa o ID do paciente
+            pacienteNome: "" // Limpa o nome do paciente
+        })
+        .then(() => {
+            console.log("Leito atualizado para LIVRE");
+            closeLeitoModal(); // Fecha o modal
+            // NÃO PRECISA FAZER MAIS NADA! O onSnapshot vai atualizar a UI sozinho.
+        })
+        .catch((error) => console.error("Erro ao atualizar leito: ", error));
+    });
+}
+// (Adicione aqui a lógica para os outros botões: Alocar, Programar Alta, Desbloquear...)
 
 
 // --- LÓGICA DO RELATÓRIO (TELA 16.3) ---
@@ -231,9 +268,6 @@ sidebarLinks.forEach(link => {
         const targetScreen = document.getElementById(targetScreenId);
         if (targetScreen) { 
             showAppScreen(targetScreen);
-            if (targetScreenId === 'admin-management-screen') {
-                // Não é mais necessário, pois a aba já vem ativa por padrão
-            }
         }
     });
 });
@@ -246,16 +280,6 @@ gestaoHubBtns.forEach(btn => {
         const targetScreen = document.getElementById(targetScreenId);
         if (targetScreen) { 
             showAppScreen(targetScreen);
-            if (targetScreenId === 'admin-management-screen') {
-                // Ativa a primeira aba por padrão
-                const firstTabBtn = document.querySelector('#sub-tabs-nav-cadastros .subtab-btn');
-                if(firstTabBtn) showSubTab(firstTabBtn.getAttribute('data-subtab'));
-            }
-            if (targetScreenId === 'admin-fluxos-screen') {
-                // Ativa a primeira aba por padrão
-                const firstTabBtn = document.querySelector('#sub-tabs-nav-fluxos .subtab-btn');
-                if(firstTabBtn) showSubTab(firstTabBtn.getAttribute('data-subtab'));
-            }
         }
     });
 });
@@ -277,39 +301,90 @@ quickAccessBtns.forEach(btn => {
         
         if (targetScreen) {
             showAppScreen(targetScreen);
-            if (targetScreenId === 'admin-management-screen') {
-                const firstTabBtn = document.querySelector('#sub-tabs-nav-cadastros .subtab-btn');
-                if(firstTabBtn) showSubTab(firstTabBtn.getAttribute('data-subtab'));
-            }
-             if (targetScreenId === 'admin-fluxos-screen') {
-                const firstTabBtn = document.querySelector('#sub-tabs-nav-fluxos .subtab-btn');
-                if(firstTabBtn) showSubTab(firstTabBtn.getAttribute('data-subtab'));
-            }
         }
     });
 });
 
-// Simula o login
+// (FASE 1 - Passo 6.3) Lógica de Login do Admin com Firebase
 if (loginForm) {
     loginForm.addEventListener('submit', (e) => {
         e.preventDefault();
-        showLayout(appLayout);
-        showAppScreen(dashboardScreen);
+        const email = document.getElementById('login-email').value;
+        const password = document.getElementById('login-password').value;
+
+        auth.signInWithEmailAndPassword(email, password)
+            .then((userCredential) => {
+                const uid = userCredential.user.uid;
+                
+                // VERIFICAR SE É ADMIN
+                db.collection("usuarios").doc(uid).get().then(doc => {
+                    if (!doc.exists || doc.data().tipo !== "ADMIN") {
+                        alert("Acesso negado. Portal apenas para administradores.");
+                        auth.signOut();
+                        return;
+                    }
+                    console.log("Login de admin bem-sucedido!");
+                    // (O onAuthStateChanged da Fase 3 vai assumir o showLayout e o listener)
+                });
+            })
+            .catch((error) => { 
+                console.error("Erro no login:", error);
+                alert("Erro no login: " + error.message);
+             });
     });
 }
 
-// Simula o logout
+// (FASE 1 - Passo 7) Lógica de Logout do Admin com Firebase
 if (logoutBtn) {
     logoutBtn.addEventListener('click', (e) => {
         e.preventDefault();
-        showLayout(authLayout);
-        showAppScreen(null);
+        auth.signOut().then(() => {
+            console.log("Logout feito com sucesso.");
+            // (O onAuthStateChanged do Passo 12 vai tratar de mostrar o authLayout)
+        });
     });
 }
 
-// Estado inicial
-showLayout(authLayout);
-showAppScreen(null); 
+// (PASSO 10 - FASE 2) Função que ouve o mapa de leitos
+function iniciarListenerMapaDeLeitos() {
+    const mapaLeitosGrid = document.getElementById('mapa-leitos-grid');
+    if (!mapaLeitosGrid) return;
+
+    // Ouve a coleção "leitos" EM TEMPO REAL
+    db.collection("leitos").onSnapshot((querySnapshot) => {
+        mapaLeitosGrid.innerHTML = ''; // Limpa o mapa a cada atualização
+
+        querySnapshot.forEach((doc) => {
+            const leito = doc.data();
+            const leitoId = doc.id;
+            
+            // Cria o HTML do leito dinamicamente
+            const leitoDiv = document.createElement('div');
+            leitoDiv.className = `leito-card leito-${leito.status}`;
+            leitoDiv.setAttribute('data-leito', leitoId);
+            leitoDiv.setAttribute('data-status', leito.status);
+            // (Vamos assumir que o nome do paciente é guardado no documento do leito)
+            const nomePaciente = leito.pacienteNome || 'Nenhum';
+            leitoDiv.setAttribute('data-paciente', nomePaciente);
+            leitoDiv.textContent = leitoId;
+
+            // Adiciona o clique para abrir o modal
+            leitoDiv.addEventListener('click', () => {
+                openLeitoModal(leitoId, leito.status, nomePaciente);
+            });
+            
+            mapaLeitosGrid.appendChild(leitoDiv);
+        });
+
+        // Re-ativa os ícones, se necessário
+        if (typeof lucide !== 'undefined') { lucide.createIcons(); }
+    });
+}
+
+
+// Estado inicial (REMOVIDO PELO PASSO 12)
+// showLayout(authLayout);
+// showAppScreen(null); 
 
 // Ativa os ícones no carregamento inicial
 if (typeof lucide !== 'undefined') {

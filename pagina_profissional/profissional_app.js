@@ -1,3 +1,27 @@
+// (PASSO 12 - FASE 3) Auth Guard
+auth.onAuthStateChanged((user) => {
+    if (user) {
+        // O utilizador está logado.
+        db.collection("usuarios").doc(user.uid).get().then(doc => {
+            if (doc.exists && doc.data().tipo === "PROFISSIONAL") {
+                showLayout(appLayout);
+                // (Função a ser criada para carregar dados do profissional)
+                carregarDashboardProfissional(user.uid); 
+            } else {
+                // Logado, mas não é profissional. Expulsar.
+                console.warn("Tentativa de acesso não autorizada (não-profissional)");
+                auth.signOut();
+            }
+        });
+
+    } else {
+        // O utilizador não está logado.
+        showLayout(authLayout); 
+        showAppScreen(null); 
+    }
+});
+
+
 // --- NAVEGAÇÃO BÁSICA ---
 const authLayout = document.getElementById('auth-layout');
 const appLayout = document.getElementById('app-layout');
@@ -85,21 +109,43 @@ sidebarLinks.forEach(link => {
     });
 });
 
-// Simula o login
+// (FASE 1 - Passo 6.2) Lógica de Login do Profissional com Firebase
 if (loginForm) {
     loginForm.addEventListener('submit', (e) => {
         e.preventDefault();
-        showLayout(appLayout);
-        showAppScreen(dashboardScreen); // Mostra o dashboard ao logar
+        const email = document.getElementById('login-crm').value; // (Assumindo que o login é por email)
+        const password = document.getElementById('login-password-prof').value;
+
+        auth.signInWithEmailAndPassword(email, password)
+            .then((userCredential) => {
+                const uid = userCredential.user.uid;
+                
+                // VERIFICAR SE É PROFISSIONAL
+                db.collection("usuarios").doc(uid).get().then(doc => {
+                    if (!doc.exists || doc.data().tipo !== "PROFISSIONAL") {
+                        alert("Acesso negado. Portal apenas para profissionais.");
+                        auth.signOut();
+                        return;
+                    }
+                    console.log("Login de profissional bem-sucedido!");
+                    // (O onAuthStateChanged fará o resto)
+                });
+            })
+            .catch((error) => { 
+                console.error("Erro no login:", error);
+                alert("Erro no login: " + error.message);
+             });
     });
 }
 
-// Simula o logout
+// (FASE 1 - Passo 7) Lógica de Logout do Profissional com Firebase
 if (logoutBtn) {
     logoutBtn.addEventListener('click', (e) => {
         e.preventDefault();
-        showLayout(authLayout);
-        showAppScreen(null); // Esconde todos os ecrãs
+        auth.signOut().then(() => {
+            console.log("Logout feito com sucesso.");
+            // (O onAuthStateChanged do Passo 12 vai tratar de mostrar o authLayout)
+        });
     });
 }
 
@@ -176,10 +222,28 @@ if (tabButtons.length > 0) {
     });
 }
 
+// (PASSO 12 - FASE 3) Nova função (placeholder)
+function carregarDashboardProfissional(userId) {
+    console.log("Carregando dashboard para o profissional:", userId);
+    
+    // Carregar nome do profissional na sidebar
+    db.collection("usuarios").doc(userId).get().then(doc => {
+        if (doc.exists) {
+            const nome = doc.data().nome;
+            const nomeSidebar = document.querySelector('#app-layout aside .font-semibold');
+            if(nomeSidebar) nomeSidebar.textContent = nome;
+        }
+    });
 
-// Estado inicial
-showLayout(authLayout);
-showAppScreen(null); // Esconde todos os ecrãs da app se estiver no login
+    // TODO: Adicionar lógica para carregar agenda e métricas do profissional
+    // (Por agora, apenas mostra o dashboard)
+    showAppScreen(dashboardScreen);
+}
+
+
+// Estado inicial (REMOVIDO PELO PASSO 12)
+// showLayout(authLayout);
+// showAppScreen(null); 
 
 // Ativa os ícones no carregamento inicial
 if (typeof lucide !== 'undefined') {

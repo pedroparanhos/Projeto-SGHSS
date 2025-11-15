@@ -1,7 +1,33 @@
+// (PASSO 12 - FASE 3) Auth Guard
+auth.onAuthStateChanged((user) => {
+    if (user) {
+        // O utilizador está logado.
+        // Vamos verificar se ele está no portal certo.
+        db.collection("usuarios").doc(user.uid).get().then(doc => {
+            if (doc.exists && doc.data().tipo === "PACIENTE") {
+                showLayout(appLayout);
+                carregarDashboardPaciente(user.uid); // Carrega os dados do utilizador
+            } else {
+                // Logado, mas não é paciente. Expulsar.
+                console.warn("Tentativa de acesso não autorizada (não-paciente)");
+                auth.signOut();
+                // (O 'else' abaixo tratará de mostrar o authLayout)
+            }
+        });
+
+    } else {
+        // O utilizador não está logado.
+        showLayout(authLayout); // Garante que a tela de login/cadastro é mostrada
+        showAppScreen(null); // Esconde todos os ecrãs da app
+    }
+});
+
+
 // --- ESTADO DA APLICAÇÃO ---
 let selectedSpecialty = '';
-let selectedProfessional = { name: '', img: '' };
-let selectedDate = '22 de Outubro, 2025';
+// (PASSO 9 - FASE 2) Modificado para guardar o ID
+let selectedProfessional = { id: '', name: '', img: '' };
+let selectedDate = '22 de Outubro, 2025'; // (Isto precisará de ser dinâmico)
 let selectedTime = '';
 
 // --- REFERÊNCIAS AOS LAYOUTS E ECRÃS ---
@@ -105,9 +131,9 @@ function showAppScreen(screenToShow) {
     updateNavActiveState(screenToShow ? screenToShow.id : 'dashboard-screen');
 }
 
-// Navegação inicial
-showLayout(authLayout);
-showAppScreen(null); // Esconde todos os ecrãs da app
+// Navegação inicial (REMOVIDA PELO PASSO 12)
+// showLayout(authLayout);
+// showAppScreen(null); 
 
 // --- NAVEGAÇÃO DE AUTENTICAÇÃO ---
 if(goToRegisterLink) goToRegisterLink.addEventListener('click', (e) => {
@@ -120,18 +146,45 @@ if(goToLoginLink) goToLoginLink.addEventListener('click', (e) => {
     authScreens.forEach(s => s.classList.add('hidden'));
     if(loginScreen) loginScreen.classList.remove('hidden');
 });
+
+// (FASE 1 - Passo 6.1) Lógica de Login do Paciente com Firebase
 if(loginForm) loginForm.addEventListener('submit', (e) => {
     e.preventDefault();
-    showLayout(appLayout);
-    showAppScreen(dashboardScreen);
+    const email = document.getElementById('login-email').value;
+    const password = document.getElementById('login-password').value;
+
+    auth.signInWithEmailAndPassword(email, password)
+        .then((userCredential) => {
+            const uid = userCredential.user.uid;
+            
+            // VERIFICAR SE É PACIENTE
+            db.collection("usuarios").doc(uid).get().then(doc => {
+                if (!doc.exists || doc.data().tipo !== "PACIENTE") {
+                    alert("Acesso negado. Este portal é apenas para pacientes.");
+                    auth.signOut();
+                    return;
+                }
+                // É um paciente, carregar a app (o onAuthStateChanged vai tratar disso)
+                console.log("Login de paciente bem-sucedido!");
+                // (Não precisamos chamar o showLayout aqui, o Passo 12 fará isso)
+                // (O Passo 12 irá chamar carregarDashboardPaciente)
+            });
+        })
+        .catch((error) => {
+            console.error("Erro no login:", error);
+            alert("Erro no login: " + error.message);
+        });
 });
+
+// (FASE 1 - Passo 7) Lógica de Logout do Paciente com Firebase
 if(logoutBtnDesktop) logoutBtnDesktop.addEventListener('click', (e) => {
     e.preventDefault();
-    showLayout(authLayout);
-    showAppScreen(null);
-    authScreens.forEach(s => s.classList.add('hidden'));
-    if(loginScreen) loginScreen.classList.remove('hidden');
+    auth.signOut().then(() => {
+        console.log("Logout feito com sucesso.");
+        // (O onAuthStateChanged do Passo 12 vai tratar de mostrar o authLayout)
+    });
 });
+
 
 // --- NAVEGAÇÃO DA APLICAÇÃO ---
 
@@ -203,13 +256,20 @@ specialtyCards.forEach(card => {
         if(document.getElementById('professional-specialty-title')) {
             document.getElementById('professional-specialty-title').textContent = selectedSpecialty;
         }
+        // (PASSO 9 - FASE 2) - Esta lista deveria ser carregada do Firestore
+        // db.collection("usuarios").where("tipo", "==", "PROFISSIONAL").where("especialidade", "==", selectedSpecialty)...
         showAppScreen(professionalScreen);
     });
 });
 professionalCards.forEach(card => {
     card.addEventListener('click', () => {
+        // (PASSO 9 - FASE 2) - Modificado para guardar o ID
+        // (Assumindo que o ID está no HTML, ex: data-id="uid-do-medico")
+        // Como não está, vamos usar o nome como ID por agora, mas isto precisaria ser melhorado
+        selectedProfessional.id = card.querySelector('.font-bold').textContent; // <--- Idealmente seria card.getAttribute('data-id')
         selectedProfessional.name = card.querySelector('.font-bold').textContent;
         selectedProfessional.img = card.querySelector('img').src;
+        
         if(document.getElementById('datetime-professional-name')) {
             document.getElementById('datetime-professional-name').textContent = selectedProfessional.name;
             document.getElementById('datetime-professional-specialty').textContent = selectedSpecialty;
@@ -237,21 +297,55 @@ professionalCards.forEach(card => {
          document.getElementById('confirm-professional-name').textContent = selectedProfessional.name;
          document.getElementById('confirm-specialty').textContent = selectedSpecialty;
          document.getElementById('confirm-professional-img').src = selectedProfessional.img;
-         document.getElementById('confirm-date').textContent = selectedDate;
+         document.getElementById('confirm-date').textContent = selectedDate; // (A data está "hard-coded")
          document.getElementById('confirm-time').textContent = selectedTime;
      }
      showAppScreen(confirmationScreen);
  });
+ 
 const confirmAppointmentBtn = document.getElementById('confirm-appointment-btn');
+// (PASSO 9 - FASE 2) Lógica de salvar no Firestore
 if(confirmAppointmentBtn) confirmAppointmentBtn.addEventListener('click', () => {
-    if(document.getElementById('success-professional-name')) {
-         document.getElementById('success-professional-name').textContent = selectedProfessional.name;
-         document.getElementById('success-date-time').textContent = `${selectedDate} às ${selectedTime}`;
-     }
-     showAppScreen(successScreen);
+    
+    // Pegar o ID do utilizador logado
+    const userId = auth.currentUser.uid;
+    if (!userId) {
+        alert("Erro: Utilizador não está logado.");
+        return; 
+    }
+
+    // (Isto é uma simplificação, idealmente o 'selectedDate' seria um objeto Date)
+    const dataConsulta = new Date(); // APENAS PARA EXEMPLO
+
+    // Criar o objeto da consulta
+    const novaConsulta = {
+        pacienteId: userId,
+        profissionalId: selectedProfessional.id, // (Guardado na seleção de profissional)
+        nomeMedico: selectedProfessional.name,
+        especialidade: selectedSpecialty,
+        data: firebase.firestore.Timestamp.fromDate(dataConsulta), // Usa o Timestamp do Firebase
+        status: "Agendada"
+    };
+
+    // Adicionar ao banco de dados
+    db.collection("consultas").add(novaConsulta)
+        .then((docRef) => {
+            console.log("Consulta agendada com ID: ", docRef.id);
+            // Agora sim, ir para a tela de sucesso
+            document.getElementById('success-professional-name').textContent = selectedProfessional.name;
+            document.getElementById('success-date-time').textContent = `${selectedDate} às ${selectedTime}`;
+            showAppScreen(successScreen);
+        })
+        .catch((error) => {
+            console.error("Erro ao agendar: ", error);
+            alert("Erro ao agendar. Tente novamente.");
+        });
 });
+
 function resetAppointmentState() {
-     selectedSpecialty = ''; selectedProfessional = { name: '', img: '' }; selectedTime = '';
+     selectedSpecialty = ''; 
+     selectedProfessional = { id: '', name: '', img: '' }; 
+     selectedTime = '';
      if (timeSlotsGrid) {
          timeSlotsGrid.querySelectorAll('.time-slot').forEach(s => s.classList.remove('selected'));
      }
@@ -306,6 +400,7 @@ function resetTelemedicineView() {
 }
 
 // --- LÓGICA DO FORMULÁRIO DE CADASTRO MULTI-PASSO ---
+// (Modificado na FASE 1 - Passo 5)
 const steps = [document.getElementById('step-1'), document.getElementById('step-2'), document.getElementById('step-3')];
 const prevBtn = document.getElementById('prev-btn');
 const nextBtn = document.getElementById('next-btn');
@@ -331,13 +426,55 @@ function updateStep() {
 if(nextBtn) nextBtn.addEventListener('click', () => {
     let valid = true; const currentStepElement = steps[currentStep]; if (!currentStepElement) return;
     const currentStepInputs = currentStepElement.querySelectorAll('input[required], select[required]');
+    
     currentStepInputs.forEach(input => {
          if (!input.value) { valid = false; input.classList.add('border-red-500', 'border'); }
          else { input.classList.remove('border-red-500', 'border'); }
     });
+
     if (!valid) { console.error('Por favor, preencha todos os campos obrigatórios.'); return; }
-    if (currentStep < steps.length - 1) { currentStep++; updateStep(); }
-    else { console.log("Submetendo formulário..."); /* document.getElementById('registration-form').submit(); */ }
+    
+    // (FASE 1 - Passo 5) Lógica de Cadastro no Firebase
+    if (currentStep === 2) { // Último passo (Finalizar Cadastro)
+        // 1. Validar campos (feito acima)
+    
+        // 2. Pegar TODOS os dados dos 3 passos
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+        const nomeCompleto = document.getElementById('fullName').value;
+        const cpf = document.getElementById('cpf').value;
+        const dataNasc = document.getElementById('birthDate').value;
+        // etc.
+    
+        // 3. Criar o utilizador no Firebase Auth
+        auth.createUserWithEmailAndPassword(email, password)
+            .then((userCredential) => {
+                const uid = userCredential.user.uid;
+    
+                // 4. Salvar os dados dele no Firestore
+                return db.collection("usuarios").doc(uid).set({
+                    nome: nomeCompleto,
+                    cpf: cpf,
+                    dataNascimento: dataNasc,
+                    email: email,
+                    tipo: "PACIENTE"
+                });
+            })
+            .then(() => {
+                console.log("Paciente cadastrado com sucesso!");
+                alert("Cadastro realizado! Faça o login.");
+                // Simula o clique no link "Faça login"
+                document.getElementById('go-to-login').click();
+            })
+            .catch((error) => {
+                console.error("Erro no cadastro:", error);
+                alert("Erro ao cadastrar: " + error.message);
+            });
+    } else {
+        // Lógica de avançar o passo (seu código atual)
+        currentStep++; 
+        updateStep();
+    }
 });
 if(prevBtn) prevBtn.addEventListener('click', () => {
     if (currentStep > 0) {
@@ -360,8 +497,68 @@ if(specialtySearchInput) specialtySearchInput.addEventListener('input', (e) => {
     });
 });
 
-// Inicializa o estado do formulário e ativa os ícones
-updateStep();
+// (PASSO 8 - FASE 2) Nova função para carregar dados do dashboard
+function carregarDashboardPaciente(userId) {
+    // 1. Carregar nome do paciente
+    db.collection("usuarios").doc(userId).get().then(doc => {
+        if (doc.exists) {
+            const nome = doc.data().nome;
+            // Atualiza o "Bem-vindo João Pereira"
+            // (Usei seletores que funcionam com o seu HTML atual)
+            const nomeSidebar = document.querySelector('#app-layout aside .font-semibold');
+            if(nomeSidebar) nomeSidebar.textContent = nome;
+            
+            const nomeHeaderMobile = document.querySelector('#dashboard-screen header .text-lg');
+            if(nomeHeaderMobile) nomeHeaderMobile.textContent = nome;
+        }
+    });
+
+    // 2. Carregar próxima consulta
+    const cardConsulta = document.querySelector("#dashboard-screen .bg-fundo-secundario"); 
+    if (!cardConsulta) return;
+    
+    const areaConsulta = cardConsulta.querySelector('.bg-campo');
+    const areaDataHora = cardConsulta.querySelector('.grid-cols-2');
+    const areaBotoes = cardConsulta.querySelector('.flex.gap-3');
+    
+    if (!areaConsulta || !areaDataHora || !areaBotoes) return;
+
+    db.collection("consultas")
+      .where("pacienteId", "==", userId)
+      .where("data", ">=", new Date()) // Apenas consultas futuras
+      .orderBy("data")
+      .limit(1)
+      .get()
+      .then((querySnapshot) => {
+          if (querySnapshot.empty) {
+              areaConsulta.innerHTML = "<p class='p-3 text-texto-secundario'>Nenhuma consulta agendada.</p>";
+              areaDataHora.classList.add('hidden');
+              areaBotoes.classList.add('hidden');
+              return;
+          }
+          
+          // Se encontrou, mostra as áreas
+          areaDataHora.classList.remove('hidden');
+          areaBotoes.classList.remove('hidden');
+
+          const consulta = querySnapshot.docs[0].data();
+          
+          // Preenche os dados
+          // (Assumindo que os dados do médico estão na consulta, como no Passo 9)
+          areaConsulta.querySelector('.font-semibold').textContent = consulta.nomeMedico;
+          areaConsulta.querySelector('.text-xs').textContent = consulta.especialidade;
+          
+          // Seletores para data e hora
+          const dataEl = areaDataHora.children[0].querySelector('span');
+          const horaEl = areaDataHora.children[1].querySelector('span');
+
+          if(dataEl) dataEl.textContent = consulta.data.toDate().toLocaleDateString('pt-PT');
+          if(horaEl) horaEl.textContent = consulta.data.toDate().toLocaleTimeString('pt-PT', {hour: '2-digit', minute:'2-digit'});
+      });
+}
+
+
+// Ativa os ícones no carregamento inicial
 if (typeof lucide !== 'undefined') {
     lucide.createIcons();
 }
