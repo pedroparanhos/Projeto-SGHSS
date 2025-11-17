@@ -497,24 +497,45 @@ if(specialtySearchInput) specialtySearchInput.addEventListener('input', (e) => {
     });
 });
 
+// --- Lógica de Avatar ---
+function getInitials(name) {
+    if (!name) return "??";
+    const parts = name.split(' ');
+    if (parts.length === 1) {
+        return parts[0].substring(0, 2).toUpperCase();
+    }
+    return (parts[0].substring(0, 1) + parts[parts.length - 1].substring(0, 1)).toUpperCase();
+}
+
+
 // (PASSO 8 - FASE 2) Nova função para carregar dados do dashboard
 function carregarDashboardPaciente(userId) {
-    // 1. Carregar nome do paciente
+    
+    const sidebarAvatarImg = document.getElementById('sidebar-avatar-img');
+    const mobileAvatarImg = document.getElementById('mobile-avatar-img');
+    const sidebarAvatarName = document.getElementById('sidebar-avatar-name');
+    
+    // 1. Carregar nome e avatar do paciente
     db.collection("usuarios").doc(userId).get().then(doc => {
         if (doc.exists) {
             const nome = doc.data().nome;
+            const initials = getInitials(nome);
+            
             // Atualiza o "Bem-vindo João Pereira"
-            // (Usei seletores que funcionam com o seu HTML atual)
-            const nomeSidebar = document.querySelector('#app-layout aside .font-semibold');
-            if(nomeSidebar) nomeSidebar.textContent = nome;
+            if(sidebarAvatarName) sidebarAvatarName.textContent = nome;
             
             const nomeHeaderMobile = document.querySelector('#dashboard-screen header .text-lg');
             if(nomeHeaderMobile) nomeHeaderMobile.textContent = nome;
+
+            // Atualiza a URL dos placeholders de avatar
+            const newAvatarUrl = `https://placehold.co/40x40/06B6D4/FFFFFF?text=${initials}`;
+            if(sidebarAvatarImg) sidebarAvatarImg.src = newAvatarUrl;
+            if(mobileAvatarImg) mobileAvatarImg.src = newAvatarUrl;
         }
     });
 
     // 2. Carregar próxima consulta
-    const cardConsulta = document.querySelector("#dashboard-screen .bg-fundo-secundario"); 
+    const cardConsulta = document.querySelector("#dashboard-screen #proxima-consulta-card"); 
     if (!cardConsulta) return;
     
     const areaConsulta = cardConsulta.querySelector('.bg-campo');

@@ -4,29 +4,30 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SGHSS VidaPlus - Profissional</title>
-    <!-- Tailwind CSS -->
+
+    <!-- 1. SCRIPTS DO FIREBASE (Carregar primeiro, com o link completo) -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+    
+    <!-- 2. NOSSOS SCRIPTS DE CONFIGURAÇÃO (Note o caminho ../ para a raiz) -->
+    <script src="../firebase-init.js"></script>
+    <script src="../tailwind.config.js"></script>
+
+    <!-- 3. OUTRAS BIBLIOTECAS E ESTILOS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Ícones (Lucide Icons) -->
     <script src="https://unpkg.com/lucide@latest"></script>
-    <!-- Google Fonts: Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
     
-    <!-- Configuração de cores personalizadas do Tailwind (Arquivo separado) -->
-    <script src="../tailwind.config.js"></script>
-    
-    <!-- Estilos personalizados (Arquivo separado) -->
+    <!-- O SEU CSS ESPECÍFICO -->
     <link rel="stylesheet" href="profissional_style.css">
 
-    <!-- Scripts do Firebase -->
-    <script src="[https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js](https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js)"></script>
-    <script src="[https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js](https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js)"></script>
-    <script src="[https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js](https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js)"></script>
-    <script src="../firebase-init.js"></script> 
+    <!-- English Gemini -->
 </head>
-
 <body class="bg-fundo-principal text-texto-principal font-sans">
+
     <!-- LAYOUT DE AUTENTICAÇÃO (Login do Profissional) -->
     <div id="auth-layout" class="min-h-screen flex flex-col items-center justify-center p-4">
         <div id="login-screen" class="auth-screen w-full">
@@ -235,37 +236,37 @@
                  
                  <!-- Barra de Pesquisa -->
                  <div class="relative">
-                     <input type="search" id="paciente-search" placeholder="Procurar paciente por nome ou CPF..."
-                            class="block w-full rounded-md border-0 bg-campo p-3 pl-10 text-texto-principal placeholder:text-texto-secundario focus:ring-2 focus:ring-inset focus:ring-ciano-vibrante sm:text-sm">
-                     <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                         <i data-lucide="search" class="w-5 h-5 text-texto-secundario"></i>
-                     </div>
+                       <input type="search" id="paciente-search" placeholder="Procurar paciente por nome ou CPF..."
+                              class="block w-full rounded-md border-0 bg-campo p-3 pl-10 text-texto-principal placeholder:text-texto-secundario focus:ring-2 focus:ring-inset focus:ring-ciano-vibrante sm:text-sm">
+                       <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                           <i data-lucide="search" class="w-5 h-5 text-texto-secundario"></i>
+                       </div>
                  </div>
 
                  <!-- Lista de Resultados -->
                  <div id="pacientes-list" class="space-y-3">
-                     <!-- Item Paciente (Exemplo) -->
-                     <div class="paciente-item bg-fundo-secundario p-4 rounded-xl flex items-center justify-between shadow-lg" data-nome="João Pereira">
-                         <div class="flex items-center space-x-3">
-                             <img src="https://placehold.co/40x40/06B6D4/FFFFFF?text=JP" alt="Avatar João Pereira" class="w-10 h-10 rounded-full">
-                             <div>
-                                 <p class="font-semibold text-texto-principal text-sm">João Pereira</p>
-                                 <p class="text-xs text-texto-secundario">CPF: 123.456.789-00</p>
-                             </div>
-                         </div>
-                         <button class="btn-ver-prontuario px-3 py-2 text-xs font-semibold bg-ciano-vibrante text-white rounded-md hover:bg-azul-suave" data-paciente="João Pereira">Ver Prontuário</button>
-                     </div>
-                     <!-- Item Paciente (Exemplo) -->
-                     <div class="paciente-item bg-fundo-secundario p-4 rounded-xl flex items-center justify-between shadow-lg" data-nome="Maria Silva">
-                         <div class="flex items-center space-x-3">
-                             <img src="https://placehold.co/40x40/FBCFE8/FFFFFF?text=MS" alt="Avatar Maria Silva" class="w-10 h-10 rounded-full">
-                             <div>
-                                 <p class="font-semibold text-texto-principal text-sm">Maria Silva</p>
-                                 <p class="text-xs text-texto-secundario">CPF: 987.654.321-00</p>
-                             </div>
-                         </div>
-                         <button class="btn-ver-prontuario px-3 py-2 text-xs font-semibold bg-ciano-vibrante text-white rounded-md hover:bg-azul-suave" data-paciente="Maria Silva">Ver Prontuário</button>
-                     </div>
+                       <!-- Item Paciente (Exemplo) -->
+                       <div class="paciente-item bg-fundo-secundario p-4 rounded-xl flex items-center justify-between shadow-lg" data-nome="João Pereira">
+                           <div class="flex items-center space-x-3">
+                               <img src="https://placehold.co/40x40/06B6D4/FFFFFF?text=JP" alt="Avatar João Pereira" class="w-10 h-10 rounded-full">
+                               <div>
+                                   <p class="font-semibold text-texto-principal text-sm">João Pereira</p>
+                                   <p class="text-xs text-texto-secundario">CPF: 123.456.789-00</p>
+                               </div>
+                           </div>
+                           <button class="btn-ver-prontuario px-3 py-2 text-xs font-semibold bg-ciano-vibrante text-white rounded-md hover:bg-azul-suave" data-paciente="João Pereira">Ver Prontuário</button>
+                       </div>
+                       <!-- Item Paciente (Exemplo) -->
+                       <div class="paciente-item bg-fundo-secundario p-4 rounded-xl flex items-center justify-between shadow-lg" data-nome="Maria Silva">
+                           <div class="flex items-center space-x-3">
+                               <img src="https://placehold.co/40x40/FBCFE8/FFFFFF?text=MS" alt="Avatar Maria Silva" class="w-10 h-10 rounded-full">
+                               <div>
+                                   <p class="font-semibold text-texto-principal text-sm">Maria Silva</p>
+                                   <p class="text-xs text-texto-secundario">CPF: 987.654.321-00</p>
+                               </div>
+                           </div>
+                           <button class="btn-ver-prontuario px-3 py-2 text-xs font-semibold bg-ciano-vibrante text-white rounded-md hover:bg-azul-suave" data-paciente="Maria Silva">Ver Prontuário</button>
+                       </div>
                  </div>
             </div>
 
@@ -273,10 +274,10 @@
             <div id="atendimento-screen" class="app-screen p-4 lg:p-8 space-y-6 hidden">
                 <!-- Cabeçalho -->
                 <header class="flex items-center space-x-4">
-                     <button id="back-atendimento-to-pacientes" class="p-2">
-                         <i data-lucide="arrow-left" class="text-texto-principal w-6 h-6"></i>
-                     </button>
-                     <h1 class="text-3xl font-bold text-texto-principal">Prontuário: <span id="prontuario-paciente-nome">Nome do Paciente</span></h1>
+                       <button id="back-atendimento-to-pacientes" class="p-2">
+                           <i data-lucide="arrow-left" class="text-texto-principal w-6 h-6"></i>
+                       </button>
+                       <h1 class="text-3xl font-bold text-texto-principal">Prontuário: <span id="prontuario-paciente-nome">Nome do Paciente</span></h1>
                 </header>
 
                 <!-- Sub-Cabeçalho Info Paciente -->
@@ -326,8 +327,8 @@
                         <div id="tab-receitas" class="tab-content space-y-4 hidden">
                             <h3 class="text-xl font-semibold text-texto-principal">Receitas Emitidas</h3>
                             <div class="bg-campo p-4 rounded-lg">
-                                <p class="font-semibold text-texto-principal">Losartana 50mg (Uso contínuo)</p>
-                                <p class="text-sm text-texto-secundario mt-1">Emitida em 15 de Set, 2025 por Dra. Ana Sousa.</p>
+                                 <p class="font-semibold text-texto-principal">Losartana 50mg (Uso contínuo)</p>
+                                 <p class="text-sm text-texto-secundario mt-1">Emitida em 15 de Set, 2025 por Dra. Ana Sousa.</p>
                              </div>
                         </div>
                     </div>
@@ -343,7 +344,7 @@
                                 <i data-lucide="flask-conical" class="w-4 h-4"></i> Solicitar Exame
                             </button>
                              <button class="w-full flex items-center justify-center gap-2 rounded-md bg-campo px-3 py-3 text-sm font-semibold text-texto-principal shadow-sm hover:bg-gray-600">
-                                <i data-lucide="file-plus" class="w-4 h-4"></i> Anexar Documento
+                                 <i data-lucide="file-plus" class="w-4 h-4"></i> Anexar Documento
                             </button>
                         </div>
                     </div>
@@ -353,28 +354,28 @@
             <!-- ECRÃ 14: NOTIFICAÇÕES (Adicionado) -->
             <div id="notifications-screen" class="app-screen p-4 lg:p-8 space-y-6 hidden">
                  <header class="flex items-center space-x-4">
-                     <button id="back-notifications-to-dashboard" class="p-2">
-                         <i data-lucide="arrow-left" class="text-texto-principal w-6 h-6"></i>
-                     </button>
-                     <h1 class="text-3xl font-bold text-texto-principal">Notificações</h1>
+                       <button id="back-notifications-to-dashboard" class="p-2">
+                           <i data-lucide="arrow-left" class="text-texto-principal w-6 h-6"></i>
+                       </button>
+                       <h1 class="text-3xl font-bold text-texto-principal">Notificações</h1>
                  </header>
                  <div class="space-y-3">
-                     <div class="bg-fundo-secundario p-4 rounded-xl flex items-start space-x-3 shadow-lg cursor-pointer hover:bg-campo notification-unread">
-                         <div class="bg-ciano-vibrante/20 p-2 rounded-lg mt-1"> <i data-lucide="file-text" class="text-ciano-vibrante w-5 h-5"></i> </div>
-                         <div class="flex-1">
-                             <p class="font-semibold text-texto-principal text-sm">Novo resultado de exame</p>
-                             <p class="text-xs text-texto-secundario mt-1">O resultado de Hemograma do paciente João Pereira está disponível.</p>
-                             <p class="text-xs text-texto-secundario mt-2">Há 15 minutos</p>
-                         </div>
-                     </div>
-                     <div class="bg-fundo-secundario p-4 rounded-xl flex items-start space-x-3 shadow-lg cursor-pointer hover:bg-campo opacity-80">
-                         <div class="bg-campo/50 p-2 rounded-lg mt-1"> <i data-lucide="calendar-check" class="text-texto-secundario w-5 h-5"></i> </div>
-                         <div class="flex-1">
-                             <p class="font-semibold text-texto-principal text-sm">Consulta confirmada</p>
-                             <p class="text-xs text-texto-secundario mt-1">Maria Silva confirmou a teleconsulta de hoje às 15:00.</p>
-                             <p class="text-xs text-texto-secundario mt-2">Há 1 hora</p>
-                         </div>
-                     </div>
+                       <div class="bg-fundo-secundario p-4 rounded-xl flex items-start space-x-3 shadow-lg cursor-pointer hover:bg-campo notification-unread">
+                           <div class="bg-ciano-vibrante/20 p-2 rounded-lg mt-1"> <i data-lucide="file-text" class="text-ciano-vibrante w-5 h-5"></i> </div>
+                           <div class="flex-1">
+                               <p class="font-semibold text-texto-principal text-sm">Novo resultado de exame</p>
+                               <p class="text-xs text-texto-secundario mt-1">O resultado de Hemograma do paciente João Pereira está disponível.</p>
+                               <p class="text-xs text-texto-secundario mt-2">Há 15 minutos</p>
+                           </div>
+                       </div>
+                       <div class="bg-fundo-secundario p-4 rounded-xl flex items-start space-x-3 shadow-lg cursor-pointer hover:bg-campo opacity-80">
+                           <div class="bg-campo/50 p-2 rounded-lg mt-1"> <i data-lucide="calendar-check" class="text-texto-secundario w-5 h-5"></i> </div>
+                           <div class="flex-1">
+                               <p class="font-semibold text-texto-principal text-sm">Consulta confirmada</p>
+                               <p class="text-xs text-texto-secundario mt-1">Maria Silva confirmou a teleconsulta de hoje às 15:00.</p>
+                               <p class="text-xs text-texto-secundario mt-2">Há 1 hora</p>
+                           </div>
+                       </div>
                  </div>
             </div>
 
@@ -387,7 +388,7 @@
         </main>
     </div>
 
-    <!-- Lógica da Aplicação (Arquivo separado) -->
+    <!-- Lógica da Aplicação (Profissional) -->
     <script src="profissional_app.js"></script>
 </body>
 </html>

@@ -4,27 +4,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SGHSS VidaPlus - Administrador</title>
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Ícones (Lucide Icons) -->
-    <script src="https://unpkg.com/lucide@latest"></script>
-    <!-- Google Fonts: Inter -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
-
-    <!-- Scripts do Firebase (Adicionar ao <head> de TODOS os HTMLs) -->
+    
+    <!-- 1. SCRIPTS DO FIREBASE (Carregar primeiro, com o link completo) -->
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
-
-    <!-- O NOSSO Ficheiro de Configuração (Adicionar DEPOIS dos scripts acima) -->
-    <script src="../firebase-init.js"></script> 
     
-    <!-- ARQUIVO DE CONFIGURAÇÃO DO TAILWIND (Centralizado) -->
+    <!-- 2. NOSSOS SCRIPTS DE CONFIGURAÇÃO (Note o caminho ../ para a raiz) -->
+    <script src="../firebase-init.js"></script> 
     <script src="../tailwind.config.js"></script>
     
-    <!-- ARQUIVO DE CSS (Extraído) -->
+    <!-- 3. OUTRAS BIBLIOTECAS E ESTILOS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="admin_style.css">
 
     <!-- English Gemini -->
@@ -33,7 +28,6 @@
 
     <!-- LAYOUT DE AUTENTICAÇÃO (Login do Administrador) -->
     <div id="auth-layout" class="min-h-screen flex flex-col items-center justify-center p-4">
-        <!-- ... (Código de Login inalterado) ... -->
         <div id="admin-login-screen" class="auth-screen w-full">
             <div class="w-full max-w-sm mx-auto bg-fundo-secundario rounded-xl shadow-lg p-8 space-y-8">
                 <div class="flex flex-col items-center space-y-4">
@@ -76,7 +70,6 @@
         
         <!-- NAVEGAÇÃO LATERAL (DESKTOP) -->
         <aside class="flex-col w-64 fixed inset-y-0 z-50 bg-fundo-sidebar p-6 hidden lg:flex">
-            <!-- ... (Código da Sidebar inalterado) ... -->
             <div class="flex items-center space-x-3 mb-10">
                 <div class="w-10 h-10 bg-ciano-vibrante rounded-lg flex items-center justify-center">
                     <i data-lucide="heart-pulse" class="text-white w-6 h-6"></i>
@@ -108,7 +101,6 @@
         <main class="flex-1 lg:pl-64 flex flex-col">
             <!-- ECRÃ 15: DASHBOARD DO ADMINISTRADOR -->
             <div id="admin-dashboard-screen" class="app-screen p-4 lg:p-8 space-y-6">
-                <!-- ... (Conteúdo do Dashboard inalterado) ... -->
                 <header class="flex justify-between items-center">
                     <h1 class="text-3xl font-bold text-texto-principal">Painel do Administrador</h1>
                 </header>
@@ -165,7 +157,6 @@
 
             <!-- ECRÃ DE HUB DE GESTÃO -->
             <div id="admin-gestao-hub-screen" class="app-screen p-4 lg:p-8 space-y-6 hidden">
-                <!-- ... (Código do Hub de Gestão inalterado) ... -->
                 <header class="flex justify-between items-center">
                     <div class="flex items-center gap-4">
                         <button id="back-gestao-hub-to-dashboard" class="p-2 rounded-full hover:bg-fundo-secundario">
@@ -202,7 +193,6 @@
 
             <!-- ECRÃ 16.1: GESTÃO DE CADASTROS -->
             <div id="admin-management-screen" class="app-screen p-4 lg:p-8 space-y-6 hidden">
-                <!-- ... (Código da Gestão de Cadastros inalterado) ... -->
                 <header class="flex justify-between items-center">
                     <div class="flex items-center gap-4">
                         <button id="back-management-to-hub" class="p-2 rounded-full hover:bg-fundo-secundario">
@@ -381,7 +371,6 @@
 
                 <!-- Conteúdo da Aba 2: Fila de Espera (Sugestão 3) -->
                 <div id="subtab-fluxos-fila" class="subtab-content-fluxos space-y-4 hidden">
-                    <!-- ... (Conteúdo da Fila de Espera inalterado) ... -->
                     <h3 class="text-xl font-semibold text-texto-principal">Pacientes Aguardando Leito</h3>
                     <div class="overflow-x-auto bg-fundo-secundario rounded-lg shadow">
                         <table class="min-w-full divide-y divide-campo">
@@ -436,7 +425,6 @@
 
             <!-- ECRÃ 16.3: FERRAMENTA DE RELATÓRIOS -->
             <div id="admin-relatorios-screen" class="app-screen p-4 lg:p-8 space-y-6 hidden">
-                <!-- ... (Código dos Relatórios inalterado) ... -->
                 <header class="flex justify-between items-center">
                     <div class="flex items-center gap-4">
                         <button id="back-relatorios-to-hub" class="p-2 rounded-full hover:bg-fundo-secundario">
