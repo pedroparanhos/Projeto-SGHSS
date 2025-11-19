@@ -9,23 +9,23 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
-    <script src="../firebase-init.js"></script>
     
     <!-- 2. CONFIGURAÇÃO -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="paciente_style.css">
+    <script src="../firebase-init.js"></script>
     <script src="../tailwind.config.js"></script> 
     
-
 </head>
-<body class="bg-fundo-principal text-texto-principal font-sans">
+<body class="bg-fundo-principal text-texto-principal font-sans pb-20 lg:pb-0">
 
     <!-- LAYOUT DE AUTENTICAÇÃO -->
     <div id="auth-layout" class="min-h-screen flex flex-col items-center justify-center p-4">
+        
+        <!-- TELA DE LOGIN -->
         <div id="login-screen" class="auth-screen w-full">
             <div class="w-full max-w-sm mx-auto bg-fundo-secundario rounded-xl shadow-lg p-8 space-y-8">
                 <div class="flex flex-col items-center space-y-4">
@@ -39,7 +39,7 @@
                     <div>
                         <label for="login-email" class="block text-sm font-medium text-texto-secundario">Login</label>
                         <div class="mt-2">
-                            <input id="login-email" name="login" type="text" required placeholder="Digite o seu CPF ou E-mail" class="block w-full rounded-md border-0 bg-campo p-3 text-texto-principal placeholder:text-texto-secundario focus:ring-2 focus:ring-inset focus:ring-ciano-vibrante sm:text-sm">
+                            <input id="login-email" name="login" type="text" required placeholder="Digite o seu E-mail" class="block w-full rounded-md border-0 bg-campo p-3 text-texto-principal placeholder:text-texto-secundario focus:ring-2 focus:ring-inset focus:ring-ciano-vibrante sm:text-sm">
                         </div>
                     </div>
                     <div>
@@ -60,6 +60,7 @@
             </div>
         </div>
 
+        <!-- TELA DE REGISTRO -->
         <div id="register-screen" class="auth-screen w-full hidden">
              <div class="w-full max-w-lg mx-auto bg-fundo-secundario rounded-xl shadow-lg p-8 space-y-6">
                  <div id="header-section" class="text-center space-y-2">
@@ -90,8 +91,10 @@
     </div>
 
     <!-- LAYOUT DA APLICAÇÃO -->
-    <div id="app-layout" class="hidden min-h-screen">
-        <aside class="hidden lg:flex lg:flex-col lg:w-64 lg:fixed lg:inset-y-0 lg:z-50 bg-fundo-sidebar p-6 no-scrollbar overflow-y-auto">
+    <div id="app-layout" class="hidden min-h-screen flex">
+        
+        <!-- SIDEBAR (DESKTOP) -->
+        <aside class="hidden lg:flex lg:flex-col lg:w-64 lg:fixed lg:inset-y-0 lg:z-50 bg-fundo-sidebar p-6 border-r border-gray-800">
             <div class="flex items-center space-x-3 mb-10">
                 <div class="w-10 h-10 bg-ciano-vibrante rounded-lg flex items-center justify-center"><i data-lucide="heart-pulse" class="text-white w-6 h-6"></i></div>
                 <h1 class="text-xl font-bold text-texto-principal">VidaPlus</h1>
@@ -103,186 +106,287 @@
                 <a href="#" class="sidebar-link" data-target="messages-screen"><i data-lucide="message-square" class="w-5 h-5"></i><span>Mensagens</span></a>
                 <a href="#" class="sidebar-link" data-target="telemedicine-screen"><i data-lucide="video" class="w-5 h-5"></i><span>Telemedicina</span></a>
             </nav>
-            <div class="border-t border-campo pt-4">
-                <div class="flex items-center space-x-3">
-                    <img src="https://placehold.co/40x40/06B6D4/FFFFFF?text=..." alt="Avatar" id="sidebar-avatar-img" class="w-10 h-10 rounded-full">
+            <div class="border-t border-campo pt-4 mt-auto">
+                <div class="flex items-center space-x-3 cursor-pointer" id="logout-btn-desktop">
+                    <img src="https://placehold.co/40x40/06B6D4/FFFFFF?text=VP" alt="Avatar" id="sidebar-avatar-img" class="w-10 h-10 rounded-full">
                     <div>
                         <p class="font-semibold text-texto-principal text-sm" id="sidebar-avatar-name">Carregando...</p>
-                        <a href="#" id="logout-btn-desktop" class="text-xs text-texto-secundario hover:text-ciano-vibrante">Terminar Sessão</a>
+                        <span class="text-xs text-texto-secundario hover:text-ciano-vibrante">Sair</span>
                     </div>
                 </div>
             </div>
         </aside>
 
-        <main class="flex-1 lg:pl-64 pb-20 lg:pb-0 flex flex-col">
-            <!-- ECRÃ DASHBOARD -->
-            <div id="dashboard-screen" class="app-screen p-4 lg:p-8 space-y-6">
-                <header class="flex justify-between items-center lg:hidden">
+        <!-- CONTEÚDO PRINCIPAL -->
+        <main class="flex-1 lg:pl-64 w-full">
+            
+            <!-- ECRÃ 1: DASHBOARD -->
+            <div id="dashboard-screen" class="app-screen p-4 lg:p-8 space-y-6 max-w-5xl mx-auto">
+                <header class="flex justify-between items-center lg:hidden mb-6">
                     <div class="flex items-center space-x-3">
-                        <img src="https://placehold.co/40x40/06B6D4/FFFFFF?text=..." alt="Avatar" id="mobile-avatar-img" class="w-10 h-10 rounded-full">
+                        <img src="https://placehold.co/40x40/06B6D4/FFFFFF?text=VP" alt="Avatar" id="mobile-avatar-img" class="w-10 h-10 rounded-full">
                         <div>
                             <p class="text-texto-secundario text-xs">Bem-vindo de volta,</p>
-                            <h1 id="dashboard-nome-paciente" class="text-texto-principal text-lg font-bold">...</h1>
+                            <h1 id="dashboard-nome-paciente" class="text-texto-principal text-lg font-bold">Paciente</h1>
                         </div>
                     </div>
                 </header>
-                <header class="hidden lg:flex justify-between items-center"><h1 class="text-3xl font-bold text-texto-principal">Painel de Controlo</h1></header>
 
                 <div class="grid grid-cols-1 gap-6">
-                    <div class="space-y-6">
-                        <!-- PRÓXIMA CONSULTA -->
-                        <div id="proxima-consulta-card" class="bg-fundo-secundario p-4 rounded-xl space-y-3 shadow-lg">
-                            <div class="flex justify-between items-center"><h2 class="font-semibold text-texto-principal text-base">Próxima Consulta</h2><a href="#" id="view-all-appointments" class="text-xs text-ciano-vibrante font-semibold hover:underline">Ver todas</a></div>
-                            <div id="sem-consulta-msg" class="hidden p-4 text-center text-texto-secundario text-sm border border-dashed border-campo rounded-lg">Nenhuma consulta agendada.</div>
-                            <div id="detalhes-consulta">
-                                <div class="bg-campo p-3 rounded-lg flex items-center space-x-3 mb-3">
-                                    <div class="bg-ciano-vibrante/20 p-2 rounded-lg"><i data-lucide="heart-pulse" class="text-ciano-vibrante w-5 h-5"></i></div>
-                                    <div><p class="font-semibold text-texto-principal text-sm" id="proxima-consulta-medico">Carregando...</p><p class="text-xs text-texto-secundario" id="proxima-consulta-especialidade">...</p></div>
+                    <!-- Próxima Consulta -->
+                    <div id="proxima-consulta-card" class="bg-fundo-secundario p-5 rounded-xl shadow-lg border border-gray-700">
+                        <div class="flex justify-between items-center mb-4">
+                            <h2 class="font-semibold text-texto-principal text-lg">Próxima Consulta</h2>
+                        </div>
+                        
+                        <div id="sem-consulta-msg" class="p-6 text-center text-texto-secundario border border-dashed border-campo rounded-lg bg-gray-800/50">
+                            <p>Nenhuma consulta agendada.</p>
+                        </div>
+
+                        <div id="detalhes-consulta" class="hidden">
+                            <div class="flex items-center space-x-4 mb-4">
+                                <div class="w-12 h-12 bg-ciano-vibrante/20 rounded-full flex items-center justify-center text-ciano-vibrante">
+                                    <i data-lucide="stethoscope" class="w-6 h-6"></i>
                                 </div>
-                                <div class="grid grid-cols-2 gap-3 text-xs mb-3">
-                                    <div class="bg-campo p-2 rounded-lg flex items-center space-x-2"> <i data-lucide="calendar" class="w-3 h-3 text-texto-secundario"></i> <span class="text-texto-principal" id="proxima-consulta-data">...</span> </div>
-                                    <div class="bg-campo p-2 rounded-lg flex items-center space-x-2"> <i data-lucide="clock" class="w-3 h-3 text-texto-secundario"></i> <span class="text-texto-principal" id="proxima-consulta-hora">...</span> </div>
+                                <div>
+                                    <p class="font-bold text-texto-principal text-lg" id="proxima-consulta-medico">Dr. ...</p>
+                                    <p class="text-sm text-ciano-vibrante" id="proxima-consulta-especialidade">...</p>
+                                </div>
+                            </div>
+                            <div class="bg-campo/30 p-3 rounded-lg flex justify-between items-center text-sm">
+                                <div class="flex items-center space-x-2">
+                                    <i data-lucide="calendar" class="w-4 h-4 text-texto-secundario"></i>
+                                    <span class="text-texto-principal" id="proxima-consulta-data">...</span>
+                                </div>
+                                <div class="flex items-center space-x-2">
+                                    <i data-lucide="clock" class="w-4 h-4 text-texto-secundario"></i>
+                                    <span class="text-texto-principal" id="proxima-consulta-hora">...</span>
                                 </div>
                             </div>
                         </div>
-                        <!-- AÇÕES RÁPIDAS -->
-                        <div class="grid grid-cols-2 gap-3">
-                            <button id="go-to-schedule" class="bg-fundo-secundario p-4 rounded-xl flex flex-col items-center justify-center text-center space-y-2 hover:bg-campo transition-colors"><div class="bg-ciano-vibrante/20 p-3 rounded-full"><i data-lucide="calendar-plus" class="text-ciano-vibrante w-5 h-5"></i></div><p class="font-semibold text-texto-principal text-sm">Agendar Consulta</p></button>
-                            <button id="go-to-telemedicine-dash" class="bg-fundo-secundario p-4 rounded-xl flex flex-col items-center justify-center text-center space-y-2 hover:bg-campo transition-colors"><div class="bg-ciano-vibrante/20 p-3 rounded-full"><i data-lucide="video" class="text-ciano-vibrante w-5 h-5"></i></div><p class="font-semibold text-texto-principal text-sm">Telemedicina</p></button>
-                        </div>
+                    </div>
+
+                    <!-- Ações Rápidas -->
+                    <div class="grid grid-cols-2 gap-4">
+                        <button id="go-to-schedule" class="bg-fundo-secundario p-6 rounded-xl flex flex-col items-center justify-center gap-3 hover:bg-campo transition-all active:scale-95 shadow-lg">
+                            <div class="bg-ciano-vibrante/20 p-3 rounded-full text-ciano-vibrante">
+                                <i data-lucide="calendar-plus" class="w-6 h-6"></i>
+                            </div>
+                            <span class="font-semibold text-texto-principal">Agendar</span>
+                        </button>
+                        <button id="go-to-telemedicine-dash" class="bg-fundo-secundario p-6 rounded-xl flex flex-col items-center justify-center gap-3 hover:bg-campo transition-all active:scale-95 shadow-lg">
+                            <div class="bg-purple-500/20 p-3 rounded-full text-purple-400">
+                                <i data-lucide="video" class="w-6 h-6"></i>
+                            </div>
+                            <span class="font-semibold text-texto-principal">Telemedicina</span>
+                        </button>
                     </div>
                 </div>
             </div>
 
-            <!-- ECRÃ 4.1: ESPECIALIDADE -->
-            <div id="specialty-screen" class="app-screen p-4 space-y-4 hidden">
-                <header class="flex items-center space-x-4 mb-4"><button id="back-specialty-to-dashboard" class="p-2"><i data-lucide="arrow-left" class="text-texto-principal w-6 h-6"></i></button><h1 class="text-xl lg:text-3xl font-bold text-texto-principal">Agendar Consulta</h1></header>
-                 <div class="relative max-w-lg"><input type="text" id="specialty-search" placeholder="Qual especialidade procura?" class="block w-full rounded-md border-0 bg-campo p-3 pl-10 text-texto-principal"><div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"><i data-lucide="search" class="w-5 h-5 text-texto-secundario"></i></div></div>
-                 
-                 <!-- GRID DE ESPECIALIDADES (DINÂMICO) -->
-                 <div id="specialty-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 lg:gap-4 mt-4">
-                     <!-- O JS vai preencher isto -->
-                     <p class="col-span-full text-center text-texto-secundario">A carregar especialidades...</p>
-                 </div>
-            </div>
-
-            <!-- ECRÃ 4.2: ESCOLHA DO PROFISSIONAL -->
-            <div id="professional-screen" class="app-screen p-4 space-y-4 hidden">
-                 <header class="flex items-center space-x-4 mb-4"><button id="back-professional-to-specialty" class="p-2"><i data-lucide="arrow-left" class="text-texto-principal w-6 h-6"></i></button><h1 class="text-xl lg:text-3xl font-bold text-texto-principal">Escolha o Profissional</h1></header>
-                 <h2 class="text-lg font-semibold text-texto-principal" id="professional-specialty-title">...</h2>
-                 <!-- LISTA DINÂMICA (VAZIA) -->
-                <div id="lista-profissionais" class="space-y-3">
-                     <p class="text-center text-texto-secundario mt-10">A carregar profissionais...</p>
+            <!-- ECRÃ 2: MINHAS CONSULTAS (RESPONSIVO) -->
+            <div id="my-appointments-screen" class="app-screen p-4 lg:p-8 hidden max-w-5xl mx-auto">
+                <h1 class="text-2xl font-bold text-texto-principal mb-6 hidden lg:block">Minhas Consultas</h1>
+                <div class="flex border-b border-campo mb-6">
+                    <button id="tab-upcoming" class="flex-1 py-3 text-sm font-medium border-b-2 border-ciano-vibrante text-ciano-vibrante transition-colors">Próximas</button>
+                    <button id="tab-past" class="flex-1 py-3 text-sm font-medium border-b-2 border-transparent text-texto-secundario hover:text-texto-principal transition-colors">Passadas</button>
+                </div>
+                <!-- Grid responsiva para consultas -->
+                <div id="lista-consultas-proximas" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <p class="text-center text-texto-secundario py-10 col-span-full">A carregar...</p>
+                </div>
+                <div id="lista-consultas-passadas" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 hidden">
+                    <p class="text-center text-texto-secundario py-10 col-span-full">A carregar histórico...</p>
                 </div>
             </div>
 
-            <!-- ECRÃ 4.3: DATA E HORA -->
-            <div id="datetime-screen" class="app-screen p-4 space-y-4 hidden">
-                <header class="flex items-center space-x-4 mb-4"><button id="back-datetime-to-professional" class="p-2"><i data-lucide="arrow-left" class="text-texto-principal w-6 h-6"></i></button><h1 class="text-xl lg:text-3xl font-bold text-texto-principal">Data e Hora</h1></header>
+            <!-- ECRÃ 3: HISTÓRICO (RESPONSIVO) -->
+            <div id="my-history-screen" class="app-screen p-4 lg:p-8 hidden max-w-5xl mx-auto space-y-8">
+                <h1 class="text-2xl font-bold text-texto-principal mb-6 hidden lg:block">Histórico Clínico</h1>
+                
                 <div>
-                    <div class="flex items-center space-x-3 bg-fundo-secundario p-3 rounded-lg max-w-lg mb-4"><img src="" class="w-10 h-10 rounded-full" id="datetime-professional-img"><div><p class="font-semibold text-texto-principal text-sm" id="datetime-professional-name">...</p><p class="text-xs text-texto-secundario" id="datetime-professional-specialty">...</p></div></div>
-                    <div class="grid grid-cols-3 gap-3" id="time-slots-grid">
-                        <button class="time-slot bg-campo p-3 rounded-lg text-center text-sm font-semibold text-texto-principal hover:border-ciano-vibrante border-2 border-transparent">09:00</button>
-                        <button class="time-slot bg-campo p-3 rounded-lg text-center text-sm font-semibold text-texto-principal hover:border-ciano-vibrante border-2 border-transparent">10:00</button>
-                        <button class="time-slot bg-campo p-3 rounded-lg text-center text-sm font-semibold text-texto-principal hover:border-ciano-vibrante border-2 border-transparent">14:00</button>
+                    <h2 class="text-lg font-semibold text-texto-principal mb-3 flex items-center gap-2">
+                        <i data-lucide="flask-conical" class="w-5 h-5 text-ciano-vibrante"></i> Exames
+                    </h2>
+                    <div id="lista-exames" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <p class="text-center text-texto-secundario py-4 bg-fundo-secundario rounded-lg col-span-full">Sem exames recentes.</p>
                     </div>
-                    <button id="go-to-confirmation" class="w-full flex justify-center rounded-md bg-ciano-vibrante px-3 py-3 text-sm font-semibold text-white mt-6 hidden">Avançar</button>
                 </div>
-            </div>
-            <!-- ECRÃ 4.4: CONFIRMAÇÃO -->
-            <div id="confirmation-screen" class="app-screen p-4 space-y-4 hidden">
-                 <header class="flex items-center space-x-4 mb-4"><button id="back-confirmation-to-datetime" class="p-2"><i data-lucide="arrow-left" class="text-texto-principal w-6 h-6"></i></button><h1 class="text-xl lg:text-3xl font-bold text-texto-principal">Confirmar</h1></header>
-                 <div class="bg-fundo-secundario p-4 rounded-xl space-y-3 max-w-lg">
-                     <div class="bg-campo p-3 rounded-lg flex items-center space-x-3"><img src="" class="w-10 h-10 rounded-full" id="confirm-professional-img"><div><p class="font-semibold text-texto-principal text-sm" id="confirm-professional-name">...</p><p class="text-xs text-texto-secundario" id="confirm-specialty">...</p></div></div>
-                     <div class="grid grid-cols-2 gap-3 text-sm"><div class="bg-campo p-3 rounded-lg"><p class="text-xs text-texto-secundario">Data</p><p class="font-semibold text-texto-principal" id="confirm-date">...</p></div><div class="bg-campo p-3 rounded-lg"><p class="text-xs text-texto-secundario">Hora</p><p class="font-semibold text-texto-principal" id="confirm-time">...</p></div></div>
-                 </div>
-                 <button id="confirm-appointment-btn" class="w-full max-w-lg flex justify-center rounded-md bg-ciano-vibrante px-3 py-3 text-sm font-semibold text-white mt-6">Confirmar Agendamento</button>
-            </div>
-            <!-- ECRÃ 4.5: SUCESSO -->
-            <div id="success-screen" class="app-screen p-4 hidden">
-                 <div class="flex flex-col items-center justify-center text-center space-y-6 max-w-lg mx-auto my-12">
-                     <div class="bg-ciano-vibrante/20 p-6 rounded-full"><i data-lucide="check-circle" class="text-ciano-vibrante w-16 h-16"></i></div>
-                     <h1 class="text-2xl font-bold text-texto-principal">Agendado!</h1>
-                     <p class="text-texto-secundario">Consulta com <strong id="success-professional-name" class="text-texto-principal">...</strong> para <strong id="success-date-time" class="text-texto-principal">...</strong> confirmada.</p>
-                     <button id="back-to-home-btn" class="w-full flex justify-center rounded-md bg-ciano-vibrante px-3 py-3 text-sm font-semibold text-white">Voltar ao Início</button>
-                 </div>
-            </div>
 
-            <!-- ECRÃ 5: MINHAS CONSULTAS -->
-            <div id="my-appointments-screen" class="app-screen p-4 space-y-4 hidden">
-                 <header class="flex items-center space-x-4 mb-4"><button id="back-myappointments-to-dashboard" class="p-2 lg:hidden"><i data-lucide="arrow-left" class="text-texto-principal w-6 h-6"></i></button><h1 class="text-xl lg:text-3xl font-bold text-texto-principal">Minhas Consultas</h1></header>
-                <div class="flex border-b border-campo mb-4 max-w-md">
-                    <button id="tab-upcoming" class="tab-button flex-1 py-3 text-sm active">Próximas</button>
-                    <button id="tab-past" class="tab-button flex-1 py-3 text-sm">Passadas</button>
-                </div>
-                <div id="lista-consultas-proximas" class="space-y-3">
-                    <p class="text-center text-texto-secundario mt-4">A carregar consultas...</p>
-                </div>
-                <div id="lista-consultas-passadas" class="space-y-3 hidden">
-                    <p class="text-center text-texto-secundario mt-4">A carregar histórico...</p>
+                <div>
+                    <h2 class="text-lg font-semibold text-texto-principal mb-3 flex items-center gap-2">
+                        <i data-lucide="pill" class="w-5 h-5 text-purple-400"></i> Receitas
+                    </h2>
+                    <div id="lista-receitas" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <p class="text-center text-texto-secundario py-4 bg-fundo-secundario rounded-lg col-span-full">Sem receitas recentes.</p>
+                    </div>
                 </div>
             </div>
 
-            <!-- ECRÃ 6: HISTÓRICO -->
-            <div id="my-history-screen" class="app-screen p-4 space-y-4 hidden">
-                 <header class="flex items-center space-x-4 mb-4"><button id="back-myhistory-to-dashboard" class="p-2 lg:hidden"><i data-lucide="arrow-left" class="text-texto-principal w-6 h-6"></i></button><h1 class="text-xl lg:text-3xl font-bold text-texto-principal">Histórico Clínico</h1></header>
-                <div class="space-y-6">
-                    <div>
-                        <h2 class="font-semibold text-texto-principal mb-3 text-base">Resultados de Exames</h2>
-                        <div id="lista-exames" class="space-y-3">
-                            <p class="text-center text-texto-secundario text-sm">A carregar exames...</p>
+            <!-- ECRÃ 4: MENSAGENS (RESPONSIVO) -->
+            <div id="messages-screen" class="app-screen p-4 lg:p-8 hidden max-w-5xl mx-auto">
+                <h1 class="text-2xl font-bold text-texto-principal mb-6 hidden lg:block">Mensagens</h1>
+                <div id="lista-mensagens" class="space-y-3 max-w-3xl mx-auto">
+                    <p class="text-center text-texto-secundario py-10">Caixa de entrada vazia.</p>
+                </div>
+            </div>
+
+            <!-- ECRÃ 5: TELEMEDICINA -->
+            <div id="telemedicine-screen" class="app-screen hidden h-screen flex flex-col">
+                <!-- Sala de Espera -->
+                <div id="waiting-room-view" class="flex-1 flex flex-col items-center justify-center p-6 text-center max-w-md mx-auto w-full">
+                    <div class="w-24 h-24 bg-ciano-vibrante/20 rounded-full flex items-center justify-center mb-6">
+                        <i data-lucide="video" class="text-ciano-vibrante w-10 h-10"></i>
+                    </div>
+                    <h2 class="text-2xl font-bold text-texto-principal mb-2">Sala de Espera</h2>
+                    
+                    <div id="tele-info-box" class="bg-fundo-secundario p-6 rounded-xl w-full shadow-lg border border-gray-700 my-6 text-left hidden">
+                        <p class="text-sm text-texto-secundario mb-1">Médico</p>
+                        <p class="font-bold text-lg text-texto-principal mb-4" id="tele-medico-nome">...</p>
+                        <div class="flex items-center gap-2 text-sm text-ciano-vibrante">
+                            <i data-lucide="clock" class="w-4 h-4"></i>
+                            <span id="tele-hora">...</span>
                         </div>
                     </div>
-                     <div>
-                        <h2 class="font-semibold text-texto-principal mb-3 text-base">Receitas Médicas</h2>
-                         <div id="lista-receitas" class="space-y-3">
-                             <p class="text-center text-texto-secundario text-sm">A carregar receitas...</p>
-                         </div>
-                     </div>
+
+                    <div id="tele-sem-consulta" class="my-6 text-texto-secundario">
+                        <p>Você não tem consultas agendadas para agora.</p>
+                        <p class="text-sm mt-2">Aguarde o horário da sua consulta.</p>
+                    </div>
+
+                    <button id="join-call-btn" class="w-full bg-ciano-vibrante text-white py-4 rounded-xl font-bold hover:bg-azul-suave transition-colors shadow-lg hidden">
+                        Entrar na Consulta
+                    </button>
+                    
+                    <button onclick="showAppScreen(document.getElementById('dashboard-screen'))" class="mt-4 text-texto-secundario hover:text-white underline">Voltar</button>
+                </div>
+
+                <!-- Interface de Chamada -->
+                <div id="call-view" class="hidden flex-1 flex-col bg-black relative">
+                    <div class="flex-1 flex items-center justify-center relative">
+                        <i data-lucide="user" class="w-32 h-32 text-gray-700"></i>
+                        <p class="absolute bottom-4 text-white font-medium bg-black/50 px-3 py-1 rounded">Dr. Remoto</p>
+                        <!-- PiP -->
+                        <div class="absolute top-4 right-4 w-24 h-32 bg-gray-800 rounded border border-gray-600 flex items-center justify-center">
+                             <i data-lucide="user" class="w-8 h-8 text-gray-500"></i>
+                        </div>
+                    </div>
+                    <div class="p-6 bg-gray-900 flex justify-center gap-6">
+                        <button class="p-4 bg-gray-700 rounded-full text-white hover:bg-gray-600"><i data-lucide="mic"></i></button>
+                        <button class="p-4 bg-gray-700 rounded-full text-white hover:bg-gray-600"><i data-lucide="video"></i></button>
+                        <button id="end-call-btn" class="p-4 bg-vermelho-erro rounded-full text-white hover:bg-red-600 shadow-lg"><i data-lucide="phone-off"></i></button>
+                    </div>
                 </div>
             </div>
 
-            <!-- ECRÃ 9: MENSAGENS -->
-            <div id="messages-screen" class="app-screen p-4 space-y-4 hidden">
-                 <header class="flex items-center space-x-4 mb-4"><button id="back-messages-to-dashboard" class="p-2 lg:hidden"><i data-lucide="arrow-left" class="text-texto-principal w-6 h-6"></i></button><h1 class="text-xl lg:text-3xl font-bold text-texto-principal">Mensagens</h1></header>
-                <div id="lista-mensagens" class="space-y-3">
-                     <p class="text-center text-texto-secundario text-sm">A carregar mensagens...</p>
+            <!-- FLUXO DE AGENDAMENTO (WIZARD) -->
+            <!-- Passo 1: Especialidade -->
+            <div id="specialty-screen" class="app-screen p-4 lg:p-8 hidden max-w-4xl mx-auto">
+                <header class="flex items-center mb-6">
+                    <button onclick="showAppScreen(document.getElementById('dashboard-screen'))" class="p-2 hover:bg-fundo-secundario rounded-full mr-2"><i data-lucide="arrow-left"></i></button>
+                    <h1 class="text-2xl font-bold text-texto-principal">Escolha a Especialidade</h1>
+                </header>
+                <div id="specialty-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                    <!-- Preenchido via JS -->
+                    <p class="text-texto-secundario col-span-full text-center">A carregar...</p>
                 </div>
             </div>
 
-            <!-- ECRÃ 7: TELEMEDICINA -->
-            <div id="telemedicine-screen" class="app-screen flex-1 flex-col hidden">
-                 <div id="waiting-room-view" class="flex flex-col flex-grow items-center justify-center text-center space-y-6 max-w-sm mx-auto p-4">
-                     <header class="absolute top-4 left-4 lg:hidden"><button id="back-telemedicine-to-dashboard" class="p-2"><i data-lucide="arrow-left" class="text-texto-principal w-6 h-6"></i></button></header>
-                     <div class="bg-ciano-vibrante/20 p-6 rounded-full"><i data-lucide="video" class="text-ciano-vibrante w-12 h-12"></i></div>
-                     <h1 class="text-2xl font-bold text-texto-principal">Sala de Espera</h1>
-                     <div id="tele-info-box" class="bg-fundo-secundario p-4 rounded-lg text-sm w-full max-w-xs hidden">
-                         <p class="font-semibold text-texto-principal" id="tele-medico-nome">...</p>
-                         <p class="text-xs text-texto-secundario" id="tele-medico-esp">...</p>
-                         <div class="flex items-center justify-center space-x-2 mt-2 text-xs text-texto-secundario"><i data-lucide="clock" class="w-3 h-3"></i> <span id="tele-hora">...</span></div>
-                     </div>
-                     <div id="tele-sem-consulta" class="text-texto-secundario text-sm">Não tem consultas agendadas para agora.</div>
-                     <button id="join-call-btn" class="w-full max-w-xs flex justify-center rounded-md bg-ciano-vibrante px-3 py-3 text-sm font-semibold text-white shadow-sm hover:bg-azul-suave hidden">Entrar na Consulta</button>
-                 </div>
-                 <div id="call-view" class="hidden flex-1 flex-col h-full w-full max-w-4xl mx-auto p-4 lg:p-0 fixed inset-0 lg:static lg:relative">
-                     <div class="video-placeholder flex-grow w-full mb-2 relative"><i data-lucide="user-square-2" class="w-24 h-24 text-campo"></i><div class="absolute bottom-3 right-3 w-24 h-32 lg:w-32 lg:h-48 video-placeholder border-2 border-fundo-secundario"><i data-lucide="user" class="w-8 h-8 text-campo"></i></div></div>
-                     <div class="flex justify-center items-center gap-6 p-4 bg-fundo-secundario rounded-lg">
-                         <button class="p-3 bg-campo rounded-full text-texto-principal hover:bg-gray-600"><i data-lucide="mic"></i></button>
-                         <button class="p-3 bg-campo rounded-full text-texto-principal hover:bg-gray-600"><i data-lucide="video"></i></button>
-                         <button id="end-call-btn" class="p-4 bg-vermelho-erro rounded-full text-white hover:bg-red-700"><i data-lucide="phone-off"></i></button>
-                     </div>
-                 </div>
+            <!-- Passo 2: Profissional -->
+            <div id="professional-screen" class="app-screen p-4 lg:p-8 hidden max-w-3xl mx-auto">
+                <header class="flex items-center mb-6">
+                    <button onclick="showAppScreen(document.getElementById('specialty-screen'))" class="p-2 hover:bg-fundo-secundario rounded-full mr-2"><i data-lucide="arrow-left"></i></button>
+                    <h1 class="text-2xl font-bold text-texto-principal">Escolha o Profissional</h1>
+                </header>
+                <h2 id="professional-specialty-title" class="text-ciano-vibrante font-semibold mb-4">Especialidade</h2>
+                <div id="lista-profissionais" class="space-y-3">
+                    <!-- Preenchido via JS -->
+                </div>
+            </div>
+
+            <!-- Passo 3: Hora -->
+            <div id="datetime-screen" class="app-screen p-4 lg:p-8 hidden max-w-lg mx-auto">
+                <header class="flex items-center mb-6">
+                    <button onclick="showAppScreen(document.getElementById('professional-screen'))" class="p-2 hover:bg-fundo-secundario rounded-full mr-2"><i data-lucide="arrow-left"></i></button>
+                    <h1 class="text-2xl font-bold text-texto-principal">Escolha o Horário</h1>
+                </header>
+                
+                <div class="bg-fundo-secundario p-4 rounded-xl mb-6 flex items-center gap-4">
+                    <div class="w-12 h-12 bg-ciano-vibrante/20 rounded-full flex items-center justify-center text-ciano-vibrante">
+                        <i data-lucide="user" class="w-6 h-6"></i>
+                    </div>
+                    <div>
+                        <p class="font-bold text-texto-principal" id="datetime-professional-name">...</p>
+                        <p class="text-sm text-texto-secundario" id="datetime-professional-specialty">...</p>
+                    </div>
+                </div>
+
+                <h3 class="text-sm font-semibold text-texto-secundario mb-3 uppercase">Horários Disponíveis (Amanhã)</h3>
+                <div class="grid grid-cols-3 gap-3" id="time-slots-grid">
+                    <button class="time-slot p-3 rounded-lg bg-campo text-texto-principal hover:border-ciano-vibrante border-2 border-transparent transition-all">09:00</button>
+                    <button class="time-slot p-3 rounded-lg bg-campo text-texto-principal hover:border-ciano-vibrante border-2 border-transparent transition-all">10:00</button>
+                    <button class="time-slot p-3 rounded-lg bg-campo text-texto-principal hover:border-ciano-vibrante border-2 border-transparent transition-all">11:00</button>
+                    <button class="time-slot p-3 rounded-lg bg-campo text-texto-principal hover:border-ciano-vibrante border-2 border-transparent transition-all">14:00</button>
+                    <button class="time-slot p-3 rounded-lg bg-campo text-texto-principal hover:border-ciano-vibrante border-2 border-transparent transition-all">15:00</button>
+                    <button class="time-slot p-3 rounded-lg bg-campo text-texto-principal hover:border-ciano-vibrante border-2 border-transparent transition-all">16:30</button>
+                </div>
+
+                <button id="go-to-confirmation" class="w-full mt-8 bg-ciano-vibrante text-white py-3 rounded-xl font-bold shadow-lg hidden">Continuar</button>
+            </div>
+
+            <!-- Passo 4: Confirmar -->
+            <div id="confirmation-screen" class="app-screen p-4 lg:p-8 hidden max-w-lg mx-auto">
+                <h1 class="text-2xl font-bold text-texto-principal mb-6">Confirmar Agendamento</h1>
+                <div class="bg-fundo-secundario p-6 rounded-xl space-y-4 shadow-lg">
+                    <div class="flex justify-between border-b border-campo pb-4">
+                        <span class="text-texto-secundario">Profissional</span>
+                        <span class="font-semibold text-texto-principal text-right" id="confirm-professional-name">...</span>
+                    </div>
+                    <div class="flex justify-between border-b border-campo pb-4">
+                        <span class="text-texto-secundario">Especialidade</span>
+                        <span class="font-semibold text-texto-principal text-right" id="confirm-specialty">...</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-texto-secundario">Data e Hora</span>
+                        <span class="font-semibold text-texto-principal text-right"><span id="confirm-date"></span> às <span id="confirm-time"></span></span>
+                    </div>
+                </div>
+                <div class="flex gap-4 mt-8">
+                    <button onclick="showAppScreen(document.getElementById('datetime-screen'))" class="flex-1 py-3 rounded-xl border border-campo text-texto-secundario">Voltar</button>
+                    <button id="confirm-appointment-btn" class="flex-1 py-3 rounded-xl bg-ciano-vibrante text-white font-bold shadow-lg hover:bg-azul-suave">Confirmar</button>
+                </div>
+            </div>
+
+             <!-- Passo 5: Sucesso -->
+             <div id="success-screen" class="app-screen p-4 lg:p-8 hidden flex flex-col items-center justify-center text-center h-full">
+                <div class="w-20 h-20 bg-green-500/20 rounded-full flex items-center justify-center mb-6">
+                    <i data-lucide="check" class="w-10 h-10 text-green-500"></i>
+                </div>
+                <h1 class="text-3xl font-bold text-texto-principal mb-2">Agendado!</h1>
+                <p class="text-texto-secundario mb-8">Sua consulta foi confirmada com sucesso.</p>
+                <button id="back-to-home-btn" class="px-8 py-3 rounded-xl bg-ciano-vibrante text-white font-bold">Voltar ao Início</button>
             </div>
 
         </main>
-        <!-- Navegação Mobile -->
-        <nav id="bottom-nav" class="fixed bottom-0 left-0 right-0 bg-fundo-sidebar border-t border-campo lg:hidden">
-            <div class="flex justify-around p-3">
-                <a href="#dashboard" class="nav-link flex flex-col items-center text-ciano-vibrante" data-target="dashboard-screen"><i data-lucide="home" class="w-5 h-5"></i><span class="text-xs font-bold">Início</span></a>
-                <a href="#consultas" class="nav-link flex flex-col items-center text-texto-secundario hover:text-ciano-vibrante" data-target="my-appointments-screen"><i data-lucide="calendar-days" class="w-5 h-5"></i><span class="text-xs">Consultas</span></a>
-                <a href="#historico" class="nav-link flex flex-col items-center text-texto-secundario hover:text-ciano-vibrante" data-target="my-history-screen"><i data-lucide="clipboard-list" class="w-5 h-5"></i><span class="text-xs">Histórico</span></a>
-                <a href="#mensagens" class="nav-link flex flex-col items-center text-texto-secundario hover:text-ciano-vibrante" data-target="messages-screen"><i data-lucide="message-square" class="w-5 h-5"></i><span class="text-xs">Mensagens</span></a>
-            </div>
+
+        <!-- BOTTOM NAV (MOBILE) -->
+        <nav id="bottom-nav" class="lg:hidden fixed bottom-0 w-full bg-fundo-sidebar border-t border-gray-800 flex justify-around p-3 z-50 safe-area-pb">
+            <a href="#" class="nav-link flex flex-col items-center gap-1 text-texto-secundario transition-colors" data-target="dashboard-screen">
+                <i data-lucide="home" class="w-6 h-6"></i>
+                <span class="text-[10px] font-medium">Início</span>
+            </a>
+            <a href="#" class="nav-link flex flex-col items-center gap-1 text-texto-secundario transition-colors" data-target="my-appointments-screen">
+                <i data-lucide="calendar-days" class="w-6 h-6"></i>
+                <span class="text-[10px] font-medium">Consultas</span>
+            </a>
+            <a href="#" class="nav-link flex flex-col items-center gap-1 text-texto-secundario transition-colors" data-target="my-history-screen">
+                <i data-lucide="clipboard-list" class="w-6 h-6"></i>
+                <span class="text-[10px] font-medium">Histórico</span>
+            </a>
+            <a href="#" class="nav-link flex flex-col items-center gap-1 text-texto-secundario transition-colors" data-target="messages-screen">
+                <i data-lucide="message-square" class="w-6 h-6"></i>
+                <span class="text-[10px] font-medium">Msg</span>
+            </a>
         </nav>
     </div>
 
