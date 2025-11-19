@@ -11,7 +11,11 @@ const navLinks = document.querySelectorAll('.nav-link, .sidebar-link');
 // ESTADO DO AGENDAMENTO
 let selectedSpecialty = '';
 let selectedProfessional = { id: '', name: '' };
+let selectedDateObj = null; // Objeto Date real
 let selectedTime = '';
+
+// DETALHES DA CONSULTA
+let currentDetailAppointmentId = null;
 
 // (PASSO 12) AUTH GUARD
 auth.onAuthStateChanged((user) => {
@@ -39,18 +43,14 @@ function showLayout(layout) {
     if (layout === appLayout) layout.classList.add('flex');
 }
 
-// --- NAVEGAÇÃO CENTRALIZADA (Correção 1) ---
+// --- NAVEGAÇÃO CENTRALIZADA ---
 function showAppScreen(screenToShow) {
     if (!screenToShow) return;
     
-    // 1. Esconde todos
     appScreens.forEach(s => s.classList.add('hidden'));
-    
-    // 2. Mostra o alvo
     screenToShow.classList.remove('hidden');
     updateNavSelection(screenToShow.id);
     
-    // Lógica específica de atualização ao entrar na tela
     if(screenToShow.id === 'telemedicine-screen') {
         carregarTelemedicina(auth.currentUser.uid);
     }
@@ -59,29 +59,29 @@ function showAppScreen(screenToShow) {
 }
 
 function updateNavSelection(targetId) {
-    // Remove classes ativas de todos
     navLinks.forEach(link => {
         link.classList.remove('text-ciano-vibrante', 'active'); 
         link.classList.add('text-texto-secundario'); 
-        
         if(link.classList.contains('sidebar-link')) {
             link.classList.remove('bg-ciano-vibrante/10', 'text-ciano-vibrante', 'font-bold');
         }
     });
 
-    // Adiciona ao alvo
-    const targets = document.querySelectorAll(`[data-target="${targetId}"]`);
+    // Mapeamento para manter "Consultas" ativo mesmo na tela de detalhes
+    let activeId = targetId;
+    if (targetId === 'appointment-details-screen') activeId = 'my-appointments-screen';
+    if (targetId === 'datetime-screen' || targetId === 'professional-screen' || targetId === 'specialty-screen' || targetId === 'confirmation-screen') activeId = 'dashboard-screen';
+
+    const targets = document.querySelectorAll(`[data-target="${activeId}"]`);
     targets.forEach(link => {
         link.classList.remove('text-texto-secundario');
         link.classList.add('text-ciano-vibrante'); 
-        
         if(link.classList.contains('sidebar-link')) {
             link.classList.add('bg-ciano-vibrante/10', 'text-ciano-vibrante', 'font-bold');
         }
     });
 }
 
-// Listeners de Navegação
 navLinks.forEach(link => {
     link.addEventListener('click', (e) => {
         e.preventDefault();
@@ -91,7 +91,7 @@ navLinks.forEach(link => {
     });
 });
 
-// --- LÓGICA DE CADASTRO (RESTAURADA) ---
+// --- LÓGICA DE CADASTRO (MANTIDA) ---
 const steps = [document.getElementById('step-1'), document.getElementById('step-2'), document.getElementById('step-3')];
 const prevBtn = document.getElementById('prev-btn');
 const nextBtn = document.getElementById('next-btn');
@@ -117,20 +117,12 @@ if(nextBtn) {
         const currentStepElement = steps[currentStep];
         const inputs = currentStepElement.querySelectorAll('input[required]');
         let valid = true;
-        
         inputs.forEach(input => {
-            if (!input.value) {
-                valid = false;
-                input.classList.add('border-red-500', 'border-2');
-            } else {
-                input.classList.remove('border-red-500', 'border-2');
-            }
+            if (!input.value) { valid = false; input.classList.add('border-red-500', 'border-2'); } 
+            else { input.classList.remove('border-red-500', 'border-2'); }
         });
 
-        if (!valid) {
-            alert("Preencha os campos obrigatórios.");
-            return;
-        }
+        if (!valid) { alert("Preencha os campos obrigatórios."); return; }
 
         if (currentStep === 2) { // Finalizar
             const email = document.getElementById('email').value;
@@ -143,55 +135,28 @@ if(nextBtn) {
             auth.createUserWithEmailAndPassword(email, password)
                 .then((userCredential) => {
                     return db.collection("usuarios").doc(userCredential.user.uid).set({
-                        nome: nomeCompleto,
-                        cpf: cpf,
-                        dataNascimento: dataNasc,
-                        telefone: phone,
-                        email: email,
-                        tipo: "PACIENTE"
+                        nome: nomeCompleto, cpf: cpf, dataNascimento: dataNasc, telefone: phone, email: email, tipo: "PACIENTE"
                     });
                 })
-                .then(() => {
-                    alert("Conta criada com sucesso!");
-                    // Auth state changed fará o resto
-                })
-                .catch((error) => {
-                    alert("Erro ao cadastrar: " + error.message);
-                });
-
+                .then(() => { alert("Conta criada com sucesso!"); })
+                .catch((error) => { alert("Erro ao cadastrar: " + error.message); });
         } else {
-            currentStep++;
-            updateStep();
+            currentStep++; updateStep();
         }
     });
 }
 
-if(prevBtn) prevBtn.addEventListener('click', () => {
-    if (currentStep > 0) {
-        currentStep--;
-        updateStep();
-    }
-});
+if(prevBtn) prevBtn.addEventListener('click', () => { if (currentStep > 0) { currentStep--; updateStep(); } });
 
-// --- NAVEGAÇÃO AUTH ---
 const goToRegister = document.getElementById('go-to-register');
 const goToLogin = document.getElementById('go-to-login');
 const loginScreen = document.getElementById('login-screen');
 const registerScreen = document.getElementById('register-screen');
 
-if(goToRegister) goToRegister.addEventListener('click', (e) => {
-    e.preventDefault();
-    loginScreen.classList.add('hidden');
-    registerScreen.classList.remove('hidden');
-});
+if(goToRegister) goToRegister.addEventListener('click', (e) => { e.preventDefault(); loginScreen.classList.add('hidden'); registerScreen.classList.remove('hidden'); });
+if(goToLogin) goToLogin.addEventListener('click', (e) => { e.preventDefault(); registerScreen.classList.add('hidden'); loginScreen.classList.remove('hidden'); });
 
-if(goToLogin) goToLogin.addEventListener('click', (e) => {
-    e.preventDefault();
-    registerScreen.classList.add('hidden');
-    loginScreen.classList.remove('hidden');
-});
-
-// --- LÓGICA DE AGENDAMENTO (Correção 2) ---
+// --- LÓGICA DE AGENDAMENTO ---
 document.getElementById('go-to-schedule').addEventListener('click', () => {
     showAppScreen(document.getElementById('specialty-screen'));
     carregarEspecialidades();
@@ -200,14 +165,11 @@ document.getElementById('go-to-schedule').addEventListener('click', () => {
 function carregarEspecialidades() {
     const grid = document.getElementById('specialty-grid');
     grid.innerHTML = '<p class="col-span-full text-center text-texto-secundario">A carregar...</p>';
-    
     db.collection("usuarios").where("tipo", "==", "PROFISSIONAL").get().then(snap => {
         const set = new Set();
         snap.forEach(doc => { if(doc.data().especialidade) set.add(doc.data().especialidade); });
-        
         grid.innerHTML = '';
         if(set.size === 0) grid.innerHTML = '<p class="col-span-full text-center">Nenhum médico encontrado.</p>';
-        
         set.forEach(esp => {
             const btn = document.createElement('button');
             btn.className = "bg-fundo-secundario p-4 rounded-xl flex flex-col items-center justify-center hover:bg-campo transition-all cursor-pointer shadow-md";
@@ -227,11 +189,9 @@ function carregarEspecialidades() {
 function carregarProfissionais(esp) {
     const list = document.getElementById('lista-profissionais');
     list.innerHTML = '<p class="text-center">A procurar...</p>';
-    
     db.collection("usuarios").where("tipo", "==", "PROFISSIONAL").where("especialidade", "==", esp).get().then(snap => {
         list.innerHTML = '';
-        if(snap.empty) list.innerHTML = '<p class="text-center">Nenhum profissional disponível nesta especialidade.</p>';
-        
+        if(snap.empty) list.innerHTML = '<p class="text-center">Nenhum profissional disponível.</p>';
         snap.forEach(doc => {
             const d = doc.data();
             const btn = document.createElement('button');
@@ -241,6 +201,7 @@ function carregarProfissionais(esp) {
                 selectedProfessional = { id: doc.id, name: d.nome };
                 document.getElementById('datetime-professional-name').textContent = d.nome;
                 document.getElementById('datetime-professional-specialty').textContent = esp;
+                gerarDiasDisponiveis(); // GERA O CALENDÁRIO AQUI
                 showAppScreen(document.getElementById('datetime-screen'));
             };
             list.appendChild(btn);
@@ -249,35 +210,87 @@ function carregarProfissionais(esp) {
     });
 }
 
+// --- CALENDÁRIO DINÂMICO (SEG-SEX) ---
+function gerarDiasDisponiveis() {
+    const container = document.getElementById('date-selection-container');
+    container.innerHTML = '';
+    
+    let count = 0;
+    let dateIter = new Date();
+    dateIter.setDate(dateIter.getDate() + 1); // Começa amanhã
+
+    while (count < 10) { // Mostra os próximos 10 dias úteis
+        const dayOfWeek = dateIter.getDay();
+        if (dayOfWeek !== 0 && dayOfWeek !== 6) { // 0=Dom, 6=Sab
+            const btn = document.createElement('button');
+            const dateCopy = new Date(dateIter); // Clona para o listener
+            
+            const diaSemana = dateCopy.toLocaleDateString('pt-PT', { weekday: 'short' }).toUpperCase().replace('.', '');
+            const diaMes = dateCopy.getDate();
+            
+            btn.className = "min-w-[70px] p-3 rounded-xl bg-fundo-secundario border-2 border-transparent flex flex-col items-center justify-center cursor-pointer hover:border-ciano-vibrante transition-all date-option";
+            btn.innerHTML = `<span class="text-xs text-texto-secundario">${diaSemana}</span><span class="text-lg font-bold">${diaMes}</span>`;
+            
+            btn.onclick = () => {
+                document.querySelectorAll('.date-option').forEach(b => {
+                    b.classList.remove('bg-ciano-vibrante', 'text-white', 'border-ciano-vibrante');
+                    b.classList.add('bg-fundo-secundario');
+                    b.querySelector('.text-texto-secundario').classList.remove('text-white/80');
+                });
+                
+                btn.classList.remove('bg-fundo-secundario');
+                btn.classList.add('bg-ciano-vibrante', 'text-white', 'border-ciano-vibrante');
+                btn.querySelector('.text-texto-secundario').classList.add('text-white/80');
+                
+                selectedDateObj = dateCopy;
+                verificarSelecaoCompleta();
+            };
+            container.appendChild(btn);
+            count++;
+        }
+        dateIter.setDate(dateIter.getDate() + 1);
+    }
+}
+
 // Seleção de Hora
 document.querySelectorAll('.time-slot').forEach(slot => {
     slot.addEventListener('click', () => {
         document.querySelectorAll('.time-slot').forEach(s => s.classList.remove('bg-ciano-vibrante', 'text-white', 'border-ciano-vibrante'));
         slot.classList.add('bg-ciano-vibrante', 'text-white', 'border-ciano-vibrante');
         selectedTime = slot.textContent;
-        document.getElementById('go-to-confirmation').classList.remove('hidden');
+        verificarSelecaoCompleta();
     });
 });
+
+function verificarSelecaoCompleta() {
+    const btn = document.getElementById('go-to-confirmation');
+    if (selectedDateObj && selectedTime) {
+        btn.classList.remove('hidden');
+    } else {
+        btn.classList.add('hidden');
+    }
+}
 
 document.getElementById('go-to-confirmation').addEventListener('click', () => {
     document.getElementById('confirm-professional-name').textContent = selectedProfessional.name;
     document.getElementById('confirm-specialty').textContent = selectedSpecialty;
-    document.getElementById('confirm-date').textContent = "Amanhã"; 
+    document.getElementById('confirm-date').textContent = selectedDateObj.toLocaleDateString('pt-PT');
     document.getElementById('confirm-time').textContent = selectedTime;
     showAppScreen(document.getElementById('confirmation-screen'));
 });
 
 document.getElementById('confirm-appointment-btn').addEventListener('click', () => {
-    const data = new Date();
-    data.setDate(data.getDate() + 1); 
-    
+    // Combina data e hora num objeto Date
+    const [horas, minutos] = selectedTime.split(':');
+    const finalDate = new Date(selectedDateObj);
+    finalDate.setHours(parseInt(horas), parseInt(minutos), 0);
+
     db.collection("consultas").add({
         pacienteId: auth.currentUser.uid,
         profissionalId: selectedProfessional.id,
         nomeMedico: selectedProfessional.name,
         especialidade: selectedSpecialty,
-        data: firebase.firestore.Timestamp.fromDate(data),
-        horario: selectedTime,
+        data: firebase.firestore.Timestamp.fromDate(finalDate),
         status: "Agendada"
     }).then(() => {
         showAppScreen(document.getElementById('success-screen'));
@@ -286,7 +299,56 @@ document.getElementById('confirm-appointment-btn').addEventListener('click', () 
 
 document.getElementById('back-to-home-btn').addEventListener('click', () => showAppScreen(document.getElementById('dashboard-screen')));
 
-// --- TELEMEDICINA (Correção 3) ---
+// --- DETALHES DA CONSULTA (NOVO) ---
+function mostrarDetalhesConsulta(docId, data) {
+    currentDetailAppointmentId = docId;
+    const d = data.data.toDate();
+    
+    document.getElementById('detail-status').textContent = data.status;
+    document.getElementById('detail-status').className = `px-3 py-1 rounded-full text-xs font-bold ${data.status === 'Agendada' ? 'bg-green-500/20 text-green-500' : 'bg-red-500/20 text-red-500'}`;
+    document.getElementById('detail-medico').textContent = data.nomeMedico;
+    document.getElementById('detail-especialidade').textContent = data.especialidade;
+    document.getElementById('detail-data').textContent = d.toLocaleDateString('pt-PT');
+    document.getElementById('detail-hora').textContent = d.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
+    document.getElementById('detail-avatar').textContent = data.nomeMedico[0];
+
+    // Controle dos botões
+    const actionsDiv = document.getElementById('detail-actions');
+    if (data.status === 'Cancelada' || data.status === 'Concluída') {
+        actionsDiv.classList.add('hidden');
+    } else {
+        actionsDiv.classList.remove('hidden');
+    }
+
+    showAppScreen(document.getElementById('appointment-details-screen'));
+}
+
+document.getElementById('btn-cancelar-consulta').addEventListener('click', () => {
+    if(!currentDetailAppointmentId) return;
+    if(confirm("Tem a certeza que deseja cancelar esta consulta?")) {
+        db.collection("consultas").doc(currentDetailAppointmentId).update({
+            status: "Cancelada"
+        }).then(() => {
+            alert("Consulta cancelada.");
+            showAppScreen(document.getElementById('my-appointments-screen'));
+        });
+    }
+});
+
+document.getElementById('btn-remarcar-consulta').addEventListener('click', () => {
+    if(!currentDetailAppointmentId) return;
+    // Cancelar a atual e ir para agendamento
+    if(confirm("Para remarcar, a consulta atual será cancelada e você será levado para agendar uma nova. Continuar?")) {
+        db.collection("consultas").doc(currentDetailAppointmentId).update({
+            status: "Cancelada"
+        }).then(() => {
+            showAppScreen(document.getElementById('specialty-screen'));
+            carregarEspecialidades();
+        });
+    }
+});
+
+// --- TELEMEDICINA ---
 document.getElementById('go-to-telemedicine-dash').addEventListener('click', () => showAppScreen(document.getElementById('telemedicine-screen')));
 
 function carregarTelemedicina(userId) {
@@ -298,23 +360,25 @@ function carregarTelemedicina(userId) {
     boxSem.classList.remove('hidden');
     btnJoin.classList.add('hidden');
 
+    const now = new Date();
     db.collection("consultas")
         .where("pacienteId", "==", userId)
+        .where("status", "==", "Agendada") // Ignora canceladas
         .orderBy("data", "asc")
         .limit(1)
         .get()
         .then(snap => {
-            if(!snap.empty) {
-                const c = snap.docs[0].data();
+            // Filtro client-side para garantir data futura
+            const validDocs = snap.docs.filter(d => d.data().data.toDate() >= now);
+            
+            if(validDocs.length > 0) {
+                const c = validDocs[0].data();
                 const d = c.data.toDate();
-                
-                // Mostra info
                 boxInfo.classList.remove('hidden');
                 boxSem.classList.add('hidden');
-                btnJoin.classList.remove('hidden'); // Sempre mostra para teste
-                
+                btnJoin.classList.remove('hidden');
                 document.getElementById('tele-medico-nome').textContent = c.nomeMedico;
-                document.getElementById('tele-hora').textContent = d.toLocaleDateString() + ' às ' + (c.horario || d.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}));
+                document.getElementById('tele-hora').textContent = d.toLocaleDateString() + ' às ' + d.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
             }
         });
 }
@@ -359,39 +423,56 @@ tabPast.addEventListener('click', () => {
 // --- CARREGAMENTO GERAL ---
 function inicializarDadosPaciente(uid) {
     // Dashboard (Próxima Consulta)
-    db.collection("consultas").where("pacienteId", "==", uid).orderBy("data", "asc").limit(1).onSnapshot(snap => {
-        if(!snap.empty) {
-            const c = snap.docs[0].data();
-            document.getElementById('sem-consulta-msg').classList.add('hidden');
-            document.getElementById('detalhes-consulta').classList.remove('hidden');
-            document.getElementById('proxima-consulta-medico').textContent = c.nomeMedico;
-            document.getElementById('proxima-consulta-especialidade').textContent = c.especialidade;
-            const d = c.data.toDate();
-            document.getElementById('proxima-consulta-data').textContent = d.toLocaleDateString();
-            document.getElementById('proxima-consulta-hora').textContent = c.horario || d.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
-        }
-    });
+    const now = new Date();
+    db.collection("consultas")
+        .where("pacienteId", "==", uid)
+        .where("data", ">=", now)
+        .orderBy("data", "asc")
+        .onSnapshot(snap => {
+            // Filtra canceladas manualmente já que o query é complexo para index
+            const validDocs = snap.docs.filter(doc => doc.data().status !== 'Cancelada');
+            
+            if(validDocs.length > 0) {
+                const c = validDocs[0].data();
+                document.getElementById('sem-consulta-msg').classList.add('hidden');
+                document.getElementById('detalhes-consulta').classList.remove('hidden');
+                document.getElementById('proxima-consulta-medico').textContent = c.nomeMedico;
+                document.getElementById('proxima-consulta-especialidade').textContent = c.especialidade;
+                const d = c.data.toDate();
+                document.getElementById('proxima-consulta-data').textContent = d.toLocaleDateString();
+                document.getElementById('proxima-consulta-hora').textContent = d.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
+                
+                // Adiciona evento de clique para detalhes
+                document.getElementById('detalhes-consulta').onclick = () => mostrarDetalhesConsulta(validDocs[0].id, c);
+            } else {
+                document.getElementById('sem-consulta-msg').classList.remove('hidden');
+                document.getElementById('detalhes-consulta').classList.add('hidden');
+            }
+        });
 
     // Minhas Consultas (Lista)
     db.collection("consultas").where("pacienteId", "==", uid).onSnapshot(snap => {
         listUp.innerHTML = ''; listPast.innerHTML = '';
         if(snap.empty) listUp.innerHTML = '<p class="text-center py-4 col-span-full">Sem consultas.</p>';
         
-        const now = new Date();
         snap.forEach(doc => {
             const c = doc.data();
             const d = c.data.toDate();
-            const isFuture = d >= now; // Lógica simples de tempo
+            const isFuture = d >= now && c.status !== 'Cancelada';
+            
+            // Cor diferente para cancelada
+            const statusColor = c.status === 'Cancelada' ? 'text-vermelho-erro' : 'text-texto-secundario';
             
             const html = `
-            <div class="bg-fundo-secundario p-4 rounded-xl shadow flex gap-4 items-start">
+            <div class="bg-fundo-secundario p-4 rounded-xl shadow flex gap-4 items-start cursor-pointer hover:bg-campo transition-colors" onclick="mostrarDetalhesConsulta('${doc.id}', {status: '${c.status}', nomeMedico: '${c.nomeMedico}', especialidade: '${c.especialidade}', data: {toDate: () => new Date('${d}')}})">
                 <div class="w-10 h-10 bg-ciano-vibrante/20 rounded-full flex items-center justify-center text-ciano-vibrante font-bold">${c.nomeMedico ? c.nomeMedico[0] : 'M'}</div>
                 <div>
                     <p class="font-bold">${c.nomeMedico}</p>
                     <p class="text-sm text-ciano-vibrante">${c.especialidade}</p>
-                    <p class="text-xs text-texto-secundario mt-1">${d.toLocaleDateString()} às ${c.horario || '--:--'}</p>
+                    <p class="text-xs ${statusColor} mt-1">${c.status === 'Cancelada' ? 'Cancelada - ' : ''}${d.toLocaleDateString()} às ${d.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}</p>
                 </div>
             </div>`;
+            
             if(isFuture) listUp.innerHTML += html; else listPast.innerHTML += html;
         });
     });

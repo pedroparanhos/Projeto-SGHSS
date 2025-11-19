@@ -11,20 +11,19 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
     
     <!-- 2. CONFIGURAÇÃO -->
+    <script src="../firebase-init.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="../tailwind.config.js"></script> 
+    
     <script src="https://unpkg.com/lucide@latest"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="paciente_style.css">
-    <script src="../firebase-init.js"></script>
-    <script src="../tailwind.config.js"></script> 
-    
 </head>
 <body class="bg-fundo-principal text-texto-principal font-sans pb-20 lg:pb-0">
 
     <!-- LAYOUT DE AUTENTICAÇÃO -->
     <div id="auth-layout" class="min-h-screen flex flex-col items-center justify-center p-4">
-        
         <!-- TELA DE LOGIN -->
         <div id="login-screen" class="auth-screen w-full">
             <div class="w-full max-w-sm mx-auto bg-fundo-secundario rounded-xl shadow-lg p-8 space-y-8">
@@ -143,7 +142,7 @@
                             <p>Nenhuma consulta agendada.</p>
                         </div>
 
-                        <div id="detalhes-consulta" class="hidden">
+                        <div id="detalhes-consulta" class="hidden cursor-pointer hover:opacity-90 transition-opacity" onclick="showAppScreen(document.getElementById('my-appointments-screen'))">
                             <div class="flex items-center space-x-4 mb-4">
                                 <div class="w-12 h-12 bg-ciano-vibrante/20 rounded-full flex items-center justify-center text-ciano-vibrante">
                                     <i data-lucide="stethoscope" class="w-6 h-6"></i>
@@ -197,6 +196,63 @@
                 </div>
                 <div id="lista-consultas-passadas" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 hidden">
                     <p class="text-center text-texto-secundario py-10 col-span-full">A carregar histórico...</p>
+                </div>
+            </div>
+            
+            <!-- ECRÃ NOVO: DETALHES DA CONSULTA -->
+            <div id="appointment-details-screen" class="app-screen p-4 lg:p-8 hidden max-w-lg mx-auto">
+                <header class="flex items-center mb-6">
+                    <button onclick="showAppScreen(document.getElementById('my-appointments-screen'))" class="p-2 hover:bg-fundo-secundario rounded-full mr-2">
+                        <i data-lucide="arrow-left"></i>
+                    </button>
+                    <h1 class="text-2xl font-bold text-texto-principal">Detalhes da Consulta</h1>
+                </header>
+
+                <div class="bg-fundo-secundario p-6 rounded-xl shadow-lg space-y-6">
+                    <!-- Status -->
+                    <div class="flex justify-between items-center">
+                        <span class="text-sm text-texto-secundario">Status</span>
+                        <span id="detail-status" class="px-3 py-1 rounded-full text-xs font-bold bg-green-500/20 text-green-500">Agendada</span>
+                    </div>
+
+                    <!-- Médico Info -->
+                    <div class="flex items-center space-x-4 border-b border-campo pb-6">
+                        <div class="w-16 h-16 bg-ciano-vibrante/20 rounded-full flex items-center justify-center text-ciano-vibrante text-xl font-bold" id="detail-avatar">
+                            DR
+                        </div>
+                        <div>
+                            <h2 class="text-xl font-bold text-texto-principal" id="detail-medico">Dr. Nome</h2>
+                            <p class="text-ciano-vibrante" id="detail-especialidade">Especialidade</p>
+                        </div>
+                    </div>
+
+                    <!-- Data e Hora -->
+                    <div class="space-y-4">
+                        <div class="flex items-center space-x-3">
+                            <div class="p-2 bg-campo rounded-lg"><i data-lucide="calendar" class="w-5 h-5 text-texto-principal"></i></div>
+                            <div>
+                                <p class="text-xs text-texto-secundario">Data</p>
+                                <p class="font-medium text-texto-principal" id="detail-data">--/--/----</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <div class="p-2 bg-campo rounded-lg"><i data-lucide="clock" class="w-5 h-5 text-texto-principal"></i></div>
+                            <div>
+                                <p class="text-xs text-texto-secundario">Horário</p>
+                                <p class="font-medium text-texto-principal" id="detail-hora">--:--</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Ações -->
+                    <div class="pt-4 space-y-3" id="detail-actions">
+                        <button id="btn-cancelar-consulta" class="w-full py-3 rounded-xl border border-vermelho-erro text-vermelho-erro font-medium hover:bg-vermelho-erro/10 transition-colors">
+                            Cancelar Consulta
+                        </button>
+                        <button id="btn-remarcar-consulta" class="w-full py-3 rounded-xl bg-ciano-vibrante text-white font-medium hover:bg-azul-suave transition-colors">
+                            Remarcar
+                        </button>
+                    </div>
                 </div>
             </div>
 
@@ -304,11 +360,11 @@
                 </div>
             </div>
 
-            <!-- Passo 3: Hora -->
+            <!-- Passo 3: Data e Hora (MODIFICADO PARA CALENDÁRIO) -->
             <div id="datetime-screen" class="app-screen p-4 lg:p-8 hidden max-w-lg mx-auto">
                 <header class="flex items-center mb-6">
                     <button onclick="showAppScreen(document.getElementById('professional-screen'))" class="p-2 hover:bg-fundo-secundario rounded-full mr-2"><i data-lucide="arrow-left"></i></button>
-                    <h1 class="text-2xl font-bold text-texto-principal">Escolha o Horário</h1>
+                    <h1 class="text-2xl font-bold text-texto-principal">Data e Hora</h1>
                 </header>
                 
                 <div class="bg-fundo-secundario p-4 rounded-xl mb-6 flex items-center gap-4">
@@ -321,7 +377,14 @@
                     </div>
                 </div>
 
-                <h3 class="text-sm font-semibold text-texto-secundario mb-3 uppercase">Horários Disponíveis (Amanhã)</h3>
+                <!-- 1. SELETOR DE DATA (Seg-Sex) -->
+                <h3 class="text-sm font-semibold text-texto-secundario mb-3 uppercase">Escolha o Dia</h3>
+                <div id="date-selection-container" class="flex gap-3 overflow-x-auto pb-4 no-scrollbar mb-4">
+                    <!-- Preenchido via JS -->
+                </div>
+
+                <!-- 2. SELETOR DE HORA -->
+                <h3 class="text-sm font-semibold text-texto-secundario mb-3 uppercase">Horários Disponíveis</h3>
                 <div class="grid grid-cols-3 gap-3" id="time-slots-grid">
                     <button class="time-slot p-3 rounded-lg bg-campo text-texto-principal hover:border-ciano-vibrante border-2 border-transparent transition-all">09:00</button>
                     <button class="time-slot p-3 rounded-lg bg-campo text-texto-principal hover:border-ciano-vibrante border-2 border-transparent transition-all">10:00</button>
