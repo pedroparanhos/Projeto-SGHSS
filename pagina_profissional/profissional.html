@@ -5,390 +5,187 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SGHSS VidaPlus - Profissional</title>
 
-    <!-- 1. SCRIPTS DO FIREBASE (Carregar primeiro, com o link completo) -->
+    <!-- 1. SCRIPTS DO FIREBASE -->
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
     
-    <!-- 2. NOSSOS SCRIPTS DE CONFIGURAÇÃO (Note o caminho ../ para a raiz) -->
+    <!-- 2. CONFIGURAÇÃO -->
     <script src="../firebase-init.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
     <script src="../tailwind.config.js"></script>
 
-    <!-- 3. OUTRAS BIBLIOTECAS E ESTILOS -->
-    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- 3. ESTILOS -->
+
     <script src="https://unpkg.com/lucide@latest"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
-    
-    <!-- O SEU CSS ESPECÍFICO -->
     <link rel="stylesheet" href="profissional_style.css">
-
-    <!-- English Gemini -->
 </head>
-<body class="bg-fundo-principal text-texto-principal font-sans">
+<body class="bg-fundo-principal text-texto-principal font-sans pb-20 lg:pb-0">
 
-    <!-- LAYOUT DE AUTENTICAÇÃO (Login do Profissional) -->
+    <!-- LOGIN -->
     <div id="auth-layout" class="min-h-screen flex flex-col items-center justify-center p-4">
-        <div id="login-screen" class="auth-screen w-full">
-            <div class="w-full max-w-sm mx-auto bg-fundo-secundario rounded-xl shadow-lg p-8 space-y-8">
-                <div class="flex flex-col items-center space-y-4">
-                    <div class="w-24 h-24 bg-ciano-vibrante rounded-full flex items-center justify-center">
-                        <i data-lucide="stethoscope" class="text-white w-12 h-12"></i>
-                    </div>
-                    <h1 class="text-3xl font-bold text-texto-principal tracking-tight">Portal do Profissional</h1>
-                    <p class="text-texto-secundario">Acesse sua conta para continuar</p>
+        <div class="w-full max-w-sm bg-fundo-secundario rounded-xl shadow-lg p-8 space-y-8">
+            <div class="flex flex-col items-center space-y-4">
+                <div class="w-24 h-24 bg-ciano-vibrante rounded-full flex items-center justify-center">
+                    <i data-lucide="stethoscope" class="text-white w-12 h-12"></i>
                 </div>
-                <form class="space-y-6" id="login-form-profissional">
-                    <div>
-                        <label for="login-crm" class="block text-sm font-medium text-texto-secundario">CRM ou E-mail</label>
-                        <div class="mt-2">
-                            <input id="login-crm" name="login" type="text" required placeholder="Digite seu CRM ou E-mail"
-                                   class="block w-full rounded-md border-0 bg-campo p-3 text-texto-principal placeholder:text-texto-secundario focus:ring-2 focus:ring-inset focus:ring-ciano-vibrante sm:text-sm">
-                        </div>
-                    </div>
-                    <div>
-                        <div class="flex items-center justify-between">
-                            <label for="login-password-prof" class="block text-sm font-medium text-texto-secundario">Palavra-passe</label>
-                            <div class="text-sm">
-                                <a href="#" class="font-semibold text-ciano-vibrante hover:text-azul-suave">Esqueceu a senha?</a>
-                            </div>
-                        </div>
-                        <div class="mt-2">
-                            <input id="login-password-prof" name="password" type="password" required placeholder="••••••••"
-                                   class="block w-full rounded-md border-0 bg-campo p-3 text-texto-principal placeholder:text-texto-secundario focus:ring-2 focus:ring-inset focus:ring-ciano-vibrante sm:text-sm">
-                        </div>
-                    </div>
-                    <div>
-                        <button type="submit"
-                                class="flex w-full justify-center rounded-md bg-ciano-vibrante px-3 py-3 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-azul-suave transition-colors duration-200">
-                            Entrar
-                        </button>
-                    </div>
-                </form>
+                <h1 class="text-3xl font-bold text-texto-principal">Portal do Profissional</h1>
+                <p class="text-texto-secundario">Acesso exclusivo</p>
             </div>
+            <form class="space-y-6" id="login-form-profissional">
+                <input id="login-email" type="email" required placeholder="E-mail Corporativo" class="block w-full rounded-md bg-campo p-3 text-texto-principal focus:ring-2 focus:ring-ciano-vibrante">
+                <input id="login-password" type="password" required placeholder="Senha" class="block w-full rounded-md bg-campo p-3 text-texto-principal focus:ring-2 focus:ring-ciano-vibrante">
+                <button type="submit" class="w-full rounded-md bg-ciano-vibrante px-3 py-3 font-semibold text-white hover:bg-azul-suave">Entrar</button>
+            </form>
         </div>
     </div>
 
-    <!-- LAYOUT DA APLICAÇÃO (Após Login) -->
-    <div id="app-layout" class="hidden min-h-screen">
+    <!-- APP PRINCIPAL -->
+    <div id="app-layout" class="hidden min-h-screen flex">
         
-        <!-- NAVEGAÇÃO LATERAL (DESKTOP) -->
-        <aside class="flex-col w-64 fixed inset-y-0 z-50 bg-fundo-sidebar p-6 hidden lg:flex">
-            <!-- Logo -->
-            <div class="flex items-center space-x-3 mb-10">
-                <div class="w-10 h-10 bg-ciano-vibrante rounded-lg flex items-center justify-center">
-                    <i data-lucide="heart-pulse" class="text-white w-6 h-6"></i>
-                </div>
-                <h1 class="text-xl font-bold text-texto-principal">VidaPlus</h1>
+        <!-- SIDEBAR (DESKTOP) -->
+        <aside class="hidden lg:flex lg:flex-col lg:w-64 lg:fixed lg:inset-y-0 lg:z-50 bg-fundo-sidebar p-6 border-r border-gray-800">
+            <div class="flex items-center space-x-3 mb-10 text-ciano-vibrante">
+                <i data-lucide="heart-pulse" class="w-8 h-8"></i>
+                <h1 class="text-xl font-bold text-white">VidaPlus</h1>
             </div>
-            
-            <!-- Menu de Navegação -->
             <nav class="flex-1 space-y-2">
-                <a href="#" class="sidebar-link active" data-target="dashboard-screen">
-                    <i data-lucide="home" class="w-5 h-5"></i>
-                    <span>Início</span>
-                </a>
-                <a href="#" class="sidebar-link" data-target="agenda-screen">
-                    <i data-lucide="calendar-days" class="w-5 h-5"></i>
-                    <span>Agenda</span>
-                </a>
-                <a href="#" class="sidebar-link" data-target="pacientes-screen">
-                    <i data-lucide="users" class="w-5 h-5"></i>
-                    <span>Pacientes</span>
-                </a>
-                <a href="#" class="sidebar-link" data-target="mensagens-screen">
-                    <i data-lucide="message-square" class="w-5 h-5"></i>
-                    <span>Mensagens</span>
-                </a>
+                <a href="#" class="sidebar-link active" data-target="dashboard-screen"><i data-lucide="home"></i><span>Dashboard</span></a>
+                <a href="#" class="sidebar-link" data-target="agenda-screen"><i data-lucide="calendar"></i><span>Agenda</span></a>
+                <a href="#" class="sidebar-link" data-target="pacientes-screen"><i data-lucide="users"></i><span>Pacientes</span></a>
             </nav>
-            
-            <!-- Perfil do Utilizador (Rodapé do Sidebar) -->
-            <div class="border-t border-campo pt-4">
-                <div class="flex items-center space-x-3">
-                    <img src="https://placehold.co/40x40/7DD3FC/FFFFFF?text=CA" alt="Avatar do Profissional" class="w-10 h-10 rounded-full">
-                    <div>
-                        <p class="font-semibold text-texto-principal text-sm">Dr. Carlos Andrade</p>
-                        <a href="#" id="logout-btn-desktop" class="text-xs text-texto-secundario hover:text-ciano-vibrante">Terminar Sessão</a>
-                    </div>
+            <div class="border-t border-campo pt-4 flex items-center space-x-3 cursor-pointer" id="logout-btn">
+                <div class="w-10 h-10 rounded-full bg-ciano-vibrante flex items-center justify-center text-white font-bold" id="sidebar-avatar">DR</div>
+                <div>
+                    <p class="font-semibold text-sm" id="sidebar-nome">Dr. ...</p>
+                    <span class="text-xs text-texto-secundario hover:text-white">Sair</span>
                 </div>
             </div>
         </aside>
 
-        <!-- CONTEÚDO PRINCIPAL (Todos os ecrãs da app vão aqui) -->
-        <main class="flex-1 lg:pl-64 flex flex-col">
-            <!-- ECRÃ 10: INÍCIO / DASHBOARD DO PROFISSIONAL -->
-            <div id="dashboard-screen" class="app-screen p-4 lg:p-8 space-y-6">
-                <!-- Cabeçalho -->
-                <header class="flex justify-between items-center">
-                    <h1 class="text-3xl font-bold text-texto-principal">Painel de Controle</h1>
-                    <div class="flex items-center space-x-4">
-                        <button id="go-to-notifications-desktop" class="relative p-2 bg-fundo-secundario rounded-full">
-                             <i data-lucide="bell" class="text-texto-secundario w-5 h-5"></i>
-                             <span class="absolute top-1 right-1 flex h-2 w-2">
-                                 <span class="relative inline-flex rounded-full h-2 w-2 bg-ciano-vibrante"></span>
-                             </span>
-                        </button>
-                    </div>
-                </header>
-
-                <!-- Métricas Rápidas -->
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div class="bg-fundo-secundario p-5 rounded-xl flex items-center space-x-4">
-                        <i data-lucide="users" class="w-8 h-8 text-ciano-vibrante"></i>
-                        <div>
-                            <p class="text-texto-secundario text-sm">Pacientes em Espera</p>
-                            <p class="text-2xl font-bold text-texto-principal">3</p>
-                        </div>
-                    </div>
-                    <div class="bg-fundo-secundario p-5 rounded-xl flex items-center space-x-4">
-                        <i data-lucide="calendar" class="w-8 h-8 text-ciano-vibrante"></i>
-                        <div>
-                            <p class="text-texto-secundario text-sm">Consultas Hoje</p>
-                            <p class="text-2xl font-bold text-texto-principal">12</p>
-                        </div>
-                    </div>
-                    <div class="bg-fundo-secundario p-5 rounded-xl flex items-center space-x-4">
-                        <i data-lucide="clipboard-check" class="w-8 h-8 text-vermelho-erro"></i>
-                        <div>
-                            <p class="text-texto-secundario text-sm">Pendências</p>
-                            <p class="text-2xl font-bold text-texto-principal">2</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Agenda do Dia -->
-                <div>
-                    <h2 class="text-xl font-semibold text-texto-principal mb-4">Agenda do Dia</h2>
-                    <div class="bg-fundo-secundario rounded-xl shadow-lg p-4">
-                        <div class="space-y-4">
-                            <!-- Consulta do Paciente (Integração) -->
-                            <div class="bg-campo p-4 rounded-lg flex items-center justify-between">
-                                <div class="flex items-center space-x-3">
-                                    <img src="https://placehold.co/40x40/06B6D4/FFFFFF?text=JP" alt="Avatar João Pereira" class="w-10 h-10 rounded-full">
-                                    <div>
-                                        <p class="font-semibold text-texto-principal">João Pereira</p>
-                                        <p class="text-sm text-texto-secundario">14:30 - Cardiologia</p>
-                                    </div>
-                                </div>
-                                <button class="btn-ver-prontuario px-4 py-2 text-xs font-semibold bg-ciano-vibrante text-white rounded-md hover:bg-azul-suave" data-paciente="João Pereira">Ver Prontuário</button>
-                            </div>
-                            
-                            <!-- Outra Consulta Exemplo -->
-                            <div class="bg-campo p-4 rounded-lg flex items-center justify-between">
-                                <div class="flex items-center space-x-3">
-                                    <img src="https://placehold.co/40x40/FBCFE8/FFFFFF?text=MS" alt="Avatar Maria Silva" class="w-10 h-10 rounded-full">
-                                    <div>
-                                        <p class="font-semibold text-texto-principal">Maria Silva</p>
-                                        <p class="text-sm text-texto-secundario">15:00 - Telemedicina (Cardiologia)</p>
-                                    </div>
-                                </div>
-                                <button class="px-4 py-2 text-xs font-semibold bg-campo border border-ciano-vibrante text-ciano-vibrante rounded-md hover:bg-fundo-secundario">Iniciar Chamada</button>
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- ECRÃ 11: AGENDA DETALHADA -->
-            <div id="agenda-screen" class="app-screen p-4 lg:p-8 space-y-6 hidden">
-                <!-- Cabeçalho -->
-                <header class="flex flex-col md:flex-row justify-between md:items-center gap-4">
-                    <h1 class="text-3xl font-bold text-texto-principal">Minha Agenda</h1>
-                </header>
+        <!-- CONTEÚDO -->
+        <main class="flex-1 lg:pl-64 w-full p-4 lg:p-8">
             
-                <!-- Layout da Agenda (Apenas Lista) -->
-                <div class="space-y-4">
-                    <h2 class="text-xl font-semibold text-texto-principal">Consultas de Hoje</h2>
-                    <!-- Lista de consultas (copiada do dashboard) -->
-                    <div class="bg-fundo-secundario rounded-xl shadow-lg p-4 space-y-4">
-                        <!-- Consulta do Paciente (Integração) -->
-                        <div class="bg-campo p-4 rounded-lg flex items-center justify-between">
-                            <div class="flex items-center space-x-3">
-                                <img src="https://placehold.co/40x40/06B6D4/FFFFFF?text=JP" alt="Avatar João Pereira" class="w-10 h-10 rounded-full">
-                                <div>
-                                    <p class="font-semibold text-texto-principal text-sm">João Pereira</p>
-                                    <p class="text-xs text-texto-secundario">14:30 - Cardiologia</p>
-                                </div>
-                            </div>
-                            <button class="btn-ver-prontuario px-3 py-2 text-xs font-semibold bg-ciano-vibrante text-white rounded-md hover:bg-azul-suave" data-paciente="João Pereira"> <i data-lucide="file-text" class="w-4 h-4"></i> </button>
-                        </div>
-                        
-                        <!-- Outra Consulta Exemplo -->
-                        <div class="bg-campo p-4 rounded-lg flex items-center justify-between">
-                            <div class="flex items-center space-x-3">
-                                <img src="https://placehold.co/40x40/FBCFE8/FFFFFF?text=MS" alt="Avatar Maria Silva" class="w-10 h-10 rounded-full">
-                                <div>
-                                    <p class="font-semibold text-texto-principal text-sm">Maria Silva</p>
-                                    <p class="text-xs text-texto-secundario">15:00 - Telemedicina</p>
-                                </div>
-                            </div>
-                            <button class="px-3 py-2 text-xs font-semibold bg-campo border border-ciano-vibrante text-ciano-vibrante rounded-md hover:bg-fundo-secundario"> <i data-lucide="video" class="w-4 h-4"></i> </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- ECRÃ 13: GESTÃO DE PACIENTES -->
-            <div id="pacientes-screen" class="app-screen p-4 lg:p-8 space-y-6 hidden">
-                 <h1 class="text-3xl font-bold text-texto-principal">Gestão de Pacientes</h1>
-                 
-                 <!-- Barra de Pesquisa -->
-                 <div class="relative">
-                       <input type="search" id="paciente-search" placeholder="Procurar paciente por nome ou CPF..."
-                              class="block w-full rounded-md border-0 bg-campo p-3 pl-10 text-texto-principal placeholder:text-texto-secundario focus:ring-2 focus:ring-inset focus:ring-ciano-vibrante sm:text-sm">
-                       <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                           <i data-lucide="search" class="w-5 h-5 text-texto-secundario"></i>
-                       </div>
-                 </div>
-
-                 <!-- Lista de Resultados -->
-                 <div id="pacientes-list" class="space-y-3">
-                       <!-- Item Paciente (Exemplo) -->
-                       <div class="paciente-item bg-fundo-secundario p-4 rounded-xl flex items-center justify-between shadow-lg" data-nome="João Pereira">
-                           <div class="flex items-center space-x-3">
-                               <img src="https://placehold.co/40x40/06B6D4/FFFFFF?text=JP" alt="Avatar João Pereira" class="w-10 h-10 rounded-full">
-                               <div>
-                                   <p class="font-semibold text-texto-principal text-sm">João Pereira</p>
-                                   <p class="text-xs text-texto-secundario">CPF: 123.456.789-00</p>
-                               </div>
-                           </div>
-                           <button class="btn-ver-prontuario px-3 py-2 text-xs font-semibold bg-ciano-vibrante text-white rounded-md hover:bg-azul-suave" data-paciente="João Pereira">Ver Prontuário</button>
-                       </div>
-                       <!-- Item Paciente (Exemplo) -->
-                       <div class="paciente-item bg-fundo-secundario p-4 rounded-xl flex items-center justify-between shadow-lg" data-nome="Maria Silva">
-                           <div class="flex items-center space-x-3">
-                               <img src="https://placehold.co/40x40/FBCFE8/FFFFFF?text=MS" alt="Avatar Maria Silva" class="w-10 h-10 rounded-full">
-                               <div>
-                                   <p class="font-semibold text-texto-principal text-sm">Maria Silva</p>
-                                   <p class="text-xs text-texto-secundario">CPF: 987.654.321-00</p>
-                               </div>
-                           </div>
-                           <button class="btn-ver-prontuario px-3 py-2 text-xs font-semibold bg-ciano-vibrante text-white rounded-md hover:bg-azul-suave" data-paciente="Maria Silva">Ver Prontuário</button>
-                       </div>
-                 </div>
-            </div>
-
-            <!-- ECRÃ 12: ECRÃ DE ATENDIMENTO (PRONTUÁRIO) -->
-            <div id="atendimento-screen" class="app-screen p-4 lg:p-8 space-y-6 hidden">
-                <!-- Cabeçalho -->
-                <header class="flex items-center space-x-4">
-                       <button id="back-atendimento-to-pacientes" class="p-2">
-                           <i data-lucide="arrow-left" class="text-texto-principal w-6 h-6"></i>
-                       </button>
-                       <h1 class="text-3xl font-bold text-texto-principal">Prontuário: <span id="prontuario-paciente-nome">Nome do Paciente</span></h1>
+            <!-- ECRÃ 1: DASHBOARD -->
+            <div id="dashboard-screen" class="app-screen space-y-6 max-w-5xl mx-auto">
+                <header class="flex justify-between items-center">
+                    <h1 class="text-2xl lg:text-3xl font-bold">Olá, <span id="dash-nome">Doutor</span></h1>
                 </header>
 
-                <!-- Sub-Cabeçalho Info Paciente -->
-                <div class="bg-fundo-secundario p-4 rounded-xl shadow-lg grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
-                    <p><strong class="text-texto-secundario">Idade:</strong> 34 anos</p>
-                    <p><strong class="text-texto-secundario">Alergias:</strong> Penicilina</p>
-                    <p><strong class="text-texto-secundario">Condições:</strong> Hipertensão</p>
+                <!-- Métricas Dinâmicas -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="bg-fundo-secundario p-5 rounded-xl flex items-center space-x-4 shadow-lg border border-gray-700">
+                        <div class="p-3 bg-ciano-vibrante/20 rounded-full text-ciano-vibrante"><i data-lucide="calendar-check" class="w-6 h-6"></i></div>
+                        <div>
+                            <p class="text-texto-secundario text-sm">Consultas Marcadas</p>
+                            <p class="text-2xl font-bold text-white" id="metric-consultas-marcadas">0</p>
+                        </div>
+                    </div>
+                    <div class="bg-fundo-secundario p-5 rounded-xl flex items-center space-x-4 shadow-lg border border-gray-700">
+                        <div class="p-3 bg-purple-500/20 rounded-full text-purple-400"><i data-lucide="users" class="w-6 h-6"></i></div>
+                        <div>
+                            <p class="text-texto-secundario text-sm">Meus Pacientes</p>
+                            <p class="text-2xl font-bold text-white" id="metric-pacientes">0</p>
+                        </div>
+                    </div>
                 </div>
 
-                <!-- Abas de Navegação do Prontuário -->
-                <div class="border-b border-campo">
-                    <nav class="-mb-px flex space-x-6">
-                        <button class="tab-btn active" data-tab="resumo">Resumo</button>
-                        <button class="tab-btn" data-tab="historico">Histórico</button>
-                        <button class="tab-btn" data-tab="exames">Exames</button>
-                        <button class="tab-btn" data-tab="receitas">Receitas</button>
-                    </nav>
+                <!-- Próximo Atendimento Dinâmico -->
+                <h2 class="text-xl font-semibold mt-8 mb-4 flex items-center gap-2">
+                    <i data-lucide="clock" class="w-5 h-5 text-ciano-vibrante"></i> Próximo Atendimento
+                </h2>
+                <div id="proximo-atendimento-card" class="bg-fundo-secundario p-6 rounded-xl shadow-lg border-l-4 border-ciano-vibrante flex flex-col justify-center min-h-[100px]">
+                    <p class="text-texto-secundario text-center animate-pulse">A verificar agenda...</p>
                 </div>
+            </div>
 
-                <!-- Conteúdo das Abas -->
+            <!-- ECRÃ 2: AGENDA -->
+            <div id="agenda-screen" class="app-screen space-y-6 hidden max-w-5xl mx-auto">
+                <h1 class="text-2xl lg:text-3xl font-bold">Minha Agenda</h1>
+                <div class="bg-fundo-secundario rounded-xl shadow-lg p-4 border border-gray-700">
+                    <div id="lista-agenda-hoje" class="space-y-4">
+                        <p class="text-center text-texto-secundario py-10">A carregar agenda...</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ECRÃ 3: PACIENTES -->
+            <div id="pacientes-screen" class="app-screen space-y-6 hidden max-w-5xl mx-auto">
+                <h1 class="text-2xl lg:text-3xl font-bold">Meus Pacientes</h1>
+                <div class="relative">
+                    <input type="search" id="paciente-search" placeholder="Buscar por nome..." class="w-full bg-campo p-3 pl-10 rounded-lg text-texto-principal focus:ring-2 focus:ring-ciano-vibrante outline-none">
+                    <div class="absolute left-3 top-3 text-texto-secundario"><i data-lucide="search" class="w-5 h-5"></i></div>
+                </div>
+                <div id="lista-pacientes" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <!-- Lista dinâmica -->
+                </div>
+            </div>
+
+            <!-- ECRÃ 4: PRONTUÁRIO / ATENDIMENTO -->
+            <div id="atendimento-screen" class="app-screen space-y-6 hidden max-w-6xl mx-auto">
+                <header class="flex items-center gap-4 mb-6">
+                    <button onclick="showAppScreen(document.getElementById('dashboard-screen'))" class="p-2 bg-campo rounded-full hover:bg-fundo-secundario"><i data-lucide="arrow-left"></i></button>
+                    <div>
+                        <h1 class="text-xl lg:text-2xl font-bold text-texto-principal" id="prontuario-nome">Paciente</h1>
+                        <p class="text-sm text-ciano-vibrante flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span> Em atendimento</p>
+                    </div>
+                </header>
+
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                    <!-- Coluna Principal (Conteúdo da Aba) -->
-                    <div class="lg:col-span-2 space-y-6">
-                        <!-- Aba Resumo (Visível por padrão) -->
-                        <div id="tab-resumo" class="tab-content space-y-4">
-                            <h3 class="text-xl font-semibold text-texto-principal">Resumo da Consulta Atual</h3>
-                            <textarea rows="8" class="block w-full rounded-md border-0 bg-campo p-3 text-texto-principal placeholder:text-texto-secundario focus:ring-2 focus:ring-inset focus:ring-ciano-vibrante" placeholder="Adicionar notas da consulta..."></textarea>
-                            <button class="w-full flex justify-center rounded-md bg-ciano-vibrante px-3 py-3 text-sm font-semibold text-white shadow-sm hover:bg-azul-suave">Salvar Anotações</button>
-                        </div>
-                        
-                        <!-- Aba Histórico (Oculta) -->
-                        <div id="tab-historico" class="tab-content space-y-4 hidden">
-                             <h3 class="text-xl font-semibold text-texto-principal">Histórico de Consultas</h3>
-                             <div class="bg-campo p-4 rounded-lg">
-                                 <p class="font-semibold text-texto-principal">15 de Set, 2025 - Dra. Ana Sousa</p>
-                                 <p class="text-sm text-texto-secundario mt-1">Paciente relatou dores no peito. Pressão arterial 140/90. Receitado Losartana.</p>
-                             </div>
-                        </div>
-
-                        <!-- Aba Exames (Oculta) -->
-                        <div id="tab-exames" class="tab-content space-y-4 hidden">
-                            <h3 class="text-xl font-semibold text-texto-principal">Resultados de Exames</h3>
-                            <p class="text-texto-secundario">Nenhum exame recente.</p>
-                        </div>
-                        
-                        <!-- Aba Receitas (Oculta) -->
-                        <div id="tab-receitas" class="tab-content space-y-4 hidden">
-                            <h3 class="text-xl font-semibold text-texto-principal">Receitas Emitidas</h3>
-                            <div class="bg-campo p-4 rounded-lg">
-                                 <p class="font-semibold text-texto-principal">Losartana 50mg (Uso contínuo)</p>
-                                 <p class="text-sm text-texto-secundario mt-1">Emitida em 15 de Set, 2025 por Dra. Ana Sousa.</p>
-                             </div>
+                    <!-- Coluna Esquerda: Histórico -->
+                    <div class="lg:col-span-1 space-y-4 order-2 lg:order-1">
+                        <div class="bg-fundo-secundario p-4 rounded-xl h-auto lg:h-[600px] overflow-y-auto border border-gray-700">
+                            <h3 class="font-bold mb-4 border-b border-campo pb-2 text-texto-secundario flex items-center gap-2">
+                                <i data-lucide="history" class="w-4 h-4"></i> Histórico
+                            </h3>
+                            <div id="historico-clinico" class="space-y-3 text-sm">
+                                <p class="text-texto-secundario text-center">Carregando histórico...</p>
+                            </div>
                         </div>
                     </div>
 
-                    <!-- Coluna Lateral (Ações Rápidas) -->
-                    <div class="lg:col-span-1 space-y-4">
-                        <h3 class="text-xl font-semibold text-texto-principal">Ações</h3>
-                        <div class="bg-fundo-secundario p-4 rounded-xl shadow-lg space-y-3">
-                            <button class="w-full flex items-center justify-center gap-2 rounded-md bg-campo px-3 py-3 text-sm font-semibold text-texto-principal shadow-sm hover:bg-gray-600">
-                                <i data-lucide="pilcrow" class="w-4 h-4"></i> Emitir Receita
-                            </button>
-                            <button class="w-full flex items-center justify-center gap-2 rounded-md bg-campo px-3 py-3 text-sm font-semibold text-texto-principal shadow-sm hover:bg-gray-600">
-                                <i data-lucide="flask-conical" class="w-4 h-4"></i> Solicitar Exame
-                            </button>
-                             <button class="w-full flex items-center justify-center gap-2 rounded-md bg-campo px-3 py-3 text-sm font-semibold text-texto-principal shadow-sm hover:bg-gray-600">
-                                 <i data-lucide="file-plus" class="w-4 h-4"></i> Anexar Documento
+                    <!-- Coluna Direita: Consulta Atual -->
+                    <div class="lg:col-span-2 space-y-6 order-1 lg:order-2">
+                        <div class="bg-fundo-secundario p-6 rounded-xl space-y-4 border border-gray-700 shadow-lg">
+                            <h3 class="font-bold text-lg flex items-center gap-2"><i data-lucide="file-text" class="w-5 h-5 text-ciano-vibrante"></i> Evolução Clínica</h3>
+                            <textarea id="notas-medicas" class="w-full h-40 bg-campo rounded-lg p-4 text-texto-principal focus:ring-2 focus:ring-ciano-vibrante outline-none resize-none" placeholder="Descreva os sintomas, diagnóstico e observações..."></textarea>
+                        </div>
+
+                        <div class="bg-fundo-secundario p-6 rounded-xl space-y-4 border border-gray-700 shadow-lg">
+                            <h3 class="font-bold text-lg flex items-center gap-2"><i data-lucide="clipboard-list" class="w-5 h-5 text-purple-400"></i> Conduta</h3>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <input id="prescricao-input" type="text" placeholder="Prescrever Medicamento" class="bg-campo p-3 rounded-lg w-full focus:ring-2 focus:ring-ciano-vibrante outline-none">
+                                <input id="exame-input" type="text" placeholder="Solicitar Exame" class="bg-campo p-3 rounded-lg w-full focus:ring-2 focus:ring-ciano-vibrante outline-none">
+                            </div>
+                            <button id="btn-finalizar-consulta" class="w-full bg-ciano-vibrante text-white py-3 rounded-lg font-bold hover:bg-azul-suave transition-colors shadow-lg mt-4">
+                                Finalizar Atendimento e Salvar
                             </button>
                         </div>
                     </div>
                 </div>
-            </div>
-
-            <!-- ECRÃ 14: NOTIFICAÇÕES (Adicionado) -->
-            <div id="notifications-screen" class="app-screen p-4 lg:p-8 space-y-6 hidden">
-                 <header class="flex items-center space-x-4">
-                       <button id="back-notifications-to-dashboard" class="p-2">
-                           <i data-lucide="arrow-left" class="text-texto-principal w-6 h-6"></i>
-                       </button>
-                       <h1 class="text-3xl font-bold text-texto-principal">Notificações</h1>
-                 </header>
-                 <div class="space-y-3">
-                       <div class="bg-fundo-secundario p-4 rounded-xl flex items-start space-x-3 shadow-lg cursor-pointer hover:bg-campo notification-unread">
-                           <div class="bg-ciano-vibrante/20 p-2 rounded-lg mt-1"> <i data-lucide="file-text" class="text-ciano-vibrante w-5 h-5"></i> </div>
-                           <div class="flex-1">
-                               <p class="font-semibold text-texto-principal text-sm">Novo resultado de exame</p>
-                               <p class="text-xs text-texto-secundario mt-1">O resultado de Hemograma do paciente João Pereira está disponível.</p>
-                               <p class="text-xs text-texto-secundario mt-2">Há 15 minutos</p>
-                           </div>
-                       </div>
-                       <div class="bg-fundo-secundario p-4 rounded-xl flex items-start space-x-3 shadow-lg cursor-pointer hover:bg-campo opacity-80">
-                           <div class="bg-campo/50 p-2 rounded-lg mt-1"> <i data-lucide="calendar-check" class="text-texto-secundario w-5 h-5"></i> </div>
-                           <div class="flex-1">
-                               <p class="font-semibold text-texto-principal text-sm">Consulta confirmada</p>
-                               <p class="text-xs text-texto-secundario mt-1">Maria Silva confirmou a teleconsulta de hoje às 15:00.</p>
-                               <p class="text-xs text-texto-secundario mt-2">Há 1 hora</p>
-                           </div>
-                       </div>
-                 </div>
-            </div>
-
-            <!-- ECRÃ 15: MENSAGENS (Placeholder) -->
-            <div id="mensagens-screen" class="app-screen p-4 lg:p-8 space-y-6 hidden">
-                 <h1 class="text-3xl font-bold text-texto-principal">Mensagens</h1>
-                 <p class="text-texto-secundario">Ecrã para mensagens do profissional.</p>
             </div>
 
         </main>
+
+        <!-- BOTTOM NAV (MOBILE) -->
+        <nav class="lg:hidden fixed bottom-0 w-full bg-fundo-sidebar border-t border-gray-800 flex justify-around p-3 z-50 safe-area-pb">
+            <a href="#" class="nav-link flex flex-col items-center gap-1 text-ciano-vibrante transition-colors" data-target="dashboard-screen">
+                <i data-lucide="home" class="w-6 h-6"></i>
+                <span class="text-[10px] font-medium">Home</span>
+            </a>
+            <a href="#" class="nav-link flex flex-col items-center gap-1 text-texto-secundario transition-colors" data-target="agenda-screen">
+                <i data-lucide="calendar" class="w-6 h-6"></i>
+                <span class="text-[10px] font-medium">Agenda</span>
+            </a>
+            <a href="#" class="nav-link flex flex-col items-center gap-1 text-texto-secundario transition-colors" data-target="pacientes-screen">
+                <i data-lucide="users" class="w-6 h-6"></i>
+                <span class="text-[10px] font-medium">Pacientes</span>
+            </a>
+        </nav>
+
     </div>
 
-    <!-- Lógica da Aplicação (Profissional) -->
     <script src="profissional_app.js"></script>
 </body>
 </html>
