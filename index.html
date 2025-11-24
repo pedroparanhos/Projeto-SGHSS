@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SGHSS VidaPlus - Bem-vindo</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Ícones (Lucide Icons) -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+
+    <!-- Scripts do Firebase -->
+    <script src="[https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js](https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js)"></script>
+    <script src="[https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js](https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js)"></script>
+    <script src="[https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js](https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js)"></script>
+    <script src="../firebase-init.js"></script> 
+
+    <script>
+        // Configuração de cores personalizadas do Tailwind
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'fundo-principal': '#1E293B',
+                        'fundo-secundario': '#334155',
+                        'fundo-sidebar': '#0F172A', 
+                        'campo': '#475569',
+                        'texto-principal': '#F1F5F9',
+                        'texto-secundario': '#94A3B8',
+                        'ciano-vibrante': '#06B6D4',
+                        'azul-suave': '#22D3EE',
+                    },
+                    fontFamily: {
+                        'sans': ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #1E293B;
+            color: #F1F5F9;
+        }
+        /* Efeito de hover personalizado para os cartões */
+        .portal-card {
+            transition: transform 0.2s ease-out, box-shadow 0.2s ease-out;
+        }
+        .portal-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col items-center justify-center p-6">
+
+    <main class="w-full max-w-4xl mx-auto">
+        <!-- Cabeçalho -->
+        <div class="text-center mb-12">
+            <div class="inline-flex items-center justify-center w-20 h-20 bg-ciano-vibrante rounded-full mb-6 shadow-lg">
+                <i data-lucide="heart-pulse" class="text-white w-10 h-10"></i>
+            </div>
+            <h1 class="text-4xl md:text-5xl font-bold text-texto-principal mb-3 tracking-tight">
+                Bem-vindo ao SGHSS VidaPlus
+            </h1>
+            <p class="text-lg md:text-xl text-texto-secundario">
+                Selecione o seu portal de acesso para continuar.
+            </p>
+        </div>
+
+        <!-- Grelha de Seleção de Portal -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
+            
+            <!-- 1. Portal do Paciente -->
+            <a href="pagina_paciente/paciente.html" class="portal-card bg-fundo-secundario rounded-xl shadow-lg p-8 text-center block">
+                <div class="inline-flex items-center justify-center w-16 h-16 bg-ciano-vibrante/20 rounded-full mb-5">
+                    <i data-lucide="user" class="w-8 h-8 text-ciano-vibrante"></i>
+                </div>
+                <h2 class="text-1xl font-bold text-texto-principal mb-2">Portal do Paciente</h2>
+                <p class="text-texto-secundario mb-6">Agende consultas, veja o seu histórico e acessa à telemedicina.</p>
+                <span class="font-semibold text-ciano-vibrante flex items-center justify-center gap-2">
+                    Acessar agora <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                </span>
+            </a>
+
+            <!-- 2. Portal do Profissional -->
+            <a href="pagina_profissional/profissional.html" class="portal-card bg-fundo-secundario rounded-xl shadow-lg p-8 text-center block">
+                <div class="inline-flex items-center justify-center w-16 h-16 bg-ciano-vibrante/20 rounded-full mb-5">
+                    <i data-lucide="stethoscope" class="w-8 h-8 text-ciano-vibrante"></i>
+                </div>
+                <h2 class="text-1xl font-bold text-texto-principal mb-2">Portal do Profissional</h2>
+                <p class="text-texto-secundario mb-6">Consulte a sua agenda, gerencie pacientes e acesse prontuários.</p>
+                <span class="font-semibold text-ciano-vibrante flex items-center justify-center gap-2">
+                    Acessar agora <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                </span>
+            </a>
+
+            <!-- 3. Portal do Administrador -->
+            <a href="pagina_adm/admin.html" class="portal-card bg-fundo-secundario rounded-xl shadow-lg p-8 text-center block">
+                <div class="inline-flex items-center justify-center w-16 h-16 bg-ciano-vibrante/20 rounded-full mb-5">
+                    <i data-lucide="shield-check" class="w-8 h-8 text-ciano-vibrante"></i>
+                </div>
+                <h2 class="text-1xl font-bold text-texto-principal mb-2">Portal do Administrador</h2>
+                <p class="text-texto-secundario mb-6">Gerencie cadastros, fluxos do hospital e visualize relatórios.</p>
+                <span class="font-semibold text-ciano-vibrante flex items-center justify-center gap-2">
+                    Acessar agora <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                </span>
+            </a>
+
+        </div>
+    </main>
+
+    <footer class="text-center text-texto-secundario text-sm mt-12">
+        <p>&copy; 2025 SGHSS VidaPlus. Todos os direitos reservados.</p>
+    </footer>
+
+    <script>
+        // Ativa os ícones no carregamento inicial
+        if (typeof lucide !== 'undefined') {
+            lucide.createIcons();
+        }
+    </script>
+</body>
+</html>

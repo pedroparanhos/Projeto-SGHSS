@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SGHSS VidaPlus - Administrador</title>
+    
+    <!-- SCRIPTS DO FIREBASE -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+    
+    <!-- CONFIGURAÇÃO -->
+    <script src="../firebase-init.js"></script> 
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="../tailwind.config.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="admin_style.css">
+</head>
+<body class="bg-fundo-principal text-texto-principal font-sans pb-20 lg:pb-0">
+
+    <!-- LOGIN -->
+    <div id="auth-layout" class="min-h-screen flex flex-col items-center justify-center p-4">
+        <div class="w-full max-w-sm bg-fundo-secundario rounded-xl shadow-lg p-8 space-y-8">
+            <div class="flex flex-col items-center space-y-4">
+                <div class="w-24 h-24 bg-ciano-vibrante rounded-full flex items-center justify-center shadow-lg shadow-ciano-vibrante/20">
+                    <i data-lucide="shield-check" class="text-white w-12 h-12"></i>
+                </div>
+                <h1 class="text-2xl font-bold text-texto-principal tracking-tight">Portal do Admin</h1>
+                <p class="text-texto-secundario">Acesso exclusivo</p>
+            </div>
+            <form class="space-y-6" id="login-form-admin">
+                <input id="login-email" type="email" required placeholder="E-mail" class="block w-full rounded-md bg-campo p-3 text-texto-principal focus:ring-2 focus:ring-ciano-vibrante">
+                <input id="login-password" type="password" required placeholder="Senha" class="block w-full rounded-md bg-campo p-3 text-texto-principal focus:ring-2 focus:ring-ciano-vibrante">
+                <button type="submit" class="w-full rounded-md bg-ciano-vibrante px-3 py-3 font-semibold text-white hover:bg-azul-suave">Entrar</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- APP -->
+    <div id="app-layout" class="hidden min-h-screen flex">
+        
+        <!-- SIDEBAR -->
+        <aside class="hidden lg:flex lg:flex-col lg:w-64 lg:fixed lg:inset-y-0 lg:z-50 bg-fundo-sidebar p-6 border-r border-gray-800">
+            <div class="flex items-center space-x-3 mb-10">
+                <div class="w-10 h-10 bg-ciano-vibrante rounded-lg flex items-center justify-center"><i data-lucide="heart-pulse" class="text-white w-6 h-6"></i></div>
+                <h1 class="text-xl font-bold text-texto-principal">VidaPlus</h1>
+            </div>
+            <nav class="flex-1 space-y-2">
+                <a href="#" class="sidebar-link active" data-target="admin-dashboard-screen"><i data-lucide="home"></i><span>Dashboard</span></a>
+                <a href="#" class="sidebar-link" data-target="admin-gestao-hub-screen"><i data-lucide="sliders-horizontal"></i><span>Gestão</span></a>
+            </nav>
+            <div class="border-t border-campo pt-4 mt-auto flex items-center space-x-3 cursor-pointer" id="logout-btn-desktop">
+                <div class="w-10 h-10 bg-amarelo-alerta rounded-full flex items-center justify-center text-white font-bold">A</div>
+                <div><p class="font-semibold text-sm">Admin</p><span class="text-xs text-texto-secundario hover:text-white">Sair</span></div>
+            </div>
+        </aside>
+
+        <!-- CONTEÚDO -->
+        <main class="flex-1 lg:pl-64 w-full p-4 lg:p-8">
+            
+            <!-- ECRÃ 1: DASHBOARD -->
+            <div id="admin-dashboard-screen" class="app-screen space-y-6 max-w-6xl mx-auto">
+                <h1 class="text-3xl font-bold">Painel Administrativo</h1>
+                
+                <!-- MÉTRICAS REAIS -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="bg-fundo-secundario p-6 rounded-xl flex items-center space-x-4 shadow-lg border border-gray-700">
+                        <div class="p-4 bg-ciano-vibrante/20 rounded-full text-ciano-vibrante"><i data-lucide="users"></i></div>
+                        <div>
+                            <p class="text-texto-secundario text-sm">Total Pacientes</p>
+                            <p class="text-3xl font-bold text-white" id="metric-total-pacientes">0</p>
+                        </div>
+                    </div>
+                    <div class="bg-fundo-secundario p-6 rounded-xl flex items-center space-x-4 shadow-lg border border-gray-700">
+                        <div class="p-4 bg-amarelo-alerta/20 rounded-full text-amarelo-alerta"><i data-lucide="bed-double"></i></div>
+                        <div>
+                            <p class="text-texto-secundario text-sm">Leitos Ocupados</p>
+                            <p class="text-3xl font-bold text-white" id="metric-leitos-ocupados">0</p>
+                        </div>
+                    </div>
+                    <div class="bg-fundo-secundario p-6 rounded-xl flex items-center space-x-4 shadow-lg border border-gray-700">
+                        <div class="p-4 bg-green-500/20 rounded-full text-green-500"><i data-lucide="dollar-sign"></i></div>
+                        <div>
+                            <p class="text-texto-secundario text-sm">Receita Est.</p>
+                            <p class="text-3xl font-bold text-white" id="metric-receita">R$ 0</p>
+                        </div>
+                    </div>
+                </div>
+
+                <h2 class="text-xl font-semibold mt-8 mb-4">Acesso Rápido</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <button class="btn-nav bg-fundo-secundario p-6 rounded-xl flex items-center gap-4 hover:bg-campo transition-colors shadow-lg" data-target="admin-management-screen">
+                        <div class="bg-blue-500/20 p-3 rounded-full text-blue-500"><i data-lucide="user-cog"></i></div>
+                        <div class="text-left"><p class="font-bold">Cadastros</p><p class="text-xs text-texto-secundario">Pacientes e Profissionais</p></div>
+                    </button>
+                    <button class="btn-nav bg-fundo-secundario p-6 rounded-xl flex items-center gap-4 hover:bg-campo transition-colors shadow-lg" data-target="admin-fluxos-screen">
+                        <div class="bg-purple-500/20 p-3 rounded-full text-purple-500"><i data-lucide="building"></i></div>
+                        <div class="text-left"><p class="font-bold">Leitos</p><p class="text-xs text-texto-secundario">Gestão de Internação</p></div>
+                    </button>
+                    <button class="btn-nav bg-fundo-secundario p-6 rounded-xl flex items-center gap-4 hover:bg-campo transition-colors shadow-lg" data-target="admin-relatorios-screen">
+                        <div class="bg-orange-500/20 p-3 rounded-full text-orange-500"><i data-lucide="file-text"></i></div>
+                        <div class="text-left"><p class="font-bold">Relatórios</p><p class="text-xs text-texto-secundario">Exportar Dados</p></div>
+                    </button>
+                </div>
+            </div>
+
+            <!-- ECRÃ 1.5: HUB DE GESTÃO -->
+            <div id="admin-gestao-hub-screen" class="app-screen space-y-6 hidden max-w-6xl mx-auto">
+                <header class="flex justify-between items-center">
+                    <div class="flex items-center gap-4">
+                        <button class="btn-back p-2 bg-campo rounded-full hover:bg-fundo-secundario" data-target="admin-dashboard-screen">
+                            <i data-lucide="arrow-left"></i>
+                        </button>
+                        <h1 class="text-3xl font-bold text-texto-principal">Gestão</h1>
+                    </div>
+                </header>
+                <h2 class="text-xl font-semibold text-texto-principal">Selecione uma área para gerir:</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <button class="btn-nav bg-fundo-secundario p-6 rounded-xl flex items-center space-x-4 hover:bg-campo border border-gray-700" data-target="admin-management-screen">
+                        <i data-lucide="user-cog" class="w-8 h-8 text-ciano-vibrante"></i>
+                        <div>
+                            <p class="text-lg font-semibold text-texto-principal text-left">Gerir Cadastros</p>
+                            <p class="text-texto-secundario text-sm text-left">Pacientes e Profissionais</p>
+                        </div>
+                    </button>
+                    <button class="btn-nav bg-fundo-secundario p-6 rounded-xl flex items-center space-x-4 hover:bg-campo border border-gray-700" data-target="admin-relatorios-screen">
+                        <i data-lucide="clipboard-list" class="w-8 h-8 text-ciano-vibrante"></i>
+                        <div>
+                            <p class="text-lg font-semibold text-texto-principal text-left">Gerar Relatórios</p>
+                            <p class="text-texto-secundario text-sm text-left">Financeiros e Suprimentos</p>
+                        </div>
+                    </button>
+                       <button class="btn-nav bg-fundo-secundario p-6 rounded-xl flex items-center space-x-4 hover:bg-campo border border-gray-700" data-target="admin-fluxos-screen">
+                        <i data-lucide="building" class="w-8 h-8 text-ciano-vibrante"></i>
+                        <div>
+                            <p class="text-lg font-semibold text-texto-principal text-left">Controle de Fluxos</p>
+                            <p class="text-texto-secundario text-sm text-left">Internações e Leitos</p>
+                        </div>
+                    </button>                      
+                </div>
+            </div>
+
+            <!-- ECRÃ 2: GESTÃO DE CADASTROS -->
+            <div id="admin-management-screen" class="app-screen space-y-6 hidden max-w-6xl mx-auto">
+                <header class="flex items-center gap-4 mb-6">
+                    <button class="btn-back p-2 bg-campo rounded-full hover:bg-fundo-secundario" data-target="admin-gestao-hub-screen"><i data-lucide="arrow-left"></i></button>
+                    <h1 class="text-2xl font-bold">Gestão de Cadastros</h1>
+                </header>
+
+                <!-- Abas Internas -->
+                <div class="flex gap-4 border-b border-campo mb-6">
+                    <button id="tab-pacientes" class="px-4 py-2 border-b-2 border-ciano-vibrante text-ciano-vibrante font-bold">Pacientes</button>
+                    <button id="tab-profissionais" class="px-4 py-2 border-b-2 border-transparent text-texto-secundario hover:text-white">Profissionais</button>
+                </div>
+
+                <!-- Lista Pacientes -->
+                <div id="view-pacientes" class="space-y-4">
+                    <div class="flex justify-between">
+                        <input type="search" id="search-pacientes" placeholder="Buscar paciente..." class="bg-campo p-2 rounded w-64 focus:ring-2 focus:ring-ciano-vibrante outline-none">
+                        <button onclick="abrirModalCadastro('PACIENTE')" class="bg-ciano-vibrante text-white px-4 py-2 rounded flex gap-2 items-center hover:bg-azul-suave"><i data-lucide="plus"></i> Novo Paciente</button>
+                    </div>
+                    <div id="lista-pacientes-real" class="grid gap-3">
+                        <p class="text-center py-10">Carregando...</p>
+                    </div>
+                </div>
+
+                <!-- Lista Profissionais -->
+                <div id="view-profissionais" class="space-y-4 hidden">
+                    <div class="flex justify-between">
+                        <input type="search" id="search-profissionais" placeholder="Buscar profissional..." class="bg-campo p-2 rounded w-64 focus:ring-2 focus:ring-ciano-vibrante outline-none">
+                        <button onclick="abrirModalCadastro('PROFISSIONAL')" class="bg-purple-600 text-white px-4 py-2 rounded flex gap-2 items-center hover:bg-purple-700"><i data-lucide="plus"></i> Novo Profissional</button>
+                    </div>
+                    <div id="lista-profissionais-real" class="grid gap-3"></div>
+                </div>
+            </div>
+
+            <!-- ECRÃ 3: CONTROLE DE LEITOS -->
+            <div id="admin-fluxos-screen" class="app-screen space-y-6 hidden max-w-6xl mx-auto">
+                <header class="flex items-center gap-4 mb-6">
+                    <button class="btn-back p-2 bg-campo rounded-full hover:bg-fundo-secundario" data-target="admin-gestao-hub-screen"><i data-lucide="arrow-left"></i></button>
+                    <h1 class="text-2xl font-bold">Mapa de Leitos (Tempo Real)</h1>
+                </header>
+                
+                <div class="flex gap-4 mb-4 overflow-x-auto pb-2">
+                    <span class="flex items-center gap-2 text-xs"><span class="w-3 h-3 rounded-full bg-green-500"></span> Livre</span>
+                    <span class="flex items-center gap-2 text-xs"><span class="w-3 h-3 rounded-full bg-red-500"></span> Ocupado</span>
+                    <span class="flex items-center gap-2 text-xs"><span class="w-3 h-3 rounded-full bg-orange-500"></span> Limpeza</span>
+                    <span class="flex items-center gap-2 text-xs"><span class="w-3 h-3 rounded-full bg-gray-500"></span> Manutenção</span>
+                </div>
+
+                <div id="grid-leitos-real" class="grid grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-4"></div>
+            </div>
+
+            <!-- ECRÃ 4: RELATÓRIOS -->
+            <div id="admin-relatorios-screen" class="app-screen space-y-6 hidden max-w-6xl mx-auto">
+                <header class="flex items-center gap-4 mb-6">
+                    <button class="btn-back p-2 bg-campo rounded-full hover:bg-fundo-secundario" data-target="admin-gestao-hub-screen"><i data-lucide="arrow-left"></i></button>
+                    <h1 class="text-2xl font-bold">Ferramenta de Relatórios</h1>
+                </header>
+                
+                <div class="bg-fundo-secundario p-6 rounded-xl max-w-2xl space-y-6 border border-gray-700 shadow-lg">
+                    <h3 class="text-xl font-semibold text-texto-principal border-b border-campo pb-2">Gerador de Relatórios</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-texto-secundario mb-1">Tipo de Relatório</label>
+                            <select class="w-full rounded-md bg-campo p-3 text-texto-principal focus:ring-2 focus:ring-ciano-vibrante">
+                                <option>Financeiro (Receita)</option>
+                                <option>Ocupação de Leitos</option>
+                                <option>Atendimentos por Profissional</option>
+                                <option>Consumo de Suprimentos</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-texto-secundario mb-1">Período</label>
+                            <select class="w-full rounded-md bg-campo p-3 text-texto-principal focus:ring-2 focus:ring-ciano-vibrante">
+                                <option>Últimos 7 dias</option>
+                                <option>Últimos 30 dias</option>
+                                <option>Mês Atual</option>
+                                <option>Mês Anterior</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-texto-secundario mb-1">Data Inicial</label>
+                            <input type="date" class="w-full rounded-md bg-campo p-3 text-texto-secundario focus:ring-2 focus:ring-ciano-vibrante">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-texto-secundario mb-1">Data Final</label>
+                            <input type="date" class="w-full rounded-md bg-campo p-3 text-texto-secundario focus:ring-2 focus:ring-ciano-vibrante">
+                        </div>
+                    </div>
+                    <div>
+                        <button class="flex items-center justify-center gap-2 w-full rounded-md bg-ciano-vibrante px-3 py-3 text-sm font-semibold text-white shadow-sm hover:bg-azul-suave transition-colors">
+                            <i data-lucide="download" class="w-4 h-4"></i> Gerar Relatório (.xls)
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- MODAIS -->
+    <div id="modal-cadastro" class="fixed inset-0 bg-black/80 hidden flex items-center justify-center p-4 z-50 backdrop-blur-sm">
+        <div class="bg-fundo-secundario p-6 rounded-xl w-full max-w-md border border-gray-700 shadow-2xl">
+            <h2 class="text-xl font-bold mb-4" id="modal-cad-titulo">Novo Cadastro</h2>
+            <form id="form-cadastro" class="space-y-4">
+                <input type="hidden" id="cad-tipo">
+                <input type="hidden" id="cad-id">
+                <input id="cad-nome" type="text" placeholder="Nome Completo" required class="w-full bg-campo p-3 rounded text-white outline-none focus:ring-2 focus:ring-ciano-vibrante">
+                <input id="cad-email" type="email" placeholder="E-mail" required class="w-full bg-campo p-3 rounded text-white outline-none focus:ring-2 focus:ring-ciano-vibrante">
+                <input id="cad-cpf" type="text" placeholder="CPF" class="w-full bg-campo p-3 rounded text-white outline-none hidden">
+                <input id="cad-especialidade" type="text" placeholder="Especialidade" class="w-full bg-campo p-3 rounded text-white outline-none hidden">
+                <input id="cad-crm" type="text" placeholder="CRM" class="w-full bg-campo p-3 rounded text-white outline-none hidden">
+                <div class="flex justify-end gap-3 mt-6">
+                    <button type="button" onclick="fecharModalCadastro()" class="px-4 py-2 text-texto-secundario hover:text-white">Cancelar</button>
+                    <button type="submit" class="px-6 py-2 bg-ciano-vibrante text-white rounded font-bold hover:bg-azul-suave">Salvar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="modal-leito" class="fixed inset-0 bg-black/80 hidden flex items-center justify-center p-4 z-50 backdrop-blur-sm">
+        <div class="bg-fundo-secundario p-6 rounded-xl w-full max-w-sm border border-gray-700 text-center">
+            <h2 class="text-xl font-bold mb-2">Leito <span id="modal-leito-num"></span></h2>
+            <p class="text-texto-secundario mb-6">Status Atual: <span id="modal-leito-status" class="font-bold text-white"></span></p>
+            <div class="grid grid-cols-2 gap-3">
+                <button onclick="alterarStatusLeito('livre')" class="p-3 bg-green-500/20 text-green-500 rounded hover:bg-green-500 hover:text-white transition">Livre</button>
+                <button onclick="alterarStatusLeito('ocupado')" class="p-3 bg-red-500/20 text-red-500 rounded hover:bg-red-500 hover:text-white transition">Ocupado</button>
+                <button onclick="alterarStatusLeito('limpeza')" class="p-3 bg-orange-500/20 text-orange-500 rounded hover:bg-orange-500 hover:text-white transition">Limpeza</button>
+                <button onclick="alterarStatusLeito('bloqueado')" class="p-3 bg-gray-500/20 text-gray-400 rounded hover:bg-gray-500 hover:text-white transition">Manut.</button>
+            </div>
+            <button onclick="document.getElementById('modal-leito').classList.add('hidden')" class="mt-4 text-sm text-texto-secundario underline">Fechar</button>
+        </div>
+    </div>
+    
+    <script>
+        window.onload = function() {
+            if(typeof lucide !== 'undefined') {
+                lucide.createIcons();
+            }
+        }
+    </script>
+
+    <script src="admin_app.js"></script>
+</body>
+</html>
