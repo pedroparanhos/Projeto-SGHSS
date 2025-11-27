@@ -211,6 +211,16 @@
             <a href="#" class="nav-link text-texto-secundario flex flex-col items-center gap-1" data-target="pacientes-screen"><i data-lucide="users" class="w-6 h-6"></i><span class="text-[10px]">Pacientes</span></a>
         </nav>
     </div>
+
+        <!-- SCRIPT PARA FORÇAR ÍCONES NO CARREGAMENTO -->
+    <script>
+        window.onload = function() {
+            if(typeof lucide !== 'undefined') {
+                lucide.createIcons();
+            }
+        }
+    </script>
+
     <script src="profissional_app.js"></script>
 </body>
 </html>
